@@ -1,0 +1,34 @@
+mat-toolbar {
+  min-height: $bsu*2;
+
+  box-sizing: border-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+  font-size: 20px;
+  height: $bsu*2;
+  width: 100%;
+  padding: 0;
+  align-items: normal;
+}
+
+.title__padding {
+  padding-left: 20px;
+}
+
+.mat-toolbar-tools {
+  width: 100%;
+}
+
+mat-toolbar .mat-icon-button {
+  transition-duration: .5s;
+  transition-timing-function: cubic-bezier(.35,0,.25,1);
+  transition-property: background-color,fill,color;
+}
+
+.mat-toolbar.mat-toolbar-row, .mat-toolbar.mat-toolbar-single-row {
+  padding: 0;
+}

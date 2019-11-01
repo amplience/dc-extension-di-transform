@@ -1,0 +1,14 @@
+mat-radio-group {
+  mat-radio-button .mat-container {
+    margin-top: 1px;
+    height: 17px;
+    width: 17px;
+    .mat-off, .mat-on {
+      width: 17px;
+      height: 17px;
+    }
+  }
+  .mat-label {
+    margin-left: 30px;
+  }
+}

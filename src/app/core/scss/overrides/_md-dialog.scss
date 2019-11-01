@@ -1,0 +1,46 @@
+mat-dialog {
+  width: 620px;
+  * {
+    box-sizing: border-box;
+  }
+  border-radius: 0;
+  mat-dialog-content {
+    display: block;
+    padding: 20px 30px 0;
+    mat-select {
+      max-width: 320px;
+    }
+  }
+
+  mat-dialog-actions {
+    padding: 30px;
+    //Border top shows in IE11 without this...
+    border-color: transparent !important;
+    .mat-button {
+      margin: 0 0 0 8px;
+      line-height: 30px;
+    }
+  }
+  .mat-button.mat-icon-button {
+    &.dialog-close {
+      margin: 6px 0 0 0;
+    }
+  }
+
+  .mat-actions {
+    padding-right:0;
+  }
+}
+
+.mat-dialog {
+  &__heading {
+    height: 60px;
+    padding: 0 30px;
+    border-bottom: solid 1px $color-light-grey;
+    .mat-headline {
+      font-size: $font-size-title;
+      line-height: 59px;
+      margin: 0;
+    }
+  }
+}

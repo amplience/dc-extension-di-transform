@@ -1,0 +1,15 @@
+@import "./core/core.scss";
+
+:host {
+  width: 100%;
+  height: 500px;
+  background-color: $color-lightest-grey;
+  display: flex;
+  flex-direction: column;
+}
+
+.amp-root__topbar {
+  &--hide {
+    margin-top: -42px;
+  }
+}

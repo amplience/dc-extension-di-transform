@@ -1,0 +1,21 @@
+%select-deselect-all{
+  @include fadeInOut();
+  &.ng-leave-active {
+    width: auto;
+  }
+  .md-button--link {
+    &:not([disabled]) {
+      color: $color-darkest-grey;
+      &:hover {
+        color: $color-primary;
+      }
+    }
+    &:first-child {
+      &:after {
+        content: "|";
+        margin: 0 5px;
+        color: $color-darkest-grey;
+      }
+    }
+  }
+}

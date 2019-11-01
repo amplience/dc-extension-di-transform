@@ -1,0 +1,15 @@
+%inline-data-table {
+  table-layout: fixed;
+  tbody {
+    th {
+      font-weight: $font-weight-normal;
+      font-style: italic;
+      padding-right: 20px;
+      white-space: nowrap;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: text-top;
+    }
+  }
+}

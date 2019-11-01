@@ -1,0 +1,19 @@
+@import "../../core/core.scss";
+
+:host {
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  transition: 0.5s margin-right;
+  background-color: #fcfcfc;
+
+  img {
+    padding: 5px;
+    background: white;
+    margin: 5px;
+    border: 1px solid $color-light-grey;
+  }
+}

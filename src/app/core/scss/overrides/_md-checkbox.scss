@@ -1,0 +1,46 @@
+mat-checkbox {
+  .mat-container, .mat-icon {
+    width: 14px;
+    height: 14px; 
+  }
+  &:not(.mat-checked) .mat-icon {
+    border-color: $color-rolling-stone;
+  }
+  &.mat-checked .mat-icon {
+    background-color: $color-primary;
+    border-color: $color-primary;
+    &:after {
+      width: 4px;
+      height: 9px;
+      left: 3px;
+      top: 0px;
+      display: block;   
+    }
+  }
+  &[disabled]:not(.mat-checked) {
+    .mat-icon {
+      border-color: $color-lighter-grey;
+    }
+    &.mat-checkbox--unselectable {
+      .mat-icon {
+        background-color: $color-lighter-grey;       
+      }
+    }
+  }
+  &[disabled].mat-checked {
+    .mat-icon {
+      background-color: $color-another-grey;
+      border-color: $color-another-grey;
+    }
+  }
+  .mat-label {
+    margin-left: 23px;
+  }
+  &.mat-indeterminate .mat-icon:after {
+    width: 7px;
+    height: 0;
+    border-right: 0;
+    top: 50%;
+    display: block;
+  }
+}

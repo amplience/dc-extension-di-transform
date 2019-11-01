@@ -1,0 +1,4 @@
+$menu-items-to-display: 8;
+$menu-item-height: 32px;
+$menu-padding: 8px;
+$max-menu-height: $menu-padding * 2 + ($menu-item-height * $menu-items-to-display);

@@ -1,0 +1,30 @@
+@import "../../core";
+
+mat-menu-content {
+  max-height: $max-menu-height;
+  padding: $menu-padding 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+mat-select-menu {
+  max-height: $max-menu-height;
+  mat-content{
+    box-sizing: border-box;
+    max-height: $max-menu-height;
+  }
+}
+mat-menu-content, mat-select-menu{
+  mat-menu-item, mat-option{
+    height: $menu-item-height;
+    min-height: $menu-item-height;
+    > .mat-button {
+      font-size: $font-size-small;
+      height: $menu-item-height;
+      min-height: $menu-item-height;
+      line-height: $menu-item-height;
+      &.mat-focused:not(:hover):focus {
+        background-color: transparent;
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@import "./colours";
+$base-spacing-unit: 20px;
+$bsu: $base-spacing-unit;
+$transition-speed: 0.3s;
+$transition-speed-fast: 0.15s;
+$masthead-height: 40px;
+
+$gutter-size: 15px;
+$card-padding: $bsu / 2;
+
+$workflow-border-radius: 9px;
+$card-border-radius: 3px;
+$card-background-color: $color-white;
+$card-gutter: $gutter-size;
+$card-box-shadow: 0 1px 5px 0 $color-black-20p,
+                  0 2px 2px 0 $color-black-10p,
+                  0 3px 1px -2px $color-black-10p;

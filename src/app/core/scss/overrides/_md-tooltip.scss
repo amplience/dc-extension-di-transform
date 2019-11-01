@@ -1,0 +1,21 @@
+.mat-panel.mat-tooltip{
+  height:auto;
+  border-radius: 2px;
+  background-color:$color-black-80p;
+  max-width: 300px;
+  min-width: 64px;
+  word-wrap: break-word;
+  margin-top: 5px;
+  white-space: initial;
+  line-height: 12px;
+  font-size: 11px;
+  padding:8px;
+  text-align: center;
+  .input-shield & {
+    display: none !important;
+  }
+}
+
+.mat-tooltip, mat-tooltip {
+  pointer-events: none !important;
+}

@@ -1,0 +1,52 @@
+@import "../../core/core.scss";
+
+:host {
+  transition: margin-top 0.5s;
+  margin-top: 0;
+  display: flex;
+  position: relative;
+  z-index: 1;
+  background-color: $color-lighter-grey;
+  width: 100%;
+  height: 42px;
+
+  button {
+    margin: 5px;
+    height: 32px;
+    line-height: 32px;
+  }
+}
+
+.amp-edit-toolbar {
+  &__modes {
+    flex: 1;
+  }
+
+  &__right {
+
+  }
+
+  &__slidergroup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 10px;
+  }
+
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+
+    &__label {
+      font-size: 12px;
+      display: block;
+      margin: 5px;
+      width: 80px;
+    }
+  }
+
+  &--hide {
+    margin-top: -42px;
+  }
+}

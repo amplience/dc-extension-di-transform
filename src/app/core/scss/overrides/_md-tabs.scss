@@ -1,0 +1,41 @@
+@keyframes tabs {
+  0% { opacity: 0; }
+  100% { opacity: 1; }  
+}
+
+.mat-tab {
+  text-transform: none;
+  padding: 10px 80px;
+  line-height: 16px;
+  font-size: $bfz;
+  font-weight: $font-weight-normal;
+}
+
+md-pagination-wrapper, md-tabs-canvas {
+  height: 40px;
+}
+
+md-tabs[md-border-bottom]:not(.mat-dynamic-height) md-tabs-content-wrapper {
+  top: 41px;
+}
+
+md-tabs .mat-tab {
+  transition: color $transition-speed;
+  color: $color-darkest-grey;
+  &.mat-active {
+    color: $color-primary;
+    font-weight: $font-weight-bold;
+  }
+  &:hover {
+    color: $color-primary-light;
+  }
+}
+
+md-tab-content {
+  transition: opacity $transition-speed;
+  animation: 0.2s tabs;
+}
+
+tabs md-ink-bar {
+  color: $color-primary;
+}

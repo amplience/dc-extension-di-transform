@@ -1,0 +1,63 @@
+%flex-table {
+  display: flex;
+  flex-direction: column;
+  * {
+    box-sizing: border-box;
+  }
+  thead, tbody, tfoot {
+    display: block;
+  }
+  tr {
+    display: flex;
+  }
+  th, td {
+    display: block;
+    text-align: left;
+  }
+}
+
+%flex-table--default {
+  width: 100%;
+  thead, tfoot {
+    background-color: $color-lightest-grey;
+  }
+  th, td {
+    padding: $bsu;
+    flex: 1;
+  }
+  th {
+    color: $color-another-grey;
+  }
+  tbody {
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    tr {
+      border-bottom: 1px solid $color-lighter-grey;
+      transition: background-color $transition-speed;
+      &:first-child {
+        border-top: 1px solid $color-lighter-grey;
+      }
+      &:hover {
+        background-color: $color-primary-lightest;
+        md-select:not([disabled]) .md-select-icon{
+          display: block;
+        }
+        md-input-container .md-input:not(:focus), md-select:not([disabled]) md-select-value:not(:focus){
+          border-color: $color-black-10p;
+        }
+      }
+    }
+  }
+  md-input-container .md-input, md-select .md-select-value {
+    transition: border-color $transition-speed;
+    border-color: transparent;
+  }
+
+  md-input-container.md-input-invalid .md-input, md-select.md-input-invalid md-select-value {
+    border-color: $color-error-red!important;
+  }
+
+  md-select:not([disabled]) .md-select-icon{
+    display: none;
+  }
+}

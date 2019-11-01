@@ -1,0 +1,150 @@
+a {
+  color: $color-primary;
+  transition: color $transition-speed;
+  text-decoration: none;
+  &:hover {
+   color: $color-primary-light
+  }
+}
+
+.link {
+  cursor: pointer;
+  &--black {
+    color: $color-black;
+  }
+  &--grey {
+    color: $color-mid-grey;
+  }
+  &--italic {
+    font-style: italic;
+  }
+  &--med {
+    font-weight: $font-weight-medium;
+  }
+  &--block {
+    display: block;
+  }
+  &--dashed {
+    border-bottom: 1px dashed;
+  }
+
+  &--as-button {
+    background-color: transparent;
+    text-transform:none;
+    min-height:30px;
+    line-height:30px;
+    &:hover {
+      background-color: transparent!important;
+    }
+
+    &[disabled] {
+      color: $color-yet-another-grey!important;
+    }
+  }
+
+  &--13 {
+    font-size: 13px;
+    line-height: 13px;
+    cursor:pointer;
+    padding-left:8px;
+    padding-right: 8px;
+    &--1{
+      font-size: 13px;
+      line-height: 13px;
+      cursor:pointer;
+      padding-left:8px;
+      padding-right: 8px;
+      color: $color-primary;
+      &:hover{
+        color: $color-primary-light;
+      }
+    }
+    &--2{
+      font-size: 13px;
+      line-height: 13px;
+      cursor:pointer;
+      padding-left:8px;
+      padding-right: 8px;
+      color: $color-darkest-grey;
+      &:hover{
+        color: $color-primary-light;
+      }
+      &.selected{
+        color: $color-primary;
+      }
+    }
+    &--3{
+      font-size: 13px;
+      line-height: 13px;
+      cursor:pointer;
+      padding-left:8px;
+      padding-right: 8px;
+      font-weight: $font-weight-medium;
+      color: $color-darkest-grey;
+      &:hover{
+        color: $color-primary-light;
+      }
+    }
+    &--4{
+      color: $color-darkest-grey;
+      font-size: 13px;
+      line-height: 13px;
+      cursor:pointer;
+      padding-left:8px;
+      padding-right: 8px;
+      font-weight: $font-weight-bold;
+      &:hover{
+        color: $color-primary-light;
+      }
+    }
+    &--5{
+      font-size: 13px;
+      line-height: 13px;
+      cursor:pointer;
+      padding-left:8px;
+      padding-right: 8px;
+      color: $color-darkest-grey;
+      font-style: italic;
+      &:hover{
+        color: $color-primary-light;
+      }
+    }
+    &--6{
+      font-size: 13px;
+      line-height: 13px;
+      cursor:pointer;
+      padding-left:8px;
+      padding-right: 8px;
+      color: $color-another-grey;
+      &:hover{
+        color: $color-primary-light;
+      }
+    }
+    &--7 {
+      font-size: 13px;
+      line-height: 13px;
+      cursor:pointer;
+      color: $color-dove-grey;
+      font-weight: $font-weight-medium;
+
+      &:hover{
+        color: $color-primary;
+      }
+    }
+  }
+  &--14 {
+     font-size: $font-size-mid;
+     line-height: $font-size-mid;
+     &--1 {
+       font-size: $font-size-mid;
+       line-height: 13px;
+       cursor:pointer;
+       padding-left:8px;
+       padding-right: 8px;
+       color: $color-another-grey;
+       &:hover{
+         color: $color-primary-light;
+       }
+     }
+  }
+}
