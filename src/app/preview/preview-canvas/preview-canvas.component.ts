@@ -49,10 +49,13 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   // scale related parameters
   scale = 1;
   private lastRotation;
+  canvasTransform: SafeStyle;
   handleHSize = '-4px';
   handleSize = '8px';
   cropRectStroke = '2px';
   outlineSize = '1000px';
+
+  private activeAspect: number;
 
   private movingHandle = -1;
   private lastPos: number[];
@@ -60,18 +63,34 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   constructor(private myElem: ElementRef<Element>, private sanitizer: DomSanitizer, private dimage: DiImageService,
               private editor: EditorService, private field: DiFieldService) {
     this.dataUpdated(this.field.data);
+    editor.modeChange.subscribe((mode) => {
+      this.updateCanvasTransform();
+    });
     field.fieldUpdated.subscribe((data: DiTransformedImage) => {
       this.dataUpdated(data);
     });
+    window.addEventListener('resize', () => { this.updateCanvasTransform(); })
   }
 
   dataUpdated(data: DiTransformedImage) {
     this.data = data;
     this.image = (data == null) ? null : data.image;
 
-    if (data != null && this.data.rot !== this.lastRotation) {
-      // recalculate scale
-      this.lastRotation = this.data.rot;
+    if (data != null) {
+      if (this.data.rot !== this.lastRotation) {
+        // recalculate scale
+        this.lastRotation = this.data.rot;
+      }
+
+      if (data.aspectLock != null && data.aspectLock !== 'none') {
+        // attempt to lock aspect of the crop rectangle
+        const split = data.aspectLock.split(':');
+        if (split.length === 2) {
+          this.forceAspect(Number(split[0]) / Number(split[1]));
+        }
+      } else {
+        this.activeAspect = null;
+      }
     }
   }
 
@@ -89,7 +108,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     return this.sanitizer.bypassSecurityTrustStyle(transformCommands.join(' '));
   }
 
-  getCanvasTransform(): SafeStyle {
+  updateCanvasTransform() {
     if (this.canvas == null) {
       return;
     }
@@ -127,7 +146,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     if (this.data.fliph || this.data.flipv) {
       transformCommands.push(`scale(${this.data.fliph ? -1 : 1}, ${this.data.flipv ? -1 : 1})`);
     }
-    return this.sanitizer.bypassSecurityTrustStyle(transformCommands.join(' '));
+    this.canvasTransform = this.sanitizer.bypassSecurityTrustStyle(transformCommands.join(' '));
   }
 
   getImageFilter(): SafeStyle {
@@ -142,6 +161,70 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
       filterCommands.push(`brightness(${this.diIntensityToBrowser(this.data.bri)})`);
     }
     return this.sanitizer.bypassSecurityTrustStyle(filterCommands.join(' '));
+  }
+
+  private boundSize(size: number[], bounds: number[]) {
+    if (size[0] > bounds[2]) {
+      size[1] *= bounds[2] / size[0];
+      size[0] *= bounds[2] / size[0];
+    }
+    if (size[1] > bounds[3]) {
+      size[0] *= bounds[3] / size[1];
+      size[1] *= bounds[3] / size[1];
+    }
+  }
+
+  private forceAspect(aspect: number) {
+    const bounds = this.dimage.getRotatedBounds();
+
+    // find a target size less than the size, based on the current size
+    // a good choice is the average of aspect correcting both dimensions, limited to the size of the bounds
+
+    const aspectBound1 = [this.cropPx[2], this.cropPx[2] / aspect];
+    const aspectBound2 = [this.cropPx[3] * aspect, this.cropPx[3]];
+
+    this.boundSize(aspectBound1, bounds);
+    this.boundSize(aspectBound2, bounds);
+
+    const newBound = [(aspectBound1[0] + aspectBound2[0]) / 2.0, (aspectBound1[1] + aspectBound2[1]) / 2.0];
+
+    // if holding the rectangle by a corner, anchor it to the opposite corner
+
+    switch (this.movingHandle) {
+      case 0: // top left: anchor to bottom right
+        this.cropPx[0] = this.cropPx[0] + this.cropPx[2] - newBound[0];
+        this.cropPx[1] = this.cropPx[1] + this.cropPx[3] - newBound[1];
+        break;
+      case 1: // top right: anchor to bottom left
+        this.cropPx[1] = this.cropPx[1] + this.cropPx[3] - newBound[1];
+        break;
+      case 2: // bottom right: anchor to top left (default)
+        break;
+      case 3: // bottom left: anchor to top right
+        this.cropPx[0] = this.cropPx[0] + this.cropPx[2] - newBound[0];
+        break;
+    }
+
+    this.cropPx[2] = newBound[0];
+    this.cropPx[3] = newBound[1];
+
+    // move the rectangle back in bounds, if necessary
+    const boundLimitX = bounds[0] + bounds[2];
+    if (this.cropPx[0] + this.cropPx[2] > boundLimitX) {
+      this.cropPx[0] = boundLimitX - this.cropPx[2];
+    }
+    const boundLimitY = bounds[1] + bounds[3];
+    if (this.cropPx[1] + this.cropPx[3] > boundLimitY) {
+      this.cropPx[1] = boundLimitY - this.cropPx[3];
+    }
+
+    if (this.cropPx[0] < bounds[0]) {
+      this.cropPx[0] = bounds[0];
+    }
+    if (this.cropPx[1] < bounds[1]) {
+      this.cropPx[1] = bounds[1];
+    }
+    this.activeAspect = aspect;
   }
 
   private diIntensityToBrowser(intensity: number): number {
@@ -209,10 +292,20 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     this.lastPos = null;
   }
 
+  globalOffset(elem: HTMLElement): number[] {
+    if (elem.offsetParent == null) {
+      return [elem.offsetLeft, elem.offsetTop];
+    } else {
+      const parent = this.globalOffset(elem.offsetParent as HTMLElement);
+      return [elem.offsetLeft + parent[0], elem.offsetTop + parent[1]];
+    }
+  }
+
   private getMousePosition(event: MouseEvent): number[] {
     const container = this.imageContainer.nativeElement;
-    const ctrx = event.clientX - (container.offsetLeft + this.imageWidth / 2);
-    const ctry = event.clientY - (container.offsetTop + this.imageHeight / 2);
+    const offset = this.globalOffset(container);
+    const ctrx = event.clientX - (offset[0] + this.imageWidth / 2);
+    const ctry = event.clientY - (offset[1] + this.imageHeight / 2);
 
     const scalex = (this.data.fliph ? -1 : 1) / this.scale;
     const scaley = (this.data.flipv ? -1 : 1) / this.scale;
@@ -223,6 +316,9 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   }
 
   private clampCrop(clamp: number[]) {
+    if (this.activeAspect != null) {
+      this.forceAspect(this.activeAspect);
+    }
     this.cropPx = [
       Math.min(Math.max(this.cropPx[0], clamp[0]), clamp[2] + clamp[0]),
       Math.min(Math.max(this.cropPx[1], clamp[1]), clamp[3] + clamp[1]),

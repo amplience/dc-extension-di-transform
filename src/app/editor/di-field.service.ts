@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { DiTransformedImage } from '../model/di-transformed-image';
-import { DIEditSlider } from './di-edit-slider';
+import { DiEditSlider } from './di-edit-slider';
 import { DcSdkService } from '../api/dc-sdk.service';
 
 @Injectable({
@@ -35,6 +35,7 @@ export class DiFieldService {
         sat: 0,
         bri: 0,
         poi: null,
+        aspectLock: 'none',
         query: ''
       };
     }
@@ -48,7 +49,7 @@ export class DiFieldService {
     }
   }
 
-  updateSliderValue(slider: DIEditSlider, value: number) {
+  updateSliderValue(slider: DiEditSlider, value: number) {
     if (this.data == null) {
       return;
     }
@@ -56,7 +57,7 @@ export class DiFieldService {
     this.updateField();
   }
 
-  getSliderValue(slider: DIEditSlider): number {
+  getSliderValue(slider: DiEditSlider): number {
     if (this.data == null) {
       return 0;
     }

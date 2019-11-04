@@ -1,6 +1,6 @@
 <!-- The image itself, transformed -->
 <div class="amp-preview-canvas__imagesplit">
-  <div class="amp-preview-canvas__canvas" [style.transform]="getCanvasTransform()" #canvas>
+  <div class="amp-preview-canvas__canvas" [style.transform]="canvasTransform" #canvas>
     <div *ngIf="image" class="amp-preview-canvas__imagecontainer" [style.width]="imageWidth+'px'" [style.height]="imageHeight+'px'" #imageContainer>
       <img class="amp-preview-canvas__image"
       src="https://{{image.defaultHost}}/i/{{image.endpoint}}/{{escapeUrl(image.name)}}"
@@ -28,7 +28,7 @@
 
       <!-- The POI overlay -->
 
-      <div *ngIf="isPOI" class="amp-preview-canvas__poi"
+      <div *ngIf="isPreview || isPOI && this.poiPx != null" class="amp-preview-canvas__poi"
         (mousedown)="grabPOI()"
         [style.left]="(poiPx[0]-20)+'px'"
         [style.top]="(poiPx[1]-20)+'px'"
@@ -39,28 +39,8 @@
       </div>
     </div>
   </div>
-
-  <!--
-  <div class="amp-preview-canvas__dipreview" [ngClass]="{'amp-preview-canvas__dipreview--hide': isPreview}">
-    <img *ngFor="let preview of diPreviewSrc" [src]="preview.url" [style.width]="preview.width+'px'" [style.height]="preview.height+'px'"/>
-  </div>
-  -->
   <amp-di-preview [ngClass]="{'amp-preview-canvas__dipreview--hide': isPreview}"></amp-di-preview>
 </div>
 
 <!-- Pre-edit options -->
-
 <amp-mode-buttons></amp-mode-buttons>
-<!--
-<div *ngIf="showButtons()" class="amp-preview-canvas__overlay">
-  <ng-container *ngIf="image">
-      <button mat-fab (click)="doModeRequest('edit')"><mat-icon>edit</mat-icon></button>
-      <button mat-fab (click)="doModeRequest('poi')"><mat-icon>gps_fixed</mat-icon></button>
-    <button mat-fab color="secondary" (click)="doModeRequest('delete')"><mat-icon>delete</mat-icon></button>
-    <button mat-fab color="secondary" (click)="doModeRequest('swap')"><mat-icon>swap_horiz</mat-icon></button>
-  </ng-container>
-  <ng-container *ngIf="image == null">
-    <button mat-fab (click)="doModeRequest('swap')"><mat-icon>add</mat-icon></button>
-  </ng-container>
-</div>
--->

@@ -89,7 +89,7 @@ export class DiPreviewService {
       // cropping with no rotation (pcrop)
       queryCommands.push(`pcrop=${Math.round(crop[0])},${Math.round(crop[1])},${Math.round(crop[2])},${Math.round(crop[3])}`);
     }
-    return '?' + queryCommands.join('&');
+    return queryCommands.join('&');
   }
 
   updateDiQuery() {
@@ -104,7 +104,7 @@ export class DiPreviewService {
 
     const previewSize = 141;
     const previewPoi = data.rot === undefined || data.rot === 0;
-    const baseQuery = `https://${image.defaultHost}/i/${image.endpoint}/${encodeURIComponent(image.name)}` + data.query;
+    const baseQuery = `https://${image.defaultHost}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query;
     if (previewPoi) {
       this.previews = [];
       this.previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=1:1&w=${previewSize}`, previewSize, previewSize));

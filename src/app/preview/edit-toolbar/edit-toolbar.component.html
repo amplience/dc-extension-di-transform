@@ -1,14 +1,24 @@
 <div class="amp-edit-toolbar__modes">
   <mat-menu #buttonMenu="matMenu" class="amp-edit-toolbar__menu">
-    <div class="amp-edit-toolbar__slidergroup" *ngFor="let slider of activeSliders" (click)="$event.stopPropagation()">
-      <div class="amp-edit-toolbar__menu__label">{{slider.name}}</div>
+    <div class="amp-edit-toolbar__slidergroup" *ngFor="let slider of activeSliders" (click)="$event.stopPropagation()"
+      [ngClass]="{'amp-edit-toolbar__slidergroup--margin': slider.type !== 'listItem'}">
+
+      <button mat-menu-item
+      *ngIf="slider.type == 'listItem'"
+      class="amp-edit-toolbar__item"
+      [ngClass]="{'amp-edit-toolbar__item--active': getSliderValue(slider) === slider.value }"
+      (click)="updateSliderValue(slider, slider.value)">
+        <mat-icon>check</mat-icon><span>{{slider.name}}</span>
+      </button>
+
+      <div class="amp-edit-toolbar__menu__label" *ngIf="slider.type != 'listItem'">{{slider.name}}</div>
       <mat-slide-toggle
-      *ngIf="slider.bool"
+      *ngIf="slider.type == 'bool'"
       [checked]="!!getSliderValue(slider)"
       (change)="updateSliderValue(slider, $event.checked)">
       </mat-slide-toggle>
       <mat-slider
-      *ngIf="!slider.bool"
+      *ngIf="slider.type == 'slider'"
       thumbLabel="true"
       [value]="getSliderValue(slider)"
       [min]="slider.min"
@@ -33,6 +43,6 @@
   </ng-container>
 </div>
 <div class="amp-edit-toolbar__right">
-    <button mat-button (click)="exitMode(false)">Cancel</button>
+    <button mat-button (click)="exitMode(true)">Cancel</button>
     <button mat-flat-button color="primary" (click)="exitMode(false)">Done</button>
 </div>

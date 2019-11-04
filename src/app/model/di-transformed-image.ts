@@ -12,6 +12,7 @@ export interface DiTransformedImage {
   fliph?: boolean;
   flipv?: boolean;
 
+  aspectLock?: string;
   query?: string;
 }
 

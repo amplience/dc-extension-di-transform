@@ -39,7 +39,9 @@ export class DiImageService {
   loadImage(data: DiTransformedImage) {
     const image = new Image();
     image.onload = this.imageLoaded.bind(this);
-    image.src = this.buildImageSrc(data.image);
+    if (data.image != null) {
+      image.src = this.buildImageSrc(data.image);
+    }
 
     this.image = image;
   }

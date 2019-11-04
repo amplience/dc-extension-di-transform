@@ -1,8 +1,10 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { DIEditMode } from './di-edit-slider';
+import { DiEditMode } from './di-edit-slider';
 import { DiFieldService } from './di-field.service';
 import { DcSdkService } from '../api/dc-sdk.service';
 import { DiImageService } from './di-image.service';
+import { DiTransformedImage } from '../model/di-transformed-image';
+import { MediaImageLink } from 'dc-extensions-sdk';
 
 export enum PreviewMode {
   View,
@@ -21,7 +23,9 @@ export enum PreviewMode {
 })
 export class EditorService {
   previewMode: PreviewMode = PreviewMode.View;
-  mode: DIEditMode = 'crop';
+  mode: DiEditMode = 'crop';
+
+  private cancelBackup: DiTransformedImage;
 
   modeChange: EventEmitter<PreviewMode> = new EventEmitter();
 
@@ -29,15 +33,20 @@ export class EditorService {
 
   modeRequest(mode: string) {
     switch (mode) {
+      case 'view':
+        this.previewMode = PreviewMode.View;
+        break;
       case 'swap':
         this.switchImage();
         break;
       case 'edit':
         this.previewMode = PreviewMode.EditCrop;
+        this.backup();
         this.mode = 'crop';
         break;
       case 'poi':
         this.previewMode = PreviewMode.POI;
+        this.backup();
         this.mode = 'poi';
         break;
       case 'delete':
@@ -50,9 +59,24 @@ export class EditorService {
     this.modeChange.emit(this.previewMode);
   }
 
+  backup() {
+    // todo: better deep copy?
+    this.cancelBackup = JSON.parse(JSON.stringify(this.field.data));
+  }
+
+  cancelChanges() {
+    this.field.data = this.cancelBackup;
+    this.field.updateField();
+  }
+
   async switchImage() {
     const sdk = await this.sdkService.getSDK();
-    const result = await sdk.mediaLink.getImage();
+    let result: MediaImageLink;
+    try {
+      result = await sdk.mediaLink.getImage();
+    } catch (err) {
+      return;
+    }
     this.field.data.image = result;
     this.field.data.poi = {x: 0.5, y: 0.5};
     this.field.data.crop = [null, null, null, null];

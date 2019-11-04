@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DiFieldService } from 'src/app/editor/di-field.service';
-import { DIEditSlider, DIEditModeButton } from 'src/app/editor/di-edit-slider';
+import { DiEditField, DiEditModeButton, DiEditListItem, DiEditSlider } from 'src/app/editor/di-edit-slider';
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 
 @Component({
@@ -10,25 +10,34 @@ import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 })
 export class EditToolbarComponent implements OnInit {
 
-  buttons: DIEditModeButton[];
-  activeSliders: DIEditSlider[] = [];
+  buttons: DiEditModeButton[];
+  activeSliders: DiEditField[] = [];
 
   editButtons = [
-    new DIEditModeButton('crop', 'Crop', []),
-    new DIEditModeButton('rotate', 'Rotate', [{name: 'Rotation (degrees)', field: 'rot', min: 0, max: 360}]),
-    new DIEditModeButton('flip', 'Flip', [
-      {name: 'Horizontal', field: 'fliph', bool: true},
-      {name: 'Vertical', field: 'flipv', bool: true}
+    new DiEditModeButton('crop', 'Crop', [
+      {type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none'},
+      {type: 'listItem', name: 'Square', field: 'aspectLock', value: '1:1'},
+      {type: 'listItem', name: '16:9', field: 'aspectLock', value: '16:9'},
+      {type: 'listItem', name: '4:3', field: 'aspectLock', value: '4:3'},
+      {type: 'listItem', name: '3:2', field: 'aspectLock', value: '3:2'},
+      {type: 'listItem', name: '2:3', field: 'aspectLock', value: '2:3'},
+    ] as DiEditListItem[]),
+    new DiEditModeButton('rotate', 'Rotate', [
+      {type: 'slider', name: 'Rotation (degrees)', field: 'rot', min: 0, max: 360}
+    ] as DiEditSlider[]),
+    new DiEditModeButton('flip', 'Flip', [
+      {type: 'bool', name: 'Horizontal', field: 'fliph'},
+      {type: 'bool', name: 'Vertical', field: 'flipv'}
     ]),
-    new DIEditModeButton('hsb', 'HSB', [
-      {name: 'Hue (degrees)', field: 'hue', min: -180, max: 180},
-      {name: 'Saturation', field: 'sat', min: -100, max: 100},
-      {name: 'Brightness', field: 'bri', min: -100, max: 100}
-    ])
+    new DiEditModeButton('hsb', 'HSB', [
+      {type: 'slider', name: 'Hue (degrees)', field: 'hue', min: -180, max: 180},
+      {type: 'slider', name: 'Saturation', field: 'sat', min: -100, max: 100},
+      {type: 'slider', name: 'Brightness', field: 'bri', min: -100, max: 100}
+    ] as DiEditSlider[])
   ];
 
   poiButtons = [
-    new DIEditModeButton('poi', 'POI', []),
+    new DiEditModeButton('poi', 'POI', []),
   ];
 
   constructor(private field: DiFieldService, public editor: EditorService) {
@@ -55,19 +64,22 @@ export class EditToolbarComponent implements OnInit {
   ngOnInit() {
   }
 
-  updateSliderValue(slider: DIEditSlider, value: number) {
+  updateSliderValue(slider: DiEditSlider, value: number) {
     this.field.updateSliderValue(slider, value);
   }
 
-  getSliderValue(slider: DIEditSlider): number {
+  getSliderValue(slider: DiEditSlider): number {
     return this.field.getSliderValue(slider);
   }
 
   exitMode(rollback: boolean) {
-    this.editor.previewMode = PreviewMode.View;
+    if (rollback) {
+      this.editor.cancelChanges();
+    }
+    this.editor.modeRequest('view');
   }
 
-  setMode(button: DIEditModeButton) {
+  setMode(button: DiEditModeButton) {
     this.editor.mode = button.mode;
     this.activeSliders = button.sliders;
   }
