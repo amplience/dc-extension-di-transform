@@ -11,6 +11,7 @@ import { DiImageService } from 'src/app/editor/di-image.service';
 import { DiPreviewService } from 'src/app/editor/di-preview.service';
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 import { DiFieldService } from 'src/app/editor/di-field.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'amp-preview-canvas',
@@ -63,13 +64,16 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   constructor(private myElem: ElementRef<Element>, private sanitizer: DomSanitizer, private dimage: DiImageService,
               private editor: EditorService, private field: DiFieldService) {
     this.dataUpdated(this.field.data);
+    this.dimage.imageChanged.subscribe((image) => {
+      this.updateCanvasTransform();
+    });
     editor.modeChange.subscribe((mode) => {
       this.updateCanvasTransform();
     });
     field.fieldUpdated.subscribe((data: DiTransformedImage) => {
       this.dataUpdated(data);
     });
-    window.addEventListener('resize', () => { this.updateCanvasTransform(); })
+    window.addEventListener('resize', () => { this.updateCanvasTransform(); });
   }
 
   dataUpdated(data: DiTransformedImage) {
@@ -122,7 +126,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     }
 
     const bounds = this.dimage.getRotatedBounds();
-    const imageSize = this.isPreview ? [this.cropPx[2], this.cropPx[3]] : [bounds[2], bounds[3]];
+    const imageSize = (this.isPreview && this.cropPx != null) ? [this.cropPx[2], this.cropPx[3]] : [bounds[2], bounds[3]];
 
     const transformCommands: string[] = [];
 
@@ -135,7 +139,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     transformCommands.push(`scale(${scale}, ${scale})`);
 
     // crop offset - in preview mode, offset the image to the middle
-    if (this.isPreview) {
+    if (this.isPreview && this.cropPx != null) {
       const centerOff = [
         this.imageWidth / 2 - (this.cropPx[0] + this.cropPx[2] / 2),
         this.imageHeight / 2 - (this.cropPx[1] + this.cropPx[3] / 2),
@@ -379,12 +383,19 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
   private bindMouseEvent(moveEvent, upHandle) {
     let upEvent;
+    const outEvent = (event: MouseEvent) => {
+      if (!(event.relatedTarget)) {
+        upEvent(event);
+      }
+    };
     upEvent = (event: MouseEvent) => {
       this.myElem.nativeElement.removeEventListener('mousemove', moveEvent);
-      this.myElem.nativeElement.removeEventListener('mouseup', upEvent);
+      window.removeEventListener('mouseup', upEvent);
+      window.removeEventListener('mouseout', outEvent);
       upHandle(event);
     };
     this.myElem.nativeElement.addEventListener('mousemove', moveEvent);
-    this.myElem.nativeElement.addEventListener('mouseup', upEvent);
+    window.addEventListener('mouseup', upEvent);
+    window.addEventListener('mouseout', outEvent);
   }
 }

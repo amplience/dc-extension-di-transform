@@ -69,25 +69,27 @@ export class DiPreviewService {
     }
 
     const crop = this.image.cropPx;
-    if (data.rot != null && data.rot !== 0) {
-      // cropping after a rotation. protate then crop. if the user wants to crop after this, they should use ecrop.
-      // rotating resizes the image so we're going to want to use percentage calculations to align crops to the center
+    if (crop != null) {
+      if (data.rot != null && data.rot !== 0) {
+        // cropping after a rotation. protate then crop. if the user wants to crop after this, they should use ecrop.
+        // rotating resizes the image so we're going to want to use percentage calculations to align crops to the center
 
-      const bounds = this.image.getRotatedBounds();
-      const xOff = Math.round((this.image.imageWidth / 2) - crop[0]);
-      const yOff = Math.round((this.image.imageHeight / 2) - crop[1]);
+        const bounds = this.image.getRotatedBounds();
+        const xOff = Math.round((this.image.imageWidth / 2) - crop[0]);
+        const yOff = Math.round((this.image.imageHeight / 2) - crop[1]);
 
-      const cropPercent = [
-        this.decimalRound((crop[0] - bounds[0]) / bounds[2] * 100, 100),
-        this.decimalRound((crop[1] - bounds[1]) / bounds[3] * 100, 100),
-        this.decimalRound(crop[2] / bounds[2] * 100, 100),
-        this.decimalRound(crop[3] / bounds[3] * 100, 100),
-      ];
+        const cropPercent = [
+          this.decimalRound((crop[0] - bounds[0]) / bounds[2] * 100, 100),
+          this.decimalRound((crop[1] - bounds[1]) / bounds[3] * 100, 100),
+          this.decimalRound(crop[2] / bounds[2] * 100, 100),
+          this.decimalRound(crop[3] / bounds[3] * 100, 100),
+        ];
 
-      queryCommands.push(`crop={${cropPercent[0]}%},{${cropPercent[1]}%},{${cropPercent[2]}%},{${cropPercent[3]}%}`);
-    } else {
-      // cropping with no rotation (pcrop)
-      queryCommands.push(`pcrop=${Math.round(crop[0])},${Math.round(crop[1])},${Math.round(crop[2])},${Math.round(crop[3])}`);
+        queryCommands.push(`crop={${cropPercent[0]}%},{${cropPercent[1]}%},{${cropPercent[2]}%},{${cropPercent[3]}%}`);
+      } else {
+        // cropping with no rotation (pcrop)
+        queryCommands.push(`pcrop=${Math.round(crop[0])},${Math.round(crop[1])},${Math.round(crop[2])},${Math.round(crop[3])}`);
+      }
     }
     return queryCommands.join('&');
   }

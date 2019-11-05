@@ -96,7 +96,7 @@ export class DiImageService {
       this.cropPx = null;
     }
 
-    if (this.poiPx == null && data.poi.x != null) {
+    if (this.poiPx == null && data.poi != null && data.poi.x != null && this.cropPx != null) {
       // initialize point of interest
       this.poiPx = [this.cropPx[0] + this.cropPx[2] * data.poi.x, this.cropPx[1] + this.cropPx[3] * data.poi.y];
     }

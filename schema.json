@@ -32,7 +32,8 @@
 					"minItems": 4,
 					"maxItems": 4,
 					"items": {
-						"type": "number"
+						"type": "number",
+            "default": 0
 					}
 				},
 				"poi": {
@@ -43,40 +44,52 @@
 						"x": {
 							"title": "X",
 							"description": "The x coordinate",
-							"type": "number"
+							"type": "number",
+              "default": 0.5
 						},
 						"y": {
 							"title": "Y",
 							"description": "The y coordinate",
-							"type": "number"
+							"type": "number",
+              "default": 0.5
 						}
 					}
 				},
 				"rot": {
 					"title": "Rotate",
 					"description": "The rotation modifier (in degrees)",
-					"type": "number"
+					"type": "number",
+          "default": 0
 				},
 				"hue": {
 					"title": "Hue",
 					"description": "The hue modifier",
-					"type": "number"
+					"type": "number",
+          "default": 0
 				},
 				"sat": {
 					"title": "Saturation",
 					"description": "The saturation modifier",
-					"type": "number"
+					"type": "number",
+          "default": 0
 				},
 				"bri": {
 					"title": "Brightness",
 					"description": "The brightness modifier",
-					"type": "number"
-				},
+          "type": "number",
+          "default": 0
+        },
 
+        "aspectLock": {
+					"title": "Crop Aspect Ratio",
+					"description": "The aspect ratio to use when resizing the crop rectangle, eg: 4:3. Use 'none' to unlock aspect.",
+          "type": "string",
+          "default": "none"
+        },
 				"query": {
 					"title": "DI Query String",
 					"description": "A query string baked with all the above parameters.",
-					"type": "string"
+          "type": "string",
 				}
 			},
 			"ui:extension": {
