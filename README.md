@@ -5,10 +5,22 @@ Check out `schema.json` for the content schema to use with this extension. Note 
 
 You're probably better off looking at a feature branch, check those out in the branches list.
 
+# Step by Step to run on (a new version of) DC:
+
+- `npm install -g angular-cli` (if it is not already installed)
+- `npm i`
+- `ng serve`
+- Head to `http://localhost:4200/` and accept the security risk.
+- Go to a version of DC that supports UI extensions. Example: http://qa-daniel-app.s3-website-eu-west-1.amazonaws.com/builds/qa-titan-sprint-72-64/index-1.46.0-qa-titan-sprint-72-64.html?env=../envs/env-cmp.json
+- Log in, go to development and create a new schema. (if the schema is not already set up on that account)
+- Paste the contents of `schema.json`
+- Save it. Go back to development and create a content type for your new schema.
+- Go to Production and make as many content items as your heart desires.
+
 ## TODO
 - POI summary, more than just one hotspot.
 - Work out what to do about cropping rotated images. (may need DI change to support this (pprotate?? make protate apply before pcrop?), if not we can just disable POI for rotated crops, or disable crop. up to the user)
-- Preset crops with fixed aspect. Pixel level crop size control.
+- Pixel level crop size control.
 - More transformations (blur, unsharp), discussion about "scale" now that we have full crop control.
 - "Metadata" tab that lets you see printouts of all the transformations.
 
