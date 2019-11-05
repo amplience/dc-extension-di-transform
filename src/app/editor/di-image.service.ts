@@ -20,6 +20,7 @@ export class DiImageService {
   image: HTMLImageElement;
   imageWidth = 1;
   imageHeight = 1;
+  imageReady = false;
 
   imageChanged: EventEmitter<HTMLImageElement> = new EventEmitter();
 
@@ -43,23 +44,28 @@ export class DiImageService {
       image.src = this.buildImageSrc(data.image);
     }
 
+    this.imageReady = false;
     this.image = image;
   }
 
   imageLoaded(event: Event) {
+    this.imageReady = true;
     this.imageWidth = (event.target as HTMLImageElement).width;
     this.imageHeight = (event.target as HTMLImageElement).height;
     const data = this.field.data;
 
     if (this.cropPx == null) {
+      /*
       this.cropPx = [0, 0, this.imageWidth, this.imageHeight];
       if (data.crop[0] != null) {
         this.saveCrop();
       }
+      */
     }
 
     if (this.poiPx == null) {
-      this.poiPx = [this.cropPx[0] + this.cropPx[2] / 2, this.cropPx[1] + this.cropPx[3] / 2];
+      const bound = this.cropPx || this.getRotatedBounds();
+      this.poiPx = [bound[0] + bound[2] * data.poi.x, bound[1] + bound[3] * data.poi.y];
     }
 
     this.imageChanged.emit(this.image);
@@ -89,20 +95,28 @@ export class DiImageService {
   }
 
   parseDataChange(data: DiTransformedImage) {
-    if (data.crop[0] != null) {
+    if (this.lastImage !== data.image) {
+      if (this.lastImage != null) {
+        // clear data from the last image.
+        data.crop = [0, 0, 0, 0];
+        data.poi = {x: 0.5, y: 0.5};
+        this.poiPx = null;
+      }
+      this.loadImage(data);
+      this.lastImage = data.image;
+    }
+
+    if (this.field.isCropActive()) {
       // crop must be initialized
       this.cropPx = data.crop;
     } else {
       this.cropPx = null;
     }
 
-    if (this.poiPx == null && data.poi != null && data.poi.x != null && this.cropPx != null) {
+    if (this.imageReady && this.poiPx == null && data.poi != null && data.poi.x != null) {
       // initialize point of interest
-      this.poiPx = [this.cropPx[0] + this.cropPx[2] * data.poi.x, this.cropPx[1] + this.cropPx[3] * data.poi.y];
-    }
-
-    if (this.lastImage !== data.image) {
-      this.loadImage(data);
+      const bounds = this.cropPx || this.getRotatedBounds();
+      this.poiPx = [bounds[0] + bounds[2] * data.poi.x, bounds[1] + bounds[3] * data.poi.y];
     }
   }
 
@@ -117,14 +131,14 @@ export class DiImageService {
     const data = this.field.data;
 
     // bound the point of interest within the crop area
-    const bounds = this.cropPx;
+    const bounds = this.cropPx || this.getRotatedBounds();
     this.poiPx[0] = Math.max(bounds[0], Math.min(bounds[0] + bounds[2], this.poiPx[0]));
     this.poiPx[1] = Math.max(bounds[1], Math.min(bounds[1] + bounds[3], this.poiPx[1]));
 
     // transform into % terms
     data.poi = {
-      x: (this.poiPx[0] - this.cropPx[0]) / this.cropPx[2],
-      y: (this.poiPx[1] - this.cropPx[1]) / this.cropPx[3]
+      x: (this.poiPx[0] - bounds[0]) / bounds[2],
+      y: (this.poiPx[1] - bounds[1]) / bounds[3]
     };
     if (!withoutSave) {
       this.field.updateField();

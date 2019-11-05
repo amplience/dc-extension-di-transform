@@ -68,8 +68,8 @@ export class DiPreviewService {
       queryCommands.push(`scaleFit=poi`);
     }
 
-    const crop = this.image.cropPx;
-    if (crop != null) {
+    if (this.field.isCropActive()) {
+      const crop = data.crop;
       if (data.rot != null && data.rot !== 0) {
         // cropping after a rotation. protate then crop. if the user wants to crop after this, they should use ecrop.
         // rotating resizes the image so we're going to want to use percentage calculations to align crops to the center

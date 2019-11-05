@@ -180,6 +180,9 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
   private forceAspect(aspect: number) {
     const bounds = this.dimage.getRotatedBounds();
+    if (this.cropPx == null) {
+      this.cropPx = bounds;
+    }
 
     // find a target size less than the size, based on the current size
     // a good choice is the average of aspect correcting both dimensions, limited to the size of the bounds
@@ -228,6 +231,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     if (this.cropPx[1] < bounds[1]) {
       this.cropPx[1] = bounds[1];
     }
+    this.saveCrop();
     this.activeAspect = aspect;
   }
 
@@ -278,6 +282,11 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
         this.cropPx[0] += delta[0];
         this.cropPx[1] += delta[1];
         this.lastPos = [localx, localy];
+        break;
+      case 5: // creating a box
+        this.cropPx = [localx, localy, 1, 1];
+        this.movingHandle = 2;
+        break;
     }
     this.clampCrop(bounds);
     this.saveCrop();
@@ -365,7 +374,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
   grabCropHandle(handle: number) {
     // handle is 0 for top left, incrementing clockwise
-    if (this.editor.previewMode !== PreviewMode.EditCrop) {
+    if (this.editor.previewMode !== PreviewMode.EditCrop || (handle === 5 && this.field.isCropActive())) {
       return;
     }
     this.movingHandle = handle;

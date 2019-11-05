@@ -15,6 +15,7 @@ export class EditToolbarComponent implements OnInit {
 
   editButtons = [
     new DiEditModeButton('crop', 'Crop', [
+      {type: 'listItem', name: 'Clear', field: 'aspectLock', value: '', action: () => this.clearCrop()},
       {type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none'},
       {type: 'listItem', name: 'Square', field: 'aspectLock', value: '1:1'},
       {type: 'listItem', name: '16:9', field: 'aspectLock', value: '16:9'},
@@ -84,4 +85,13 @@ export class EditToolbarComponent implements OnInit {
     this.activeSliders = button.sliders;
   }
 
+  resetTransforms() {
+    this.field.resetDefault();
+  }
+
+  clearCrop() {
+    this.field.data.crop = [0, 0, 0, 0];
+    this.field.data.aspectLock = 'none';
+    this.field.updateField();
+  }
 }

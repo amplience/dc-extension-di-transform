@@ -7,7 +7,7 @@
       *ngIf="slider.type == 'listItem'"
       class="amp-edit-toolbar__item"
       [ngClass]="{'amp-edit-toolbar__item--active': getSliderValue(slider) === slider.value }"
-      (click)="updateSliderValue(slider, slider.value)">
+      (click)="(slider.action) ? slider.action(slider) : updateSliderValue(slider, slider.value)">
         <mat-icon>check</mat-icon><span>{{slider.name}}</span>
       </button>
 
@@ -41,6 +41,7 @@
       {{button.name}}
     </button>
   </ng-container>
+  <button mat-flat-button (click)="resetTransforms()"><mat-icon>refresh</mat-icon></button>
 </div>
 <div class="amp-edit-toolbar__right">
     <button mat-button (click)="exitMode(true)">Cancel</button>

@@ -20,6 +20,7 @@ export interface DiEditListItem extends DiEditField {
   type: 'listItem';
   value: string;
   iconSVG: string;
+  action?: (DiEditListItem) => void;
 }
 
 export class DiEditModeButton {

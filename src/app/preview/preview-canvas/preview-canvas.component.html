@@ -1,7 +1,11 @@
 <!-- The image itself, transformed -->
 <div class="amp-preview-canvas__imagesplit">
   <div class="amp-preview-canvas__canvas" [style.transform]="canvasTransform" #canvas>
-    <div *ngIf="image" class="amp-preview-canvas__imagecontainer" [style.width]="imageWidth+'px'" [style.height]="imageHeight+'px'" #imageContainer>
+    <div *ngIf="image" class="amp-preview-canvas__imagecontainer"
+    [style.width]="imageWidth+'px'"
+    [style.height]="imageHeight+'px'"
+    (mousedown)="grabCropHandle(5)"
+    #imageContainer>
       <img class="amp-preview-canvas__image"
       src="https://{{image.defaultHost}}/i/{{image.endpoint}}/{{escapeUrl(image.name)}}"
       [style.filter]="getImageFilter()"
@@ -10,7 +14,7 @@
       <!-- The crop overlay -->
       <div class="amp-preview-canvas__croprect"
       [ngClass]="{'amp-preview-canvas__croprect--inactive': !isCrop, 'amp-preview-canvas__croprect--simulated': isPreview}"
-      *ngIf="cropPx"
+      *ngIf="cropPx && cropPx[2] > 0 && cropPx[3] > 0"
       [style.left]="cropPx[0]+'px'"
       [style.top]="cropPx[1]+'px'"
       [style.width]="cropPx[2]+'px'"
@@ -28,7 +32,7 @@
 
       <!-- The POI overlay -->
 
-      <div *ngIf="isPreview || isPOI && this.poiPx != null" class="amp-preview-canvas__poi"
+      <div *ngIf="isPreview || isPOI && poiPx != null" class="amp-preview-canvas__poi"
         (mousedown)="grabPOI()"
         [style.left]="(poiPx[0]-20)+'px'"
         [style.top]="(poiPx[1]-20)+'px'"

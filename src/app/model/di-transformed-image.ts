@@ -3,17 +3,17 @@ import { MediaImageLink } from 'dc-extensions-sdk';
 /** The data type we expect the schema to use. */
 export interface DiTransformedImage {
   image?: MediaImageLink;
-  crop?: number[];
-  poi?: DiTransformPoi;
-  rot?: number;
-  hue?: number;
-  sat?: number;
-  bri?: number;
-  fliph?: boolean;
-  flipv?: boolean;
+  crop: number[];
+  poi: DiTransformPoi;
+  rot: number;
+  hue: number;
+  sat: number;
+  bri: number;
+  fliph: boolean;
+  flipv: boolean;
 
-  aspectLock?: string;
-  query?: string;
+  aspectLock: string;
+  query: string;
 }
 
 export interface DiTransformPoi {
