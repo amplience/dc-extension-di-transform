@@ -70,6 +70,6 @@ void buildApp(buildEnv = 'qa') {
   ansiColor('xterm') {
     def build = "${BRANCH_NAME}".replace("/", "-").replace("%2F", "-")
     def dir = "/" //"/dc-extension-di-transform/${build}"
-    sh "ng build"
+    sh "npm run build"
   }
 }
