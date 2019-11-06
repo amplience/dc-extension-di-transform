@@ -5,7 +5,16 @@ Check out `schema.json` for the content schema to use with this extension. Note 
 
 You're probably better off looking at a feature branch, check those out in the branches list.
 
-# Step by Step to run on (a new version of) DC:
+# Step by Step to run from Jenkins on DC:
+This project is built on Jenkins and hosted on dev-artifacts to make QA and UAT a little easier.
+- Go to a version of DC that supports UI extensions. Example: http://qa-daniel-app.s3-website-eu-west-1.amazonaws.com/builds/qa-titan-sprint-72-64/index-1.46.0-qa-titan-sprint-72-64.html?env=../envs/env-cmp.json
+- Log in, go to development and create a new schema. (if the schema is not already set up on that account)
+- Paste the contents of `schemajenkins.json`.
+  - If you want to choose a specific build, replace the branch name in the link to `index.html` with the branch you're interested in.
+- Save it. Go back to development and create a content type for your new schema.
+- Go to Production and make as many content items as your heart desires.
+
+# Step by Step to run locally on DC:
 
 - `npm install -g angular-cli` (if it is not already installed)
 - `npm i`

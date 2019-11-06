@@ -79,7 +79,7 @@
           "type": "number",
           "default": 0
         },
-        "fliph": {
+				"fliph": {
 					"title": "Horizontal Flip",
 					"description": "Whether the image should be horizontally flipped",
           "type": "boolean",
@@ -105,7 +105,7 @@
 				}
 			},
 			"ui:extension": {
-				"url": "https://localhost:4200",
+				"url": "https://apps.dev-artifacts.adis.ws/dc-extension-di-transform/feature-intial/index.html",
 				"height": 500
 			}
 		}
