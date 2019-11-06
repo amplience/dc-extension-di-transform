@@ -23,7 +23,7 @@ node('jnlp-slave-docker') {
 
             stage('Build App') {
               buildApp()
-              archiveArtifacts artifacts: 'dist/dc-uiex-di', fingerprint: true, onlyIfSuccessful: true
+              archiveArtifacts artifacts: 'dist/', fingerprint: true, onlyIfSuccessful: true
             }
           }
         }
@@ -70,6 +70,6 @@ void buildApp(buildEnv = 'qa') {
   ansiColor('xterm') {
     def build = "${BRANCH_NAME}".replace("/", "-").replace("%2F", "-")
     def dir = "/" //"/dc-extension-di-transform/${build}"
-    sh "npm run build"
+    sh "npm run-script ng -- build --base-href=\"${dir}\""
   }
 }
