@@ -1,114 +1,107 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$id": "http://custom.image",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://custom-jenkins.image",
 
-	"title": "DI Image Customizer Example",
-	"description": "Description",
+  "title": "DI Image Customizer Example",
+  "description": "Description",
 
-	"allOf": [
-		{
-			"$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
-		}
-	],
+  "allOf": [
+    {
+      "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/content"
+    }
+  ],
 
-	"type": "object",
-	"properties": {
-		"diImage": {
-			"title": "Transformed Image",
-			"description": "An image with DI transformations included.",
-			"type": "object",
-			"properties": {
-				"image": {
-					"title": "Base Image",
-					"description": "The base image to apply DI transformations to.",
-					"allOf": [
-						{ "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/image-link" }
-					]
-				},
-				"crop": {
-					"title": "Crop",
-					"description": "The crop rectangle to apply, in % scale.",
-					"type": "array",
-					"minItems": 4,
-					"maxItems": 4,
-					"items": {
-						"type": "number",
-            "default": 0
-					}
-				},
-				"poi": {
-					"title": "Point of Interest",
-					"description": "The point of interest, in % scale.",
-					"type": "object",
-					"properties": {
-						"x": {
-							"title": "X",
-							"description": "The x coordinate",
-							"type": "number",
-              "default": 0.5
-						},
-						"y": {
-							"title": "Y",
-							"description": "The y coordinate",
-							"type": "number",
-              "default": 0.5
-						}
-					}
-				},
-				"rot": {
-					"title": "Rotate",
-					"description": "The rotation modifier (in degrees)",
-					"type": "number",
-          "default": 0
-				},
-				"hue": {
-					"title": "Hue",
-					"description": "The hue modifier",
-					"type": "number",
-          "default": 0
-				},
-				"sat": {
-					"title": "Saturation",
-					"description": "The saturation modifier",
-					"type": "number",
-          "default": 0
-				},
-				"bri": {
-					"title": "Brightness",
-					"description": "The brightness modifier",
-          "type": "number",
-          "default": 0
+  "type": "object",
+  "properties": {
+    "diImage": {
+      "title": "Transformed Image",
+      "description": "An image with DI transformations included.",
+      "type": "object",
+      "properties": {
+        "image": {
+          "title": "Base Image",
+          "description": "The base image to apply DI transformations to.",
+          "allOf": [
+            {
+              "$ref": "http://bigcontent.io/cms/schema/v1/core#/definitions/image-link"
+            }
+          ]
         },
-				"fliph": {
-					"title": "Horizontal Flip",
-					"description": "Whether the image should be horizontally flipped",
-          "type": "boolean",
-          "default": false
+        "crop": {
+          "title": "Crop",
+          "description": "The crop rectangle to apply, in % scale.",
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "number",
+            "default": 0
+          }
+        },
+        "poi": {
+          "title": "Point of Interest",
+          "description": "The point of interest, in % scale.",
+          "type": "object",
+          "properties": {
+            "x": {
+              "title": "X",
+              "description": "The x coordinate",
+              "type": "number"
+            },
+            "y": {
+              "title": "Y",
+              "description": "The y coordinate",
+              "type": "number"
+            }
+          }
+        },
+        "rot": {
+          "title": "Rotate",
+          "description": "The rotation modifier (in degrees)",
+          "type": "number"
+        },
+        "hue": {
+          "title": "Hue",
+          "description": "The hue modifier",
+          "type": "number"
+        },
+        "sat": {
+          "title": "Saturation",
+          "description": "The saturation modifier",
+          "type": "number"
+        },
+        "bri": {
+          "title": "Brightness",
+          "description": "The brightness modifier",
+          "type": "number"
+        },
+        "fliph": {
+          "title": "Horizontal Flip",
+          "description": "Whether the image should be horizontally flipped",
+          "type": "boolean"
         },
         "flipv": {
-					"title": "Vertical Flip",
-					"description": "Whether the image should be vertically flipped",
-          "type": "boolean",
-          "default": false
+          "title": "Vertical Flip",
+          "description": "Whether the image should be vertically flipped",
+          "type": "boolean"
         },
 
         "aspectLock": {
-					"title": "Crop Aspect Ratio",
-					"description": "The aspect ratio to use when resizing the crop rectangle, eg: 4:3. Use 'none' to unlock aspect.",
-          "type": "string",
-          "default": "none"
-        },
-				"query": {
-					"title": "DI Query String",
-					"description": "A query string baked with all the above parameters.",
+          "title": "Crop Aspect Ratio",
+          "description": "The aspect ratio to use when resizing the crop rectangle, eg: 4:3. Use 'none' to unlock aspect.",
           "type": "string"
-				}
-			},
-			"ui:extension": {
-				"url": "https://apps.dev-artifacts.adis.ws/dc-extension-di-transform/feature-intial/index.html",
-				"height": 500
-			}
-		}
-	},
-	"propertyOrder": []
+        },
+        "query": {
+          "title": "DI Query String",
+          "description": "A query string baked with all the above parameters.",
+          "type": "string"
+        }
+      },
+      "ui:extension": {
+        "url": "https://apps.dev-artifacts.adis.ws/dc-extension-di-transform/feature-intial/index.html",
+        "height": 500
+      }
+    }
+  },
+  "propertyOrder": []
 }

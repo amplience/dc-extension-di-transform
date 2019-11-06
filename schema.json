@@ -44,59 +44,50 @@
 						"x": {
 							"title": "X",
 							"description": "The x coordinate",
-							"type": "number",
-              "default": 0.5
+							"type": "number"
 						},
 						"y": {
 							"title": "Y",
 							"description": "The y coordinate",
-							"type": "number",
-              "default": 0.5
+							"type": "number"
 						}
 					}
 				},
 				"rot": {
 					"title": "Rotate",
 					"description": "The rotation modifier (in degrees)",
-					"type": "number",
-          "default": 0
+					"type": "number"
 				},
 				"hue": {
 					"title": "Hue",
 					"description": "The hue modifier",
-					"type": "number",
-          "default": 0
+					"type": "number"
 				},
 				"sat": {
 					"title": "Saturation",
 					"description": "The saturation modifier",
-					"type": "number",
-          "default": 0
+					"type": "number"
 				},
 				"bri": {
 					"title": "Brightness",
 					"description": "The brightness modifier",
-          "type": "number",
-          "default": 0
+          "type": "number"
         },
         "fliph": {
 					"title": "Horizontal Flip",
 					"description": "Whether the image should be horizontally flipped",
-          "type": "boolean",
-          "default": false
+          "type": "boolean"
         },
         "flipv": {
 					"title": "Vertical Flip",
 					"description": "Whether the image should be vertically flipped",
-          "type": "boolean",
-          "default": false
+          "type": "boolean"
         },
 
         "aspectLock": {
 					"title": "Crop Aspect Ratio",
 					"description": "The aspect ratio to use when resizing the crop rectangle, eg: 4:3. Use 'none' to unlock aspect.",
-          "type": "string",
-          "default": "none"
+          "type": "string"
         },
 				"query": {
 					"title": "DI Query String",

@@ -60,6 +60,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
   private movingHandle = -1;
   private lastPos: number[];
+  private lastFlip: boolean[] = [false, false];
 
   constructor(private myElem: ElementRef<Element>, private sanitizer: DomSanitizer, private dimage: DiImageService,
               private editor: EditorService, private field: DiFieldService) {
@@ -84,6 +85,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
       if (this.data.rot !== this.lastRotation) {
         // recalculate scale
         this.lastRotation = this.data.rot;
+      }
+
+      if (this.data.fliph !== this.lastFlip[0] || this.data.flipv !== this.lastFlip[1]) {
+        this.updateCanvasTransform();
       }
 
       if (data.aspectLock != null && data.aspectLock !== 'none') {
@@ -138,6 +143,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     this.scale = scale;
     transformCommands.push(`scale(${scale}, ${scale})`);
 
+    if (this.data.fliph || this.data.flipv) {
+      transformCommands.push(`scale(${this.data.fliph ? -1 : 1}, ${this.data.flipv ? -1 : 1})`);
+    }
+
     // crop offset - in preview mode, offset the image to the middle
     if (this.isPreview && this.cropPx != null) {
       const centerOff = [
@@ -147,9 +156,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
       transformCommands.push(`translate(${centerOff[0]}px, ${centerOff[1]}px)`);
     }
 
-    if (this.data.fliph || this.data.flipv) {
-      transformCommands.push(`scale(${this.data.fliph ? -1 : 1}, ${this.data.flipv ? -1 : 1})`);
-    }
+    this.lastFlip = [this.data.fliph, this.data.flipv];
     this.canvasTransform = this.sanitizer.bypassSecurityTrustStyle(transformCommands.join(' '));
   }
 

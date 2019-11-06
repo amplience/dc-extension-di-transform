@@ -65,7 +65,9 @@ export class EditorService {
   }
 
   cancelChanges() {
+    const image = this.field.data.image;
     this.field.data = this.cancelBackup;
+    this.field.data.image = image;
     this.field.updateField();
   }
 
