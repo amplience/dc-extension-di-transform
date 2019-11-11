@@ -1,11 +1,18 @@
 <ng-container *ngIf="showButtons">
   <ng-container *ngIf="hasImage">
-      <button mat-fab (click)="changeMode('edit')"><mat-icon>edit</mat-icon></button>
-      <button mat-fab (click)="changeMode('poi')"><mat-icon>gps_fixed</mat-icon></button>
-    <button mat-fab color="secondary" (click)="changeMode('delete')"><mat-icon>delete</mat-icon></button>
-    <button mat-fab color="secondary" (click)="changeMode('swap')"><mat-icon>swap_horiz</mat-icon></button>
+      <button mat-fab (click)="changeMode('edit')" matTooltip="Edit image & focal point" class="amp-fab">
+        <mat-icon class="amp-icon-small">edit</mat-icon>
+      </button>
+      <button mat-fab color="secondary" (click)="changeMode('swap')" matTooltip="Replace" class="amp-fab">
+        <mat-icon class="amp-icon-small">swap_horiz</mat-icon>
+      </button>
+    <button mat-fab color="secondary" (click)="changeMode('delete')" matTooltip="Remove" class="amp-fab">
+      <mat-icon class="amp-icon-small" svgIcon="delete"></mat-icon>
+    </button>
   </ng-container>
   <ng-container *ngIf="!hasImage">
-    <button mat-fab (click)="changeMode('swap')"><mat-icon>add</mat-icon></button>
+    <button mat-fab (click)="changeMode('swap')" matTooltip="Set image" class="amp-fab">
+      <mat-icon class="amp-icon-small">add</mat-icon>
+    </button>
   </ng-container>
 </ng-container>

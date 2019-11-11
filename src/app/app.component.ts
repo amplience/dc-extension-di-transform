@@ -3,6 +3,8 @@ import { DcSdkService } from './api/dc-sdk.service';
 import { MediaImageLink } from 'dc-extensions-sdk';
 import { DiTransformedImage } from './model/di-transformed-image';
 import { EditorService, PreviewMode } from './editor/editor.service';
+import { MatIconRegistry } from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'amp-root',
@@ -17,6 +19,8 @@ export class AppComponent {
     return this.editor.previewMode !== PreviewMode.View;
   }
 
-  constructor(private sdkService: DcSdkService, private editor: EditorService) {
+  constructor(private sdkService: DcSdkService, private editor: EditorService, private icons: MatIconRegistry,
+              private sanitizer: DomSanitizer) {
+    icons.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/ic-asset-delete.svg'));
   }
 }

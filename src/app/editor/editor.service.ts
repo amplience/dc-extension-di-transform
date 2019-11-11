@@ -32,6 +32,7 @@ export class EditorService {
   constructor(private field: DiFieldService, private sdkService: DcSdkService, private image: DiImageService) { }
 
   modeRequest(mode: string) {
+    const needBackup = this.previewMode === PreviewMode.View;
     switch (mode) {
       case 'view':
         this.previewMode = PreviewMode.View;
@@ -41,12 +42,16 @@ export class EditorService {
         break;
       case 'edit':
         this.previewMode = PreviewMode.EditCrop;
-        this.backup();
+        if (needBackup) {
+          this.backup();
+        }
         this.mode = 'crop';
         break;
       case 'poi':
         this.previewMode = PreviewMode.POI;
-        this.backup();
+        if (needBackup) {
+          this.backup();
+        }
         this.mode = 'poi';
         break;
       case 'delete':

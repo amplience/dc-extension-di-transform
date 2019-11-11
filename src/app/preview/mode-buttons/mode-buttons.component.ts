@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostBinding, Host } from '@angular/core';
 import { DiFieldService } from 'src/app/editor/di-field.service';
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 
@@ -9,6 +9,7 @@ import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 })
 export class ModeButtonsComponent implements OnInit {
 
+  @HostBinding('class.amp-mode-buttons__hide') hidden: boolean;
   hasImage: boolean;
   get showButtons(): boolean {
     return this.editor.previewMode === PreviewMode.View;
@@ -18,6 +19,9 @@ export class ModeButtonsComponent implements OnInit {
     this.updateData();
     field.fieldUpdated.subscribe(data => {
       this.updateData();
+    });
+    editor.modeChange.subscribe(mode => {
+      this.hidden = !this.showButtons;
     });
   }
 

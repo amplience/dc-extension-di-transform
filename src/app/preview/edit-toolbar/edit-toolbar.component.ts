@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DiFieldService } from 'src/app/editor/di-field.service';
 import { DiEditField, DiEditModeButton, DiEditListItem, DiEditSlider } from 'src/app/editor/di-edit-slider';
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
+import { MatMenuTrigger } from '@angular/material';
 
 @Component({
   selector: 'amp-edit-toolbar',
@@ -12,11 +13,20 @@ export class EditToolbarComponent implements OnInit {
 
   buttons: DiEditModeButton[];
   activeSliders: DiEditField[] = [];
+  @ViewChild('cropMenuTrigger', {read: MatMenuTrigger, static: true}) cropMenuTrigger: MatMenuTrigger;
+
+  get crop(): number[] {
+    return this.field.data == null ? [0, 0, 0, 0] : this.field.data.crop;
+  }
+
+  set crop(value: number[]) {
+    this.field.data.crop = value;
+  }
 
   editButtons = [
     new DiEditModeButton('crop', 'Crop', [
       {type: 'listItem', name: 'Clear', field: 'aspectLock', value: '', action: () => this.clearCrop()},
-      {type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none'},
+      {type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none', action: () => this.showCropMenu()},
       {type: 'listItem', name: 'Square', field: 'aspectLock', value: '1:1'},
       {type: 'listItem', name: '16:9', field: 'aspectLock', value: '16:9'},
       {type: 'listItem', name: '4:3', field: 'aspectLock', value: '4:3'},
@@ -50,12 +60,6 @@ export class EditToolbarComponent implements OnInit {
 
   modeChanged() {
     switch (this.editor.previewMode) {
-      case PreviewMode.POI:
-        this.buttons = this.poiButtons;
-        break;
-      case PreviewMode.View:
-        this.buttons = [];
-        break;
       default:
         this.buttons = this.editButtons;
         break;
@@ -81,6 +85,9 @@ export class EditToolbarComponent implements OnInit {
   }
 
   setMode(button: DiEditModeButton) {
+    if (this.editor.previewMode !== PreviewMode.EditCrop) {
+      this.editor.modeRequest('edit');
+    }
     this.editor.mode = button.mode;
     this.activeSliders = button.sliders;
   }
@@ -93,5 +100,16 @@ export class EditToolbarComponent implements OnInit {
     this.field.data.crop = [0, 0, 0, 0];
     this.field.data.aspectLock = 'none';
     this.field.updateField();
+  }
+
+  poiMode() {
+    if (this.editor.previewMode !== PreviewMode.POI) {
+      this.editor.modeRequest('poi');
+    }
+    this.editor.mode = 'poi';
+  }
+
+  showCropMenu() {
+    this.cropMenuTrigger.openMenu();
   }
 }

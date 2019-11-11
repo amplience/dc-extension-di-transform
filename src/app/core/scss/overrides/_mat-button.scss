@@ -1,0 +1,149 @@
+$button-fab-width: 50px;
+$button-fab-height: $button-fab-width;
+$button-fab-icon-size: 32px;
+$button-fab-icon-size-small: 20px;
+
+.mat-button {
+  color: $color-primary;
+  text-transform: none;
+  min-height: 0;
+  min-width: 0;
+  line-height: normal;
+  margin: 0;
+  font-weight: $font-weight-normal;
+  text-align: left;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  transition: color $transition-speed;
+  &:not([disabled]) {
+    &:hover {
+      background-color: transparent !important;
+      color: $color-primary-light;
+    }
+    &.mat-focused {
+      background-color: transparent;
+    }
+  }
+  &[disabled] {
+    color: $color-yet-another-grey;
+  }
+}
+
+.mat-flat-button {
+  border-radius: 3px;
+  padding: 0 $bsu/2;
+  transition: all $transition-speed;
+
+  &.mat-primary {
+    &[disabled], &.disabled {
+      color: $color-yet-another-grey;
+      background-color: $color-lighter-grey;
+      cursor: default;
+
+      mat-icon {
+        fill: $color-mid-grey;
+        color: $color-mid-grey;
+      }
+    }
+
+    &.mat-focused:not([disabled]) {
+      color: $color-white;
+      background-color: $color-primary;
+      box-shadow: none !important;
+
+      mat-icon {
+        fill: $color-white;
+        color: $color-white;
+      }
+    }
+
+    &:hover:not([disabled]), &.faux-hover:not([disabled]) {
+      color: $color-white;
+      background-color: $color-primary-light !important;
+      box-shadow: none !important;
+
+      mat-icon {
+        fill: $color-white;
+        color: $color-white;
+      }
+    }
+
+    &.ng-click-active {
+      color: $color-white;
+      background-color: $color-primary-dark !important;
+      box-shadow: none !important;
+
+      mat-icon {
+        fill: $color-white;
+        color: $color-white;
+      }
+    }
+  }
+}
+
+.mat-fab.amp-fab {
+  box-shadow: none !important;
+  //margin: 3px;
+  //width: $button-fab-width !important;
+  //height: $button-fab-height !important;
+  //line-height: $button-fab-height;
+  background-color: $color-iron;
+
+  mat-icon {
+    //height: $button-fab-icon-size;
+    //width: $button-fab-icon-size;
+    //line-height: $button-fab-icon-size;
+    color: $color-white;
+    fill: $color-white;
+    * {
+      fill: $color-white;
+    }
+  }
+
+  &.amp-icon-small {
+    mat-icon {
+      //height: $button-fab-icon-size-small;
+      //width: $button-fab-icon-size-small;
+      //line-height: $button-fab-icon-size-small;
+    }
+  }
+
+  &[disabled] {
+    cursor: auto !important;
+    mat-icon {
+      fill: $color-light-grey !important;
+      color: $color-light-grey !important;
+      * {
+        fill: $color-light-grey !important;
+      }
+    }
+  }
+
+
+  &:hover:not([disabled]), &.faux-hover:not([disabled]), &.mat-focused:not([disabled]) {
+    background-color: $color-primary;
+    box-shadow: none !important;
+
+    mat-icon {
+      fill: $color-white;
+      color: $color-white;
+      * {
+        fill: $color-white;
+      }
+    }
+  }
+
+  &:active:not([disabled]) {
+    background-color: $color-primary-light !important;
+    box-shadow: none !important;
+
+    mat-icon {
+      fill: $color-white;
+      color: $color-white;
+      * {
+        fill: $color-white;
+      }
+    }
+  }
+}

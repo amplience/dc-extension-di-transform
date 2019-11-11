@@ -7,7 +7,7 @@
     (mousedown)="grabCropHandle(5)"
     #imageContainer>
       <img class="amp-preview-canvas__image"
-      src="https://{{image.defaultHost}}/i/{{image.endpoint}}/{{escapeUrl(image.name)}}"
+      src="http://{{getImageHost()}}/i/{{image.endpoint}}/{{escapeUrl(image.name)}}"
       [style.filter]="getImageFilter()"
       [style.transform]="getImageTransform()">
 
@@ -32,7 +32,7 @@
 
       <!-- The POI overlay -->
 
-      <div *ngIf="isPreview || isPOI && poiPx != null" class="amp-preview-canvas__poi"
+      <div *ngIf="(isPreview || isPOI) && poiPx != null" class="amp-preview-canvas__poi"
         (mousedown)="grabPOI()"
         [style.left]="(poiPx[0]-20)+'px'"
         [style.top]="(poiPx[1]-20)+'px'"

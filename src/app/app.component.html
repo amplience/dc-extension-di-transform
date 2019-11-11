@@ -1,2 +1,5 @@
+<div style="height:500px">
 <amp-edit-toolbar [ngClass]="{'amp-root__topbar--hide': !showToolbar}"></amp-edit-toolbar>
 <amp-preview-canvas></amp-preview-canvas>
+</div>
+<amp-transform-list *ngIf="showToolbar"></amp-transform-list>

@@ -3,11 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatIconModule, MatMenuModule, MatSliderModule, MatFormFieldModule, MatSlideToggleModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatMenuModule, MatSliderModule, MatFormFieldModule, MatSlideToggleModule, MatInputModule, MatTableModule, MatTooltipModule, MatDividerModule } from '@angular/material';
 import { PreviewCanvasComponent } from './preview/preview-canvas/preview-canvas.component';
 import { DiPreviewComponent } from './preview/di-preview/di-preview.component';
 import { ModeButtonsComponent } from './preview/mode-buttons/mode-buttons.component';
 import { EditToolbarComponent } from './preview/edit-toolbar/edit-toolbar.component';
+import { FormsModule } from '@angular/forms';
+import { TransformListComponent } from './metadata/transform-list/transform-list.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,7 +18,8 @@ import { EditToolbarComponent } from './preview/edit-toolbar/edit-toolbar.compon
     PreviewCanvasComponent,
     DiPreviewComponent,
     ModeButtonsComponent,
-    EditToolbarComponent
+    EditToolbarComponent,
+    TransformListComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +29,13 @@ import { EditToolbarComponent } from './preview/edit-toolbar/edit-toolbar.compon
     MatMenuModule,
     MatSliderModule,
     MatFormFieldModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    FormsModule,
+    MatInputModule,
+    MatTableModule,
+    MatTooltipModule,
+    MatDividerModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

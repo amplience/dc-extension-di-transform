@@ -5,7 +5,7 @@ import { debounce } from 'rxjs/operators';
 import { interval, Subject } from 'rxjs';
 import { DiImageService } from './di-image.service';
 
-class DiPreviewImage {
+export class DiPreviewImage {
   url: SafeUrl;
   width: number;
   height: number;
@@ -17,12 +17,31 @@ class DiPreviewImage {
   }
 }
 
+export class DiTransformationSegment {
+  name: string;
+  query: string[];
+  fields: string[]; // contributing fields - used when we attempt to clear the transformation.
+  defaults?: any[]; // optional - defaults to reset the fields to when clearing.
+
+  constructor(name: string, query: string, fields: string[], defaults?: any[]) {
+    this.name = name;
+    this.query = [query];
+    this.fields = fields;
+    this.defaults = defaults;
+  }
+
+  queryString(): string {
+    return this.query.join('&');
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class DiPreviewService {
 
   previews: DiPreviewImage[] = [];
+  transformations: DiTransformationSegment[] = [];
   private updated = new Subject();
 
   constructor(private field: DiFieldService, private image: DiImageService) {
@@ -40,32 +59,44 @@ export class DiPreviewService {
     return Math.round(value * mul) / mul;
   }
 
+  private addSegment(commands: DiTransformationSegment[], name: string, query: string, field: string, defaultValue?: any): DiTransformationSegment {
+    let elem = commands.find((trans) => trans.name === name);
+    if (elem == null) {
+      elem = new DiTransformationSegment(name, query, [field], [defaultValue]);
+      commands.push(elem);
+    } else {
+      elem.query.push(query);
+      elem.fields.push(field);
+      elem.defaults.push(defaultValue);
+    }
+    return elem;
+  }
+
   getDiQuery() {
-    const queryCommands: string[] = [];
+    const queryCommands: DiTransformationSegment[] = [];
     const data = this.field.data;
-    if (data.rot != null) {
-      queryCommands.push(`protate=${data.rot}`);
+    if (data.rot != null && data.rot !== 0) {
+      this.addSegment(queryCommands, 'Rotate', `protate=${data.rot}`, 'rot');
     }
-    if (data.hue != null) {
-      queryCommands.push(`hue=${data.hue * (100 / 180)}`);
+    if (data.hue != null && data.hue !== 0) {
+      this.addSegment(queryCommands, 'HSB', `hue=${data.hue * (100 / 180)}`, 'hue');
     }
-    if (data.sat != null) {
-      queryCommands.push(`sat=${data.sat}`);
+    if (data.sat != null && data.sat !== 0) {
+      this.addSegment(queryCommands, 'HSB', `sat=${data.sat}`, 'sat');
     }
-    if (data.bri != null) {
-      queryCommands.push(`bri=${data.bri}`);
+    if (data.bri != null && data.bri !== 0) {
+      this.addSegment(queryCommands, 'HSB', `bri=${data.bri}`, 'bri');
     }
 
     if (data.fliph) {
-      queryCommands.push(`fliph=true`);
+      this.addSegment(queryCommands, 'Flip', `fliph=true`, 'fliph', false);
     }
     if (data.flipv) {
-      queryCommands.push(`flipv=true`);
+      this.addSegment(queryCommands, 'Flip', `flipv=true`, 'flipv', false);
     }
 
-    if (data.poi) {
-      queryCommands.push(`poi=${data.poi.x},${data.poi.y},0,0`);
-      queryCommands.push(`scaleFit=poi`);
+    if (data.poi && !(data.poi.x === 0.5 && data.poi.y === 0.5)) {
+      this.addSegment(queryCommands, 'Point of Interest', `poi=${data.poi.x},${data.poi.y},0,0&scaleFit=poi`, 'poi', {x: 0.5, y: 0.5});
     }
 
     if (this.field.isCropActive()) {
@@ -84,14 +115,18 @@ export class DiPreviewService {
           this.decimalRound(crop[2] / bounds[2] * 100, 100),
           this.decimalRound(crop[3] / bounds[3] * 100, 100),
         ];
-
-        queryCommands.push(`crop={${cropPercent[0]}%},{${cropPercent[1]}%},{${cropPercent[2]}%},{${cropPercent[3]}%}`);
+        this.addSegment(queryCommands, 'Crop', `crop={${cropPercent[0]}%},{${cropPercent[1]}%},{${cropPercent[2]}%},{${cropPercent[3]}%}`,
+        'crop',
+        [0, 0, 0, 0]);
       } else {
         // cropping with no rotation (pcrop)
-        queryCommands.push(`pcrop=${Math.round(crop[0])},${Math.round(crop[1])},${Math.round(crop[2])},${Math.round(crop[3])}`);
+        this.addSegment(queryCommands, 'Crop', `pcrop=${Math.round(crop[0])},${Math.round(crop[1])},${Math.round(crop[2])},${Math.round(crop[3])}`,
+        'crop',
+        [0, 0, 0, 0]);
       }
     }
-    return queryCommands.join('&');
+    this.transformations = queryCommands;
+    return queryCommands.map(command => command.queryString()).join('&');
   }
 
   updateDiQuery() {
@@ -106,7 +141,7 @@ export class DiPreviewService {
 
     const previewSize = 141;
     const previewPoi = data.rot === undefined || data.rot === 0;
-    const baseQuery = `https://${image.defaultHost}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query;
+    const baseQuery = `http://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query;
     if (previewPoi) {
       this.previews = [];
       this.previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=1:1&w=${previewSize}`, previewSize, previewSize));

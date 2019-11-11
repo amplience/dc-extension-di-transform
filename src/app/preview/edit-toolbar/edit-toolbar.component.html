@@ -26,6 +26,7 @@
       (input)="updateSliderValue(slider, $event.value)"></mat-slider>
     </div>
   </mat-menu>
+  <div class="amp-edit-toolbar__crop-menu-anchor" [matMenuTriggerFor]="cropMenu" #cropMenuTrigger="matMenuTrigger"></div>
   <ng-container *ngFor="let button of buttons">
     <button mat-flat-button
     *ngIf="button.sliders.length !== 0"
@@ -41,7 +42,41 @@
       {{button.name}}
     </button>
   </ng-container>
-  <button mat-flat-button (click)="resetTransforms()"><mat-icon>refresh</mat-icon></button>
+  <mat-divider [vertical]="true"></mat-divider>
+  <button mat-flat-button (click)="poiMode()" [color]="(editor.mode == 'poi') ? 'primary' : 'secondary'">Focal Point</button>
+  <mat-divider [vertical]="true"></mat-divider>
+  <button mat-flat-button (click)="resetTransforms()" matTooltip="Reset all" class="amp-edit-toolbar__reset">
+    <mat-icon>undo</mat-icon>
+  </button>
+
+  <mat-menu #cropMenu="matMenu" class="amp-edit-toolbar__cropmenu">
+    <div class="amp-edit-toolbar__cropmenu" (click)="$event.stopPropagation()">
+      <h5 class="amp-edit-toolbar__croptitle">Custom Crop Rectangle</h5>
+      <div class="amp-edit-toolbar__cropgroup">
+        <mat-form-field>
+          <input matInput placeholder="Crop X" [(ngModel)]="crop[0]" type="number"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Crop Y" [(ngModel)]="crop[1]" type="number"/>
+        </mat-form-field>
+      </div>
+
+      <div class="amp-edit-toolbar__cropgroup">
+        <mat-form-field>
+          <input matInput placeholder="Crop Width" [(ngModel)]="crop[2]" type="number"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Crop Height" [(ngModel)]="crop[3]" type="number"/>
+        </mat-form-field>
+      </div>
+
+      <div class="amp-edit-toolbar__cropgroup">
+        <button mat-flat-button color="primary" (click)="cropMenuTrigger.closeMenu()">Done</button>
+      </div>
+    </div>
+  </mat-menu>
 </div>
 <div class="amp-edit-toolbar__right">
     <button mat-button (click)="exitMode(true)">Cancel</button>

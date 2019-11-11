@@ -1,0 +1,25 @@
+<table mat-table [dataSource]="di.transformations" class="mat-elevation-z8 amp-transform-list">
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <!-- Query Column -->
+  <ng-container matColumnDef="query">
+    <th mat-header-cell *matHeaderCellDef> Query </th>
+    <td mat-cell *matCellDef="let element"> {{element.queryString()}} </td>
+  </ng-container>
+
+  <!-- Delete Column -->
+  <ng-container matColumnDef="fields">
+    <th mat-header-cell *matHeaderCellDef class="amp-transform-list__remove"> </th>
+    <td mat-cell *matCellDef="let element" class="amp-transform-list__remove">
+      <button mat-icon-button (click)="clearTransform(element)"><mat-icon>clear</mat-icon></button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

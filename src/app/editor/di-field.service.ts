@@ -1,7 +1,8 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, DefaultIterableDiffer } from '@angular/core';
 import { DiTransformedImage } from '../model/di-transformed-image';
 import { DiEditSlider } from './di-edit-slider';
 import { DcSdkService } from '../api/dc-sdk.service';
+import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,14 @@ export class DiFieldService {
 
   fieldUpdated: EventEmitter<DiTransformedImage> = new EventEmitter();
   data: DiTransformedImage;
+  stagingEnvironment: string;
 
   private updateInProgress: boolean;
 
   constructor(private sdk: DcSdkService) {
     sdk.getSDK().then(async (sdkInstance) => {
+      sdkInstance.frame.startAutoResizer();
+      this.stagingEnvironment = sdkInstance.stagingEnvironment;
       this.data = await sdkInstance.field.getValue();
       this.parseData();
       this.updateField();
@@ -30,6 +34,11 @@ export class DiFieldService {
     const sdk = await this.sdk.getSDK();
     sdk.field.setValue(this.data);
     this.updateInProgress = false;
+  }
+
+  getImageHost(): string {
+    return (this.data && this.data.image) ? this.data.image.defaultHost : null;
+    // this.stagingEnvironment || ((this.data && this.data.image) ? this.data.image.defaultHost : null);
   }
 
   parseData() {

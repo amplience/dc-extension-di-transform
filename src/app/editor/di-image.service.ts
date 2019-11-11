@@ -122,6 +122,9 @@ export class DiImageService {
 
   saveCrop() {
     const data = this.field.data;
+    for (let i = 0; i < 4; i++) {
+      this.cropPx[i] = Math.round(this.cropPx[i]);
+    }
     data.crop = this.cropPx;
     this.savePOI(true);
     this.field.updateField();

@@ -77,6 +77,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     window.addEventListener('resize', () => { this.updateCanvasTransform(); });
   }
 
+  getImageHost(): string {
+    return this.field.getImageHost();
+  }
+
   dataUpdated(data: DiTransformedImage) {
     this.data = data;
     this.image = (data == null) ? null : data.image;
@@ -123,7 +127,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     }
     const container = this.canvas.nativeElement;
 
-    const size = [window.innerWidth - 20, window.innerHeight - 20];
+    const size = [window.innerWidth - 20, 500 - 20];
 
     if (!this.isPreview) {
       size[0] -= 201;
