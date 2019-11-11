@@ -88,6 +88,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     if (data != null) {
       if (this.data.rot !== this.lastRotation) {
         // recalculate scale
+        this.updateCanvasTransform();
         this.lastRotation = this.data.rot;
       }
 
