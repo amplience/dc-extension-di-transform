@@ -131,6 +131,9 @@ export class DiImageService {
   }
 
   savePOI(withoutSave?: boolean) {
+    if (this.poiPx == null) {
+      return;
+    }
     const data = this.field.data;
 
     // bound the point of interest within the crop area
