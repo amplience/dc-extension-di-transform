@@ -1,45 +1,48 @@
 <!-- The image itself, transformed -->
 <div class="amp-preview-canvas__imagesplit">
-  <div class="amp-preview-canvas__canvas" [style.transform]="canvasTransform" #canvas>
-    <div *ngIf="image" class="amp-preview-canvas__imagecontainer"
-    [style.width]="imageWidth+'px'"
-    [style.height]="imageHeight+'px'"
-    (mousedown)="grabCropHandle(5)"
-    #imageContainer>
-      <img class="amp-preview-canvas__image"
-      src="http://{{getImageHost()}}/i/{{image.endpoint}}/{{escapeUrl(image.name)}}"
-      [style.filter]="getImageFilter()"
-      [style.transform]="getImageTransform()">
+  <div class="amp-preview-canvas__previewarea">
+    <amp-crop-toolbar *ngIf="isCrop && data != null && data.aspectLock == 'none'"></amp-crop-toolbar>
+    <div class="amp-preview-canvas__canvas" [style.transform]="canvasTransform" #canvas>
+      <div *ngIf="image" class="amp-preview-canvas__imagecontainer"
+      [style.width]="imageWidth+'px'"
+      [style.height]="imageHeight+'px'"
+      (mousedown)="grabCropHandle(5)"
+      #imageContainer>
+        <img class="amp-preview-canvas__image"
+        src="http://{{getImageHost()}}/i/{{image.endpoint}}/{{escapeUrl(image.name)}}"
+        [style.filter]="getImageFilter()"
+        [style.transform]="getImageTransform()">
 
-      <!-- The crop overlay -->
-      <div class="amp-preview-canvas__croprect"
-      [ngClass]="{'amp-preview-canvas__croprect--inactive': !isCrop, 'amp-preview-canvas__croprect--simulated': isPreview}"
-      *ngIf="cropPx && cropPx[2] > 0 && cropPx[3] > 0"
-      [style.left]="cropPx[0]+'px'"
-      [style.top]="cropPx[1]+'px'"
-      [style.width]="cropPx[2]+'px'"
-      [style.height]="cropPx[3]+'px'"
-      [style.borderWidth]="cropRectStroke"
-      [style.outlineWidth]="outlineSize"
-      (mousedown)="grabCropHandle(4)">
-        <ng-container *ngIf="isCrop">
-          <div class="amp-preview-canvas__crophandle amp-preview-canvas__crophandle--topleft" (mousedown)="grabCropHandle(0); $event.stopPropagation()" [style.width]="handleSize" [style.height]="handleSize" [style.marginLeft]="handleHSize" [style.marginTop]="handleHSize"></div>
-          <div class="amp-preview-canvas__crophandle amp-preview-canvas__crophandle--topright" (mousedown)="grabCropHandle(1); $event.stopPropagation()" [style.width]="handleSize" [style.height]="handleSize" [style.marginLeft]="handleHSize" [style.marginTop]="handleHSize"></div>
-          <div class="amp-preview-canvas__crophandle amp-preview-canvas__crophandle--bottomright" (mousedown)="grabCropHandle(2); $event.stopPropagation()" [style.width]="handleSize" [style.height]="handleSize" [style.marginLeft]="handleHSize" [style.marginTop]="handleHSize"></div>
-          <div class="amp-preview-canvas__crophandle amp-preview-canvas__crophandle--bottomleft" (mousedown)="grabCropHandle(3); $event.stopPropagation()" [style.width]="handleSize" [style.height]="handleSize" [style.marginLeft]="handleHSize" [style.marginTop]="handleHSize"></div>
-        </ng-container>
-      </div>
+        <!-- The crop overlay -->
+        <div class="amp-preview-canvas__croprect"
+        [ngClass]="{'amp-preview-canvas__croprect--inactive': !isCrop, 'amp-preview-canvas__croprect--simulated': isPreview}"
+        *ngIf="cropPx && cropPx[2] > 0 && cropPx[3] > 0"
+        [style.left]="cropPx[0]+'px'"
+        [style.top]="cropPx[1]+'px'"
+        [style.width]="cropPx[2]+'px'"
+        [style.height]="cropPx[3]+'px'"
+        [style.borderWidth]="cropRectStroke"
+        [style.outlineWidth]="outlineSize"
+        (mousedown)="grabCropHandle(4)">
+          <ng-container *ngIf="isCrop">
+            <div class="amp-preview-canvas__crophandle amp-preview-canvas__crophandle--topleft" (mousedown)="grabCropHandle(0); $event.stopPropagation()" [style.width]="handleSize" [style.height]="handleSize" [style.marginLeft]="handleHSize" [style.marginTop]="handleHSize"></div>
+            <div class="amp-preview-canvas__crophandle amp-preview-canvas__crophandle--topright" (mousedown)="grabCropHandle(1); $event.stopPropagation()" [style.width]="handleSize" [style.height]="handleSize" [style.marginLeft]="handleHSize" [style.marginTop]="handleHSize"></div>
+            <div class="amp-preview-canvas__crophandle amp-preview-canvas__crophandle--bottomright" (mousedown)="grabCropHandle(2); $event.stopPropagation()" [style.width]="handleSize" [style.height]="handleSize" [style.marginLeft]="handleHSize" [style.marginTop]="handleHSize"></div>
+            <div class="amp-preview-canvas__crophandle amp-preview-canvas__crophandle--bottomleft" (mousedown)="grabCropHandle(3); $event.stopPropagation()" [style.width]="handleSize" [style.height]="handleSize" [style.marginLeft]="handleHSize" [style.marginTop]="handleHSize"></div>
+          </ng-container>
+        </div>
 
-      <!-- The POI overlay -->
+        <!-- The POI overlay -->
 
-      <div *ngIf="(isPreview || isPOI) && poiPx != null" class="amp-preview-canvas__poi"
-        (mousedown)="grabPOI()"
-        [style.left]="(poiPx[0]-20)+'px'"
-        [style.top]="(poiPx[1]-20)+'px'"
-        [style.transform]="'scale('+ 1/scale +')'">
-        <svg width="40" height="40">
-            <rect class="amp-preview-canvas__poi-background" height="40" width="40"></rect><polygon class="amp-preview-canvas__poi-plus" points="18,8 22,8 22,18 32,18 32,22 22,22 22,32 18,32 18,22 8,22 8,18 18,18 18,8"></polygon>
-        </svg>
+        <div *ngIf="(isPreview || isPOI) && poiPx != null" class="amp-preview-canvas__poi"
+          (mousedown)="grabPOI()"
+          [style.left]="(poiPx[0]-20)+'px'"
+          [style.top]="(poiPx[1]-20)+'px'"
+          [style.transform]="'scale('+ 1/scale +')'">
+          <svg width="40" height="40">
+              <rect class="amp-preview-canvas__poi-background" height="40" width="40"></rect><polygon class="amp-preview-canvas__poi-plus" points="18,8 22,8 22,18 32,18 32,22 22,22 22,32 18,32 18,22 8,22 8,18 18,18 18,8"></polygon>
+          </svg>
+        </div>
       </div>
     </div>
   </div>

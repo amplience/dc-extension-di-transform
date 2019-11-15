@@ -95,8 +95,8 @@ export class DiPreviewService {
       this.addSegment(queryCommands, 'Flip', `flipv=true`, 'flipv', false);
     }
 
-    if (data.poi && !(data.poi.x === 0.5 && data.poi.y === 0.5)) {
-      this.addSegment(queryCommands, 'Point of Interest', `poi=${data.poi.x},${data.poi.y},0,0&scaleFit=poi`, 'poi', {x: 0.5, y: 0.5});
+    if (this.field.isPOIActive()) {
+      this.addSegment(queryCommands, 'Point of Interest', `poi=${data.poi.x},${data.poi.y},0,0&scaleFit=poi`, 'poi', {x: -1, y: -1});
     }
 
     if (this.field.isCropActive()) {

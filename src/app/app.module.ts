@@ -11,6 +11,7 @@ import { EditToolbarComponent } from './preview/edit-toolbar/edit-toolbar.compon
 import { FormsModule } from '@angular/forms';
 import { TransformListComponent } from './metadata/transform-list/transform-list.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CropToolbarComponent } from './preview/crop-toolbar/crop-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { HttpClientModule } from '@angular/common/http';
     DiPreviewComponent,
     ModeButtonsComponent,
     EditToolbarComponent,
-    TransformListComponent
+    TransformListComponent,
+    CropToolbarComponent
   ],
   imports: [
     BrowserModule,

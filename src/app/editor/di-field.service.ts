@@ -52,7 +52,7 @@ export class DiFieldService {
         bri: 0,
         fliph: false,
         flipv: false,
-        poi: {x: 0.5, y: 0.5},
+        poi: {x: -1, y: -1},
         aspectLock: 'none',
         query: ''
       };
@@ -69,6 +69,10 @@ export class DiFieldService {
 
   isCropActive() {
     return this.data.crop != null && this.data.crop[0] != null && this.data.crop[2] !== 0 && this.data.crop[3] !== 0;
+  }
+
+  isPOIActive() {
+    return this.data.poi != null && this.data.poi.x !== -1 && this.data.poi.y !== -1;
   }
 
   updateSliderValue(slider: DiEditSlider, value: number) {

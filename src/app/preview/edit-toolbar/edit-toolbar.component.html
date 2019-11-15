@@ -30,20 +30,20 @@
   <ng-container *ngFor="let button of buttons">
     <button mat-flat-button
     *ngIf="button.sliders.length !== 0"
-    [color]="(editor.mode == button.mode) ? 'primary' : 'secondary'"
+    [color]="(editor.previewMode == button.mode) ? 'primary' : 'secondary'"
     (click)="setMode(button)"
     [matMenuTriggerFor]="buttonMenu">
       {{button.name}}
     </button>
     <button mat-flat-button
     *ngIf="button.sliders.length === 0"
-    [color]="(editor.mode == button.mode) ? 'primary' : 'secondary'"
+    [color]="(editor.previewMode == button.mode) ? 'primary' : 'secondary'"
     (click)="setMode(button)">
       {{button.name}}
     </button>
   </ng-container>
   <mat-divider [vertical]="true"></mat-divider>
-  <button mat-flat-button (click)="poiMode()" [color]="(editor.mode == 'poi') ? 'primary' : 'secondary'">Focal Point</button>
+  <button mat-flat-button (click)="poiMode()" [color]="(editor.previewMode === previewMode.POI) ? 'primary' : 'secondary'">Focal Point</button>
   <mat-divider [vertical]="true"></mat-divider>
   <button mat-flat-button (click)="resetTransforms()" matTooltip="Reset all" class="amp-edit-toolbar__reset">
     <mat-icon>undo</mat-icon>

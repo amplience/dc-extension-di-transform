@@ -4,4 +4,12 @@
   &__remove {
     width: 32px;
   }
+
+  &__name {
+    width: 220px;
+  }
+
+  ::ng-deep .mat-row {
+    height: 32px;
+  }
 }

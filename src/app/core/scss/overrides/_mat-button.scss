@@ -4,7 +4,7 @@ $button-fab-icon-size: 32px;
 $button-fab-icon-size-small: 20px;
 
 .mat-button {
-  color: $color-primary;
+  color: $color-darkest-grey;
   text-transform: none;
   min-height: 0;
   min-width: 0;
@@ -79,6 +79,10 @@ $button-fab-icon-size-small: 20px;
         color: $color-white;
       }
     }
+  }
+
+  &.mat-secondary {
+    font-weight: 400;
   }
 }
 

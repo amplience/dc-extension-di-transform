@@ -54,16 +54,7 @@ export class DiImageService {
     this.imageHeight = (event.target as HTMLImageElement).height;
     const data = this.field.data;
 
-    if (this.cropPx == null) {
-      /*
-      this.cropPx = [0, 0, this.imageWidth, this.imageHeight];
-      if (data.crop[0] != null) {
-        this.saveCrop();
-      }
-      */
-    }
-
-    if (this.poiPx == null) {
+    if (this.poiPx == null && this.field.isPOIActive()) {
       const bound = this.cropPx || this.getRotatedBounds();
       this.poiPx = [bound[0] + bound[2] * data.poi.x, bound[1] + bound[3] * data.poi.y];
     }
@@ -99,7 +90,7 @@ export class DiImageService {
       if (this.lastImage != null) {
         // clear data from the last image.
         data.crop = [0, 0, 0, 0];
-        data.poi = {x: 0.5, y: 0.5};
+        data.poi = {x: -1, y: -1};
         this.poiPx = null;
       }
       this.loadImage(data);
@@ -113,10 +104,12 @@ export class DiImageService {
       this.cropPx = null;
     }
 
-    if (this.imageReady && this.poiPx == null && data.poi != null && data.poi.x != null) {
+    if (this.imageReady && this.field.isPOIActive()) {
       // initialize point of interest
       const bounds = this.cropPx || this.getRotatedBounds();
       this.poiPx = [bounds[0] + bounds[2] * data.poi.x, bounds[1] + bounds[3] * data.poi.y];
+    } else {
+      this.poiPx = null;
     }
   }
 

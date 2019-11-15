@@ -15,6 +15,8 @@ export class EditToolbarComponent implements OnInit {
   activeSliders: DiEditField[] = [];
   @ViewChild('cropMenuTrigger', {read: MatMenuTrigger, static: true}) cropMenuTrigger: MatMenuTrigger;
 
+  previewMode: any = PreviewMode;
+
   get crop(): number[] {
     return this.field.data == null ? [0, 0, 0, 0] : this.field.data.crop;
   }
@@ -24,23 +26,29 @@ export class EditToolbarComponent implements OnInit {
   }
 
   editButtons = [
-    new DiEditModeButton('crop', 'Crop', [
+    new DiEditModeButton(PreviewMode.EditCrop, 'Crop', [
       {type: 'listItem', name: 'Clear', field: 'aspectLock', value: '', action: () => this.clearCrop()},
-      {type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none', action: () => this.showCropMenu()},
+      {type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none'}, // , action: () => this.showCropMenu()},
       {type: 'listItem', name: 'Square', field: 'aspectLock', value: '1:1'},
       {type: 'listItem', name: '16:9', field: 'aspectLock', value: '16:9'},
       {type: 'listItem', name: '4:3', field: 'aspectLock', value: '4:3'},
       {type: 'listItem', name: '3:2', field: 'aspectLock', value: '3:2'},
       {type: 'listItem', name: '2:3', field: 'aspectLock', value: '2:3'},
     ] as DiEditListItem[]),
-    new DiEditModeButton('rotate', 'Rotate', [
+
+    /* disabled until POI and rotate can be used at the same time
+
+    new DiEditModeButton(PreviewMode.EditRotate, 'Rotate', [
       {type: 'slider', name: 'Rotation (degrees)', field: 'rot', min: 0, max: 360}
     ] as DiEditSlider[]),
-    new DiEditModeButton('flip', 'Flip', [
+    */
+
+    new DiEditModeButton(PreviewMode.EditFlip, 'Flip', [
       {type: 'bool', name: 'Horizontal', field: 'fliph'},
       {type: 'bool', name: 'Vertical', field: 'flipv'}
     ]),
-    new DiEditModeButton('hsb', 'HSB', [
+
+    new DiEditModeButton(PreviewMode.EditHSV, 'HSB', [
       {type: 'slider', name: 'Hue (degrees)', field: 'hue', min: -180, max: 180},
       {type: 'slider', name: 'Saturation', field: 'sat', min: -100, max: 100},
       {type: 'slider', name: 'Brightness', field: 'bri', min: -100, max: 100}
@@ -48,7 +56,7 @@ export class EditToolbarComponent implements OnInit {
   ];
 
   poiButtons = [
-    new DiEditModeButton('poi', 'POI', []),
+    new DiEditModeButton(PreviewMode.POI, 'POI', []),
   ];
 
   constructor(private field: DiFieldService, public editor: EditorService) {
@@ -85,10 +93,7 @@ export class EditToolbarComponent implements OnInit {
   }
 
   setMode(button: DiEditModeButton) {
-    if (this.editor.previewMode !== PreviewMode.EditCrop) {
-      this.editor.modeRequest('edit');
-    }
-    this.editor.mode = button.mode;
+    this.editor.setMode(button.mode);
     this.activeSliders = button.sliders;
   }
 
@@ -98,15 +103,12 @@ export class EditToolbarComponent implements OnInit {
 
   clearCrop() {
     this.field.data.crop = [0, 0, 0, 0];
-    this.field.data.aspectLock = 'none';
+    this.field.data.aspectLock = 'clear';
     this.field.updateField();
   }
 
   poiMode() {
-    if (this.editor.previewMode !== PreviewMode.POI) {
-      this.editor.modeRequest('poi');
-    }
-    this.editor.mode = 'poi';
+    this.editor.setMode(PreviewMode.POI);
   }
 
   showCropMenu() {

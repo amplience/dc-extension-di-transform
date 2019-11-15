@@ -1,4 +1,4 @@
-export type DiEditMode = 'crop' | 'scale' | 'rotate' | 'flip' | 'hsb' | 'focal' | 'hotspot' | 'poi';
+import { PreviewMode } from './editor.service';
 
 export interface DiEditField {
   type: string;
@@ -24,10 +24,10 @@ export interface DiEditListItem extends DiEditField {
 }
 
 export class DiEditModeButton {
-  mode: DiEditMode;
+  mode: PreviewMode;
   name: string;
   sliders: DiEditField[];
-  constructor(mode: DiEditMode, name: string, sliders: DiEditField[]) {
+  constructor(mode: PreviewMode, name: string, sliders: DiEditField[]) {
     this.mode = mode;
     this.name = name;
     this.sliders = sliders;

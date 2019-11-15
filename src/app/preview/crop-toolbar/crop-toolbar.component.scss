@@ -1,0 +1,44 @@
+@import "../../core/core.scss";
+
+:host {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  background-color: white;
+  z-index: 1;
+  border-bottom: 1px solid $color-light-grey;
+}
+
+.amp-crop-toolbar__label {
+  font-size: 12px;
+  white-space: nowrap;
+  //width: 64px;
+  text-align: right;
+  padding-right: 2px;
+  padding-left: 15px;
+  transition: 0.5s color;
+
+  &--active {
+    color: $color-primary;
+  }
+}
+
+mat-form-field {
+  flex: 1;
+  margin: 6px;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding: 0 !important;
+}
+
+::ng-deep .mat-form-field-underline {
+  bottom: 0 !important;
+}
+
+::ng-deep .mat-form-field-infix {
+  width: auto;
+  border: 0;
+  margin-top: -2px;
+}

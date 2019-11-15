@@ -1,5 +1,4 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { DiEditMode } from './di-edit-slider';
 import { DiFieldService } from './di-field.service';
 import { DcSdkService } from '../api/dc-sdk.service';
 import { DiImageService } from './di-image.service';
@@ -23,8 +22,6 @@ export enum PreviewMode {
 })
 export class EditorService {
   previewMode: PreviewMode = PreviewMode.View;
-  mode: DiEditMode = 'crop';
-
   private cancelBackup: DiTransformedImage;
 
   modeChange: EventEmitter<PreviewMode> = new EventEmitter();
@@ -45,14 +42,12 @@ export class EditorService {
         if (needBackup) {
           this.backup();
         }
-        this.mode = 'crop';
         break;
       case 'poi':
         this.previewMode = PreviewMode.POI;
         if (needBackup) {
           this.backup();
         }
-        this.mode = 'poi';
         break;
       case 'delete':
         this.field.data.image = null;
@@ -91,5 +86,10 @@ export class EditorService {
     this.image.parseDataChange(this.field.data);
     await this.field.updateField();
     this.modeRequest('edit');
+  }
+
+  setMode(mode: PreviewMode) {
+    this.previewMode = mode;
+    this.modeChange.emit(this.previewMode);
   }
 }

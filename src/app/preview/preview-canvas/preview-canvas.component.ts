@@ -35,6 +35,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     return this.editor.previewMode === PreviewMode.POI;
   }
 
+  get isPOIActive(): boolean {
+    return this.field.isPOIActive();
+  }
+
   @ViewChild('imageContainer', {static: false}) imageContainer: ElementRef<HTMLDivElement>;
   @ViewChild('canvas', {static: false}) canvas: ElementRef<HTMLDivElement>;
 
@@ -63,13 +67,13 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   private lastFlip: boolean[] = [false, false];
 
   constructor(private myElem: ElementRef<Element>, private sanitizer: DomSanitizer, private dimage: DiImageService,
-              private editor: EditorService, private field: DiFieldService) {
+              public editor: EditorService, private field: DiFieldService) {
     this.dataUpdated(this.field.data);
     this.dimage.imageChanged.subscribe((image) => {
       this.updateCanvasTransform();
     });
     editor.modeChange.subscribe((mode) => {
-      this.updateCanvasTransform();
+      this.updateTransformFrames(2);
     });
     field.fieldUpdated.subscribe((data: DiTransformedImage) => {
       this.dataUpdated(data);
@@ -86,6 +90,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     this.image = (data == null) ? null : data.image;
 
     if (data != null) {
+      /*
       if (this.data.rot !== this.lastRotation) {
         // recalculate scale
         this.updateCanvasTransform();
@@ -95,8 +100,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
       if (this.data.fliph !== this.lastFlip[0] || this.data.flipv !== this.lastFlip[1]) {
         this.updateCanvasTransform();
       }
+      */
 
-      if (data.aspectLock != null && data.aspectLock !== 'none') {
+      this.updateTransformFrames(1);
+      if (data.aspectLock != null && data.aspectLock !== 'none' && data.aspectLock !== 'clear') {
         // attempt to lock aspect of the crop rectangle
         const split = data.aspectLock.split(':');
         if (split.length === 2) {
@@ -122,18 +129,31 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     return this.sanitizer.bypassSecurityTrustStyle(transformCommands.join(' '));
   }
 
+  updateTransformFrames(frames: number) {
+    requestAnimationFrame(() => {
+      this.updateCanvasTransform();
+      frames--;
+      if (frames > 0) {
+        this.updateTransformFrames(frames);
+      }
+    });
+  }
+
   updateCanvasTransform() {
     if (this.canvas == null) {
       return;
     }
     const container = this.canvas.nativeElement;
 
-    const size = [window.innerWidth - 20, 500 - 20];
+    // const size = [window.innerWidth - 20, 500 - 20];
+    const size = [container.clientWidth - 20, container.clientHeight - 20];
 
+    /*
     if (!this.isPreview) {
       size[0] -= 201;
       size[1] -= 42;
     }
+    */
 
     const bounds = this.dimage.getRotatedBounds();
     const imageSize = (this.isPreview && this.cropPx != null) ? [this.cropPx[2], this.cropPx[3]] : [bounds[2], bounds[3]];
@@ -202,8 +222,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     const aspectBound1 = [this.cropPx[2], this.cropPx[2] / aspect];
     const aspectBound2 = [this.cropPx[3] * aspect, this.cropPx[3]];
 
-    this.boundSize(aspectBound1, bounds);
-    this.boundSize(aspectBound2, bounds);
+    if (this.dimage.imageReady) {
+      this.boundSize(aspectBound1, bounds);
+      this.boundSize(aspectBound2, bounds);
+    }
 
     const newBound = [(aspectBound1[0] + aspectBound2[0]) / 2.0, (aspectBound1[1] + aspectBound2[1]) / 2.0];
 
@@ -386,12 +408,28 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
   grabCropHandle(handle: number) {
     // handle is 0 for top left, incrementing clockwise
+    switch (this.editor.previewMode) {
+      case PreviewMode.EditCrop:
+        if (handle === 5 && this.field.isCropActive()) {
+          return;
+        }
+        this.movingHandle = handle;
+        const moveEvent = this.moveHandle.bind(this);
+        this.bindMouseEvent(moveEvent, this.upHandle.bind(this));
+        break;
+      case PreviewMode.POI:
+        // place point of interest
+        if (handle !== 5) {
+          return;
+        }
+        if (!this.field.isPOIActive()) {
+          this.field.data.poi = {x: 0.5, y: 0.5};
+        }
+        this.grabPOI();
+    }
     if (this.editor.previewMode !== PreviewMode.EditCrop || (handle === 5 && this.field.isCropActive())) {
       return;
     }
-    this.movingHandle = handle;
-    const moveEvent = this.moveHandle.bind(this);
-    this.bindMouseEvent(moveEvent, this.upHandle.bind(this));
   }
 
   grabPOI() {

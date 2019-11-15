@@ -1,0 +1,19 @@
+<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[0]}">Crop X</label>
+<mat-form-field>
+  <input matInput [(ngModel)]="crop[0]" type="number" (change)="updateCrop()" (focus)="focus[0] = true" (blur)="focus[0] = false"/>
+</mat-form-field>
+
+<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[1]}">Crop Y</label>
+<mat-form-field>
+  <input matInput [(ngModel)]="crop[1]" type="number" (change)="updateCrop()" (focus)="focus[1] = true" (blur)="focus[1] = false"/>
+</mat-form-field>
+
+<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[2]}">Crop Width</label>
+<mat-form-field>
+  <input matInput [(ngModel)]="crop[2]" type="number" (change)="updateCrop()" (focus)="focus[2] = true" (blur)="focus[2] = false"/>
+</mat-form-field>
+
+<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[3]}">Crop Height</label>
+<mat-form-field>
+  <input matInput [(ngModel)]="crop[3]" type="number" (change)="updateCrop()" (focus)="focus[3] = true" (blur)="focus[3] = false"/>
+</mat-form-field>
