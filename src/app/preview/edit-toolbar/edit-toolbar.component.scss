@@ -46,10 +46,10 @@
     min-width: 150px;
   }
 
-  &__menu {
+  ::ng-deep &__menu {
     display: flex;
     flex-direction: column;
-    width: 600px;
+    overflow: visible !important;
 
     &__label {
       font-size: 12px;
