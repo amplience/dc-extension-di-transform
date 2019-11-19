@@ -96,7 +96,9 @@ export class DiPreviewService {
     }
 
     if (this.field.isPOIActive()) {
-      this.addSegment(queryCommands, 'Point of Interest', `poi=${data.poi.x},${data.poi.y},0,0&scaleFit=poi`, 'poi', {x: -1, y: -1});
+      this.addSegment(queryCommands, 'Point of Interest',
+      `poi=${this.decimalRound(data.poi.x, 10000)},${this.decimalRound(data.poi.y, 10000)},0,0&scaleFit=poi`,
+      'poi', {x: -1, y: -1});
     }
 
     if (this.field.isCropActive()) {
