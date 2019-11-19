@@ -45,6 +45,7 @@
         </div>
       </div>
     </div>
+    <amp-spinner *ngIf="hasImage" class="amp-preview-canvas__loading" [ngClass]="{'amp-preview-canvas__loading--hide': !isLoading}"></amp-spinner>
   </div>
   <amp-di-preview [ngClass]="{'amp-preview-canvas__dipreview--hide': isPreview}"></amp-di-preview>
 </div>

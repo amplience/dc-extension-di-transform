@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { TransformListComponent } from './metadata/transform-list/transform-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { CropToolbarComponent } from './preview/crop-toolbar/crop-toolbar.component';
+import { SpinnerComponent } from './preview/spinner/spinner.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { CropToolbarComponent } from './preview/crop-toolbar/crop-toolbar.compon
     ModeButtonsComponent,
     EditToolbarComponent,
     TransformListComponent,
-    CropToolbarComponent
+    CropToolbarComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,8 @@ import { CropToolbarComponent } from './preview/crop-toolbar/crop-toolbar.compon
     MatTableModule,
     MatTooltipModule,
     MatDividerModule,
-    HttpClientModule
+    HttpClientModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent]

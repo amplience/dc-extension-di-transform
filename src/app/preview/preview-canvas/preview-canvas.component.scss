@@ -126,4 +126,13 @@
       margin: 10px;
     }
   }
+
+  &__loading {
+    z-index: 100;
+
+    &--hide {
+      pointer-events: none;
+      opacity: 0;
+    }
+  }
 }

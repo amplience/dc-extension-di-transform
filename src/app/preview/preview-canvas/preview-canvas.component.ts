@@ -39,6 +39,14 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     return this.field.isPOIActive();
   }
 
+  get isLoading(): boolean {
+    return !this.dimage.imageReady;
+  }
+
+  get hasImage(): boolean {
+    return this.dimage.image != null;
+  }
+
   @ViewChild('imageContainer', {static: false}) imageContainer: ElementRef<HTMLDivElement>;
   @ViewChild('canvas', {static: false}) canvas: ElementRef<HTMLDivElement>;
 

@@ -1,0 +1,15 @@
+<div
+  fxLayout="column" fxLayoutAlign="center center" fxFlexFill fxAlign="">
+  <div fxLayout>
+    <div
+      class="amp-spinner__bounce amp-spinner__bounce--{{index}}"
+      *ngFor="let index of dots" >
+    </div>
+  </div>
+  <div class="amp-spinner__message" [ngClass]="{'amp-spinner__message--in': newMessage}">
+    {{message}}
+  </div>
+  <div class="amp-spinner__messageone amp-spinner__message--out" style="margin-top: -29px;" [ngClass]="{'amp-spinner__message--outreset': oldMessage}">
+    {{lastMessage}}
+  </div>
+</div>

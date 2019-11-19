@@ -80,8 +80,9 @@ export class EditorService {
       return;
     }
     this.field.data.image = result;
-    this.field.data.poi = {x: 0.5, y: 0.5};
+    this.field.data.poi = {x: -1, y: -1};
     this.field.data.crop = [null, null, null, null];
+    this.field.updateField();
     this.image.loadImage(this.field.data);
     this.image.parseDataChange(this.field.data);
     await this.field.updateField();

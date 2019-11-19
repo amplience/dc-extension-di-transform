@@ -38,14 +38,15 @@ export class DiImageService {
   }
 
   loadImage(data: DiTransformedImage) {
-    const image = new Image();
-    image.onload = this.imageLoaded.bind(this);
-    if (data.image != null) {
-      image.src = this.buildImageSrc(data.image);
-    }
-
     this.imageReady = false;
-    this.image = image;
+    if (data.image != null) {
+      const image = new Image();
+      image.onload = this.imageLoaded.bind(this);
+      image.src = this.buildImageSrc(data.image);
+      this.image = image;
+    } else {
+      this.image = null;
+    }
   }
 
   imageLoaded(event: Event) {
