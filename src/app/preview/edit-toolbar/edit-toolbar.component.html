@@ -32,6 +32,7 @@
       <button mat-flat-button
       *ngIf="button.sliders.length !== 0"
       [color]="(editor.previewMode == button.mode) ? 'primary' : 'secondary'"
+      [disabled]="isLoading"
       (click)="setMode(button)"
       [matMenuTriggerFor]="buttonMenu">
         {{button.name}}
@@ -39,14 +40,15 @@
       <button mat-flat-button
       *ngIf="button.sliders.length === 0"
       [color]="(editor.previewMode == button.mode) ? 'primary' : 'secondary'"
+      [disabled]="isLoading"
       (click)="setMode(button)">
         {{button.name}}
       </button>
     </ng-container>
     <mat-divider [vertical]="true"></mat-divider>
-    <button mat-flat-button (click)="poiMode()" [color]="(editor.previewMode === previewMode.POI) ? 'primary' : 'secondary'">Focal Point</button>
+    <button mat-flat-button [disabled]="isLoading" (click)="poiMode()" [color]="(editor.previewMode === previewMode.POI) ? 'primary' : 'secondary'">Focal Point</button>
     <mat-divider [vertical]="true"></mat-divider>
-    <button mat-flat-button (click)="resetTransforms()" matTooltip="Reset all" class="amp-edit-toolbar__reset">
+    <button mat-flat-button [disabled]="isLoading" (click)="resetTransforms()" matTooltip="Reset all" class="amp-edit-toolbar__reset">
       <mat-icon>undo</mat-icon>
     </button>
 

@@ -3,6 +3,7 @@ import { DiFieldService } from 'src/app/editor/di-field.service';
 import { DiEditField, DiEditModeButton, DiEditListItem, DiEditSlider } from 'src/app/editor/di-edit-slider';
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 import { MatMenuTrigger } from '@angular/material';
+import { DiImageService } from 'src/app/editor/di-image.service';
 
 @Component({
   selector: 'amp-edit-toolbar',
@@ -23,6 +24,10 @@ export class EditToolbarComponent implements OnInit {
 
   set crop(value: number[]) {
     this.field.data.crop = value;
+  }
+
+  get isLoading() {
+    return !this.dimage.imageReady;
   }
 
   editButtons = [
@@ -59,7 +64,7 @@ export class EditToolbarComponent implements OnInit {
     new DiEditModeButton(PreviewMode.POI, 'POI', []),
   ];
 
-  constructor(private field: DiFieldService, public editor: EditorService) {
+  constructor(private field: DiFieldService, public editor: EditorService, private dimage: DiImageService) {
     this.modeChanged();
     editor.modeChange.subscribe((mode) => {
       this.modeChanged();
