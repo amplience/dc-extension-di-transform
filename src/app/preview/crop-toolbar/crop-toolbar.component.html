@@ -1,19 +1,31 @@
-<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[0]}">Crop X</label>
+<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[0]}">
+  <span class="amp-crop-toolbar__label--full">Crop X</span>
+  <span class="amp-crop-toolbar__label--short">X</span>
+</label>
 <mat-form-field>
   <input matInput [(ngModel)]="crop[0]" type="number" (change)="updateCrop(false)" (focus)="focus[0] = true" (blur)="focus[0] = false"/>
 </mat-form-field>
 
-<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[1]}">Crop Y</label>
+<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[1]}">
+  <span class="amp-crop-toolbar__label--full">Crop Y</span>
+  <span class="amp-crop-toolbar__label--short">Y</span>
+</label>
 <mat-form-field>
   <input matInput [(ngModel)]="crop[1]" type="number" (change)="updateCrop(false)" (focus)="focus[1] = true" (blur)="focus[1] = false"/>
 </mat-form-field>
 
-<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[2]}">Crop Width</label>
+<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[2]}">
+  <span class="amp-crop-toolbar__label--full">Crop Width</span>
+  <span class="amp-crop-toolbar__label--short">W</span>
+</label>
 <mat-form-field>
   <input matInput [(ngModel)]="crop[2]" type="number" (change)="updateCrop(true)" (focus)="focus[2] = true" (blur)="focus[2] = false"/>
 </mat-form-field>
 
-<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[3]}">Crop Height</label>
+<label class="amp-crop-toolbar__label" [ngClass]="{'amp-crop-toolbar__label--active': focus[3]}">
+  <span class="amp-crop-toolbar__label--full">Crop Height</span>
+  <span class="amp-crop-toolbar__label--short">H</span>
+</label>
 <mat-form-field>
   <input matInput [(ngModel)]="crop[3]" type="number" (change)="updateCrop(true)" (focus)="focus[3] = true" (blur)="focus[3] = false"/>
 </mat-form-field>

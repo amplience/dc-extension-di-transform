@@ -22,6 +22,21 @@
   &--active {
     color: $color-primary;
   }
+
+  &--short {
+    display: none;
+  }
+
+  @media only screen and (max-width: 670px) {
+    &--full {
+      display: none;
+    }
+
+    &--short {
+      display: inline;
+    }
+  }
+
 }
 
 mat-form-field {

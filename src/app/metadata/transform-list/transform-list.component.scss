@@ -1,12 +1,22 @@
 .amp-transform-list {
   width: 100%;
+  table-layout: fixed;
 
   &__remove {
     width: 32px;
   }
 
   &__name {
-    width: 220px;
+    max-width: 220px;
+    width: 20%;
+    min-width: 100px;
+  }
+
+  &__query {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   ::ng-deep .mat-row {

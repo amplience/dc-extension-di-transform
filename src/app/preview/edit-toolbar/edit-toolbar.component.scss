@@ -14,10 +14,17 @@
     margin: 5px;
     height: 32px;
     line-height: 32px;
+    flex-shrink: 0;
   }
 }
 
 .amp-edit-toolbar {
+  &__modescroll {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    flex: 1;
+  }
+
   &__modes {
     flex: 1;
     display: flex;

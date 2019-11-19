@@ -1,82 +1,84 @@
-<div class="amp-edit-toolbar__modes">
-  <mat-menu #buttonMenu="matMenu" class="amp-edit-toolbar__menu">
-    <div class="amp-edit-toolbar__slidergroup" *ngFor="let slider of activeSliders" (click)="$event.stopPropagation()"
-      [ngClass]="{'amp-edit-toolbar__slidergroup--margin': slider.type !== 'listItem'}">
+<div class="amp-edit-toolbar__modescroll" data-simplebar>
+  <div class="amp-edit-toolbar__modes">
+    <mat-menu #buttonMenu="matMenu" class="amp-edit-toolbar__menu">
+      <div class="amp-edit-toolbar__slidergroup" *ngFor="let slider of activeSliders" (click)="$event.stopPropagation()"
+        [ngClass]="{'amp-edit-toolbar__slidergroup--margin': slider.type !== 'listItem'}">
 
-      <button mat-menu-item
-      *ngIf="slider.type == 'listItem'"
-      class="amp-edit-toolbar__item"
-      [ngClass]="{'amp-edit-toolbar__item--active': getSliderValue(slider) === slider.value }"
-      (click)="(slider.action) ? slider.action(slider) : updateSliderValue(slider, slider.value)">
-        <mat-icon>check</mat-icon><span>{{slider.name}}</span>
+        <button mat-menu-item
+        *ngIf="slider.type == 'listItem'"
+        class="amp-edit-toolbar__item"
+        [ngClass]="{'amp-edit-toolbar__item--active': getSliderValue(slider) === slider.value }"
+        (click)="(slider.action) ? slider.action(slider) : updateSliderValue(slider, slider.value)">
+          <mat-icon>check</mat-icon><span>{{slider.name}}</span>
+        </button>
+
+        <div class="amp-edit-toolbar__menu__label" *ngIf="slider.type != 'listItem'">{{slider.name}}</div>
+        <mat-slide-toggle
+        *ngIf="slider.type == 'bool'"
+        [checked]="!!getSliderValue(slider)"
+        (change)="updateSliderValue(slider, $event.checked)">
+        </mat-slide-toggle>
+        <mat-slider
+        *ngIf="slider.type == 'slider'"
+        thumbLabel="true"
+        [value]="getSliderValue(slider)"
+        [min]="slider.min"
+        [max]="slider.max"
+        (input)="updateSliderValue(slider, $event.value)"></mat-slider>
+      </div>
+    </mat-menu>
+    <div class="amp-edit-toolbar__crop-menu-anchor" [matMenuTriggerFor]="cropMenu" #cropMenuTrigger="matMenuTrigger"></div>
+    <ng-container *ngFor="let button of buttons">
+      <button mat-flat-button
+      *ngIf="button.sliders.length !== 0"
+      [color]="(editor.previewMode == button.mode) ? 'primary' : 'secondary'"
+      (click)="setMode(button)"
+      [matMenuTriggerFor]="buttonMenu">
+        {{button.name}}
       </button>
-
-      <div class="amp-edit-toolbar__menu__label" *ngIf="slider.type != 'listItem'">{{slider.name}}</div>
-      <mat-slide-toggle
-      *ngIf="slider.type == 'bool'"
-      [checked]="!!getSliderValue(slider)"
-      (change)="updateSliderValue(slider, $event.checked)">
-      </mat-slide-toggle>
-      <mat-slider
-      *ngIf="slider.type == 'slider'"
-      thumbLabel="true"
-      [value]="getSliderValue(slider)"
-      [min]="slider.min"
-      [max]="slider.max"
-      (input)="updateSliderValue(slider, $event.value)"></mat-slider>
-    </div>
-  </mat-menu>
-  <div class="amp-edit-toolbar__crop-menu-anchor" [matMenuTriggerFor]="cropMenu" #cropMenuTrigger="matMenuTrigger"></div>
-  <ng-container *ngFor="let button of buttons">
-    <button mat-flat-button
-    *ngIf="button.sliders.length !== 0"
-    [color]="(editor.previewMode == button.mode) ? 'primary' : 'secondary'"
-    (click)="setMode(button)"
-    [matMenuTriggerFor]="buttonMenu">
-      {{button.name}}
+      <button mat-flat-button
+      *ngIf="button.sliders.length === 0"
+      [color]="(editor.previewMode == button.mode) ? 'primary' : 'secondary'"
+      (click)="setMode(button)">
+        {{button.name}}
+      </button>
+    </ng-container>
+    <mat-divider [vertical]="true"></mat-divider>
+    <button mat-flat-button (click)="poiMode()" [color]="(editor.previewMode === previewMode.POI) ? 'primary' : 'secondary'">Focal Point</button>
+    <mat-divider [vertical]="true"></mat-divider>
+    <button mat-flat-button (click)="resetTransforms()" matTooltip="Reset all" class="amp-edit-toolbar__reset">
+      <mat-icon>undo</mat-icon>
     </button>
-    <button mat-flat-button
-    *ngIf="button.sliders.length === 0"
-    [color]="(editor.previewMode == button.mode) ? 'primary' : 'secondary'"
-    (click)="setMode(button)">
-      {{button.name}}
-    </button>
-  </ng-container>
-  <mat-divider [vertical]="true"></mat-divider>
-  <button mat-flat-button (click)="poiMode()" [color]="(editor.previewMode === previewMode.POI) ? 'primary' : 'secondary'">Focal Point</button>
-  <mat-divider [vertical]="true"></mat-divider>
-  <button mat-flat-button (click)="resetTransforms()" matTooltip="Reset all" class="amp-edit-toolbar__reset">
-    <mat-icon>undo</mat-icon>
-  </button>
 
-  <mat-menu #cropMenu="matMenu" class="amp-edit-toolbar__cropmenu">
-    <div class="amp-edit-toolbar__cropmenu" (click)="$event.stopPropagation()">
-      <h5 class="amp-edit-toolbar__croptitle">Custom Crop Rectangle</h5>
-      <div class="amp-edit-toolbar__cropgroup">
-        <mat-form-field>
-          <input matInput placeholder="Crop X" [(ngModel)]="crop[0]" type="number"/>
-        </mat-form-field>
+    <mat-menu #cropMenu="matMenu" class="amp-edit-toolbar__cropmenu">
+      <div class="amp-edit-toolbar__cropmenu" (click)="$event.stopPropagation()">
+        <h5 class="amp-edit-toolbar__croptitle">Custom Crop Rectangle</h5>
+        <div class="amp-edit-toolbar__cropgroup">
+          <mat-form-field>
+            <input matInput placeholder="Crop X" [(ngModel)]="crop[0]" type="number"/>
+          </mat-form-field>
 
-        <mat-form-field>
-          <input matInput placeholder="Crop Y" [(ngModel)]="crop[1]" type="number"/>
-        </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Crop Y" [(ngModel)]="crop[1]" type="number"/>
+          </mat-form-field>
+        </div>
+
+        <div class="amp-edit-toolbar__cropgroup">
+          <mat-form-field>
+            <input matInput placeholder="Crop Width" [(ngModel)]="crop[2]" type="number"/>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Crop Height" [(ngModel)]="crop[3]" type="number"/>
+          </mat-form-field>
+        </div>
+
+        <div class="amp-edit-toolbar__cropgroup">
+          <button mat-flat-button color="primary" (click)="cropMenuTrigger.closeMenu()">Done</button>
+        </div>
       </div>
-
-      <div class="amp-edit-toolbar__cropgroup">
-        <mat-form-field>
-          <input matInput placeholder="Crop Width" [(ngModel)]="crop[2]" type="number"/>
-        </mat-form-field>
-
-        <mat-form-field>
-          <input matInput placeholder="Crop Height" [(ngModel)]="crop[3]" type="number"/>
-        </mat-form-field>
-      </div>
-
-      <div class="amp-edit-toolbar__cropgroup">
-        <button mat-flat-button color="primary" (click)="cropMenuTrigger.closeMenu()">Done</button>
-      </div>
-    </div>
-  </mat-menu>
+    </mat-menu>
+  </div>
 </div>
 <div class="amp-edit-toolbar__right">
     <button mat-button (click)="exitMode(true)">Cancel</button>
