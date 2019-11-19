@@ -1,6 +1,4 @@
 import 'hammerjs';
-import 'simplebar';
-import 'simplebar/dist/simplebar.css';
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 

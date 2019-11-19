@@ -20,14 +20,14 @@
 
 .amp-edit-toolbar {
   &__modescroll {
-    overflow-x: scroll;
+    overflow: auto;
     overflow-y: hidden;
     flex: 1;
   }
 
   &__modes {
     flex: 1;
-    display: flex;
+    display: inline-flex;
 
     mat-divider {
       margin: 5px;

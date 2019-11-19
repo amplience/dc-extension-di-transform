@@ -14,6 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CropToolbarComponent } from './preview/crop-toolbar/crop-toolbar.component';
 import { SpinnerComponent } from './preview/spinner/spinner.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { SimplebarAngularModule } from 'simplebar-angular';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatTooltipModule,
     MatDividerModule,
     HttpClientModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    SimplebarAngularModule
   ],
   providers: [],
   bootstrap: [AppComponent]

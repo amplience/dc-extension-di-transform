@@ -1,4 +1,4 @@
-<div class="amp-edit-toolbar__modescroll" data-simplebar>
+<ngx-simplebar class="amp-edit-toolbar__modescroll">
   <div class="amp-edit-toolbar__modes">
     <mat-menu #buttonMenu="matMenu" class="amp-edit-toolbar__menu">
       <div class="amp-edit-toolbar__slidergroup" *ngFor="let slider of activeSliders" (click)="$event.stopPropagation()"
@@ -81,7 +81,7 @@
       </div>
     </mat-menu>
   </div>
-</div>
+</ngx-simplebar>
 <div class="amp-edit-toolbar__right">
     <button mat-button (click)="exitMode(true)">Cancel</button>
     <button mat-flat-button color="primary" (click)="exitMode(false)">Done</button>
