@@ -25,6 +25,7 @@ export class EditorService {
   private cancelBackup: DiTransformedImage;
 
   modeChange: EventEmitter<PreviewMode> = new EventEmitter();
+  entered: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private field: DiFieldService, private sdkService: DcSdkService, private image: DiImageService) { }
 
@@ -39,6 +40,7 @@ export class EditorService {
         break;
       case 'edit':
         this.previewMode = PreviewMode.EditCrop;
+        this.entered.emit(true);
         if (needBackup) {
           this.backup();
         }

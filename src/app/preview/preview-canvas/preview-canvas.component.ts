@@ -83,6 +83,9 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     editor.modeChange.subscribe((mode) => {
       this.updateTransformFrames(2);
     });
+    editor.entered.subscribe((mode) => {
+      this.updateTransformFrames(30);
+    });
     field.fieldUpdated.subscribe((data: DiTransformedImage) => {
       this.dataUpdated(data);
     });
@@ -98,18 +101,6 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     this.image = (data == null) ? null : data.image;
 
     if (data != null) {
-      /*
-      if (this.data.rot !== this.lastRotation) {
-        // recalculate scale
-        this.updateCanvasTransform();
-        this.lastRotation = this.data.rot;
-      }
-
-      if (this.data.fliph !== this.lastFlip[0] || this.data.flipv !== this.lastFlip[1]) {
-        this.updateCanvasTransform();
-      }
-      */
-
       this.updateTransformFrames(1);
       if (data.aspectLock != null && data.aspectLock !== 'none' && data.aspectLock !== 'clear') {
         // attempt to lock aspect of the crop rectangle
@@ -344,6 +335,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   }
 
   upHandle(event: MouseEvent) {
+    if (this.field.isCropActive && (this.field.data.aspectLock == null || this.field.data.aspectLock === 'clear')) {
+      this.data.aspectLock = 'none';
+      this.field.updateField();
+    }
     this.lastPos = null;
   }
 

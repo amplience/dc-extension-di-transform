@@ -65,7 +65,9 @@ export class DiPreviewService {
       elem = new DiTransformationSegment(name, query, [field], [defaultValue]);
       commands.push(elem);
     } else {
-      elem.query.push(query);
+      if (query != null) {
+        elem.query.push(query);
+      }
       elem.fields.push(field);
       elem.defaults.push(defaultValue);
     }
@@ -126,6 +128,7 @@ export class DiPreviewService {
         'crop',
         [0, 0, 0, 0]);
       }
+      this.addSegment(queryCommands, 'Crop', null, 'aspectLock', 'clear');
     }
     this.transformations = queryCommands;
     return queryCommands.map(command => command.queryString()).join('&');
