@@ -2,6 +2,8 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { DiFieldService } from './di-field.service';
 import { DiTransformedImage } from '../model/di-transformed-image';
 import { MediaImageLink } from 'dc-extensions-sdk';
+import { HttpClient } from '@angular/common/http';
+import { DiImageMeta } from '../model/di-image-meta';
 
 /**
  * Handles image related fields in the content item, such as crop and point of interest.
@@ -18,13 +20,15 @@ export class DiImageService {
 
   lastImage: MediaImageLink;
   image: HTMLImageElement;
+  imageMeta: DiImageMeta;
   imageWidth = 1;
   imageHeight = 1;
+  imageSizeMultiplier: number[] = [1, 1];
   imageReady = false;
 
   imageChanged: EventEmitter<HTMLImageElement> = new EventEmitter();
 
-  constructor(private field: DiFieldService) {
+  constructor(private field: DiFieldService, private http: HttpClient) {
     if (field.data != null) {
       this.parseDataChange(field.data);
     }
@@ -49,10 +53,21 @@ export class DiImageService {
     }
   }
 
-  imageLoaded(event: Event) {
-    this.imageReady = true;
+  async imageLoaded(event: Event) {
     this.imageWidth = (event.target as HTMLImageElement).width;
     this.imageHeight = (event.target as HTMLImageElement).height;
+    try {
+      this.imageMeta = (await this.http.get(this.buildImageSrc(this.field.data.image) + '.json').toPromise()) as DiImageMeta;
+      this.imageSizeMultiplier = [this.imageMeta.width / this.imageWidth, this.imageMeta.height / this.imageHeight];
+      this.imageWidth = this.imageMeta.width;
+      this.imageHeight = this.imageMeta.height;
+    } catch {
+      console.log('Could not load image metadata... Using width/height from image.');
+      this.imageMeta = null;
+      this.imageSizeMultiplier = [1, 1];
+    }
+
+    this.imageReady = true;
     const data = this.field.data;
 
     if (this.poiPx == null && this.field.isPOIActive()) {

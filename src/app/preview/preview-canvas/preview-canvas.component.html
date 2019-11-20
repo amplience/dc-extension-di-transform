@@ -10,6 +10,8 @@
       #imageContainer>
         <img class="amp-preview-canvas__image"
         src="http://{{getImageHost()}}/i/{{image.endpoint}}/{{escapeUrl(image.name)}}"
+        [style.width]="imageWidth + 'px'"
+        [style.height]="imageHeight + 'px'"
         [style.filter]="getImageFilter()"
         [style.transform]="getImageTransform()">
 
