@@ -3,6 +3,7 @@ import { DiTransformedImage } from '../model/di-transformed-image';
 import { DiEditSlider } from './di-edit-slider';
 import { DcSdkService } from '../api/dc-sdk.service';
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
+import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,8 @@ export class DiFieldService {
   fieldUpdated: EventEmitter<DiTransformedImage> = new EventEmitter();
   data: DiTransformedImage;
   stagingEnvironment: string;
+  defaultParams: string[] = [];
+  fullRes: boolean;
 
   private updateInProgress: boolean;
 
@@ -19,10 +22,21 @@ export class DiFieldService {
     sdk.getSDK().then(async (sdkInstance) => {
       sdkInstance.frame.startAutoResizer();
       this.stagingEnvironment = sdkInstance.stagingEnvironment;
+      this.loadParams(sdkInstance.params.instance);
       this.data = await sdkInstance.field.getValue();
       this.parseData();
       this.updateField();
     });
+  }
+
+  private loadParams(params: any) {
+    if (params.customVSE) {
+      this.stagingEnvironment = params.customVSE;
+    }
+    if (!params.useVSE) {
+      this.stagingEnvironment = null;
+    }
+    this.fullRes = params.alwaysFullRes;
   }
 
   async updateField() {
@@ -37,8 +51,7 @@ export class DiFieldService {
   }
 
   getImageHost(): string {
-    return (this.data && this.data.image) ? this.data.image.defaultHost : null;
-    // this.stagingEnvironment || ((this.data && this.data.image) ? this.data.image.defaultHost : null);
+    return this.stagingEnvironment || ((this.data && this.data.image) ? this.data.image.defaultHost : null);
   }
 
   parseData() {
@@ -73,6 +86,10 @@ export class DiFieldService {
 
   isPOIActive() {
     return this.data.poi != null && this.data.poi.x !== -1 && this.data.poi.y !== -1;
+  }
+
+  isImageActive() {
+    return this.data != null && this.data.image != null && this.data.image.name != null;
   }
 
   updateSliderValue(slider: DiEditSlider, value: number) {

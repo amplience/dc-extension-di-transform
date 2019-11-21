@@ -9,7 +9,7 @@
       (mousedown)="grabCropHandle(5)"
       #imageContainer>
         <img class="amp-preview-canvas__image"
-        src="http://{{getImageHost()}}/i/{{image.endpoint}}/{{escapeUrl(image.name)}}"
+        #image
         [style.width]="imageWidth + 'px'"
         [style.height]="imageHeight + 'px'"
         [style.filter]="getImageFilter()"
@@ -47,7 +47,11 @@
         </div>
       </div>
     </div>
-    <amp-spinner *ngIf="hasImage" class="amp-preview-canvas__loading" [ngClass]="{'amp-preview-canvas__loading--hide': !isLoading}"></amp-spinner>
+    <amp-spinner *ngIf="hasImage"
+    class="amp-preview-canvas__loading"
+    [ngClass]="{'amp-preview-canvas__loading--hide': !isLoading}"
+    [message]="imageError">
+    </amp-spinner>
   </div>
   <amp-di-preview [ngClass]="{'amp-preview-canvas__dipreview--hide': isPreview}"></amp-di-preview>
 </div>

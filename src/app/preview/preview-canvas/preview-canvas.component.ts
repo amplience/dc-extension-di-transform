@@ -44,11 +44,16 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   }
 
   get hasImage(): boolean {
-    return this.dimage.image != null;
+    return this.field.isImageActive();
+  }
+
+  get imageError(): string {
+    return this.dimage.imageError;
   }
 
   @ViewChild('imageContainer', {static: false}) imageContainer: ElementRef<HTMLDivElement>;
   @ViewChild('canvas', {static: false}) canvas: ElementRef<HTMLDivElement>;
+  @ViewChild('image', {static: false}) imageElem: ElementRef<HTMLImageElement>;
 
   get imageWidth(): number { return this.dimage.imageWidth; }
   get imageHeight(): number { return this.dimage.imageHeight; }
@@ -115,6 +120,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
+    this.dimage.imageUIProvider = () => this.imageElem.nativeElement;
   }
 
   ngOnChanges(changes) {

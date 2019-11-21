@@ -5,6 +5,12 @@ Check out `schema.json` for the content schema to use with this extension. Note 
 
 You're probably better off looking at a feature branch, check those out in the branches list.
 
+## Parameters in Schema
+Put the following in the `params` object to change features of the extension:
+- `useVSE`: Set to true to use a VSE for fetching and rendering images. If this is false, images must be published to be seen.
+- `customVSE`: Set to whatever your custom VSE's hostname is. Do not include `http://` or a trailing slash. `useVSE` must be true.
+- `alwaysFullRes`: When true, the main preview image is always fetched at full resolution.
+
 # Step by Step to run from Jenkins on DC:
 This project is built on Jenkins and hosted on dev-artifacts to make QA and UAT a little easier.
 - Go to a version of DC that supports UI extensions. Example: http://qa-daniel-app.s3-website-eu-west-1.amazonaws.com/builds/qa-titan-sprint-72-64/index-1.46.0-qa-titan-sprint-72-64.html?env=../envs/env-cmp.json
@@ -29,9 +35,8 @@ This project is built on Jenkins and hosted on dev-artifacts to make QA and UAT 
 ## TODO
 - POI summary, more than just one hotspot.
 - Work out what to do about cropping rotated images. (may need DI change to support this (pprotate?? make protate apply before pcrop?), if not we can just disable POI for rotated crops, or disable crop. up to the user)
-- Pixel level crop size control.
 - More transformations (blur, unsharp), discussion about "scale" now that we have full crop control.
-- "Metadata" tab that lets you see printouts of all the transformations.
+- "Metadata" tab that lets you see printouts of all the transformations. (?)
 
 ## Development server
 

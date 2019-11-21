@@ -25,7 +25,11 @@ export class DiImageService {
   imageHeight = 1;
   imageSizeMultiplier: number[] = [1, 1];
   imageReady = false;
+  imageError: string;
 
+  imageUIProvider: () => HTMLImageElement;
+
+  imageSizeLimit = 1000;
   imageChanged: EventEmitter<HTMLImageElement> = new EventEmitter();
 
   constructor(private field: DiFieldService, private http: HttpClient) {
@@ -38,15 +42,48 @@ export class DiImageService {
   }
 
   buildImageSrc(image: MediaImageLink): string {
-    return `https://${image.defaultHost}/i/${image.endpoint}/${encodeURIComponent(image.name)}`;
+    return `http://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}`;
   }
 
-  loadImage(data: DiTransformedImage) {
+  async loadImage(data: DiTransformedImage) {
     this.imageReady = false;
+    this.imageError = null;
     if (data.image != null) {
-      const image = new Image();
+      let defaultParams = '';
+      try {
+        this.imageMeta = (await this.http.get(this.buildImageSrc(this.field.data.image) + '.json').toPromise()) as DiImageMeta;
+        if (this.imageMeta.status === 'error') {
+          throw new Error(this.imageMeta.errorMsg);
+        }
+        this.imageSizeMultiplier = [this.imageMeta.width / this.imageWidth, this.imageMeta.height / this.imageHeight];
+        this.imageWidth = this.imageMeta.width;
+        this.imageHeight = this.imageMeta.height;
+
+        // limit size of preview image to a reasonable scale
+        if (!this.field.fullRes) {
+          if (this.imageWidth > this.imageHeight) {
+            if (this.imageWidth > this.imageSizeLimit) {
+              defaultParams = `?w=${this.imageSizeLimit}`;
+            }
+          } else {
+            if (this.imageHeight > this.imageSizeLimit) {
+              defaultParams = `?h=${this.imageSizeLimit}`;
+            }
+          }
+        }
+
+      } catch {
+        console.log('Could not load image metadata... Using width/height from image.');
+        this.imageMeta = null;
+        this.imageSizeMultiplier = [1, 1];
+      }
+
+      const image = this.imageUIProvider();
       image.onload = this.imageLoaded.bind(this);
-      image.src = this.buildImageSrc(data.image);
+      image.onerror = (event: ErrorEvent) => {
+        this.imageError = 'Could not load image!';
+      };
+      image.src = this.buildImageSrc(data.image) + defaultParams;
       this.image = image;
     } else {
       this.image = null;
@@ -54,17 +91,9 @@ export class DiImageService {
   }
 
   async imageLoaded(event: Event) {
-    this.imageWidth = (event.target as HTMLImageElement).width;
-    this.imageHeight = (event.target as HTMLImageElement).height;
-    try {
-      this.imageMeta = (await this.http.get(this.buildImageSrc(this.field.data.image) + '.json').toPromise()) as DiImageMeta;
-      this.imageSizeMultiplier = [this.imageMeta.width / this.imageWidth, this.imageMeta.height / this.imageHeight];
-      this.imageWidth = this.imageMeta.width;
-      this.imageHeight = this.imageMeta.height;
-    } catch {
-      console.log('Could not load image metadata... Using width/height from image.');
-      this.imageMeta = null;
-      this.imageSizeMultiplier = [1, 1];
+    if (this.imageMeta == null) {
+      this.imageWidth = (event.target as HTMLImageElement).width;
+      this.imageHeight = (event.target as HTMLImageElement).height;
     }
 
     this.imageReady = true;
