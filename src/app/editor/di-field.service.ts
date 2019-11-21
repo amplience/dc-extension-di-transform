@@ -66,7 +66,7 @@ export class DiFieldService {
         fliph: false,
         flipv: false,
         poi: {x: -1, y: -1},
-        aspectLock: 'none',
+        aspectLock: 'clear',
         query: ''
       };
     }
@@ -108,11 +108,11 @@ export class DiFieldService {
     return (value == null) ? 0 : value;
   }
 
-  resetDefault() {
+  async resetDefault() {
     const image = this.data.image;
     this.data = null;
     this.parseData();
     this.data.image = image;
-    this.updateField();
+    await this.updateField();
   }
 }

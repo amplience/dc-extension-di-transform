@@ -120,7 +120,28 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.dimage.imageUIProvider = () => this.imageElem.nativeElement;
+    this.dimage.imageUIProvider = this.getImageElem.bind(this);
+  }
+
+  public getImageElem(): Promise<HTMLImageElement> {
+    // it's possible that the image element has not been created yet
+    // if we're calling this function, we should be in a state where angular will create it
+    // so just wait a few frames until it does.
+    return new Promise((resolve, reject) => {
+      if (this.imageElem == null) {
+        let continueFunc;
+        continueFunc = () => {
+          if (this.imageElem == null) {
+            requestAnimationFrame(continueFunc);
+          } else {
+            resolve(this.imageElem.nativeElement);
+          }
+        };
+        requestAnimationFrame(continueFunc);
+      } else {
+        resolve(this.imageElem.nativeElement);
+      }
+    });
   }
 
   ngOnChanges(changes) {

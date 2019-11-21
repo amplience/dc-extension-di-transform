@@ -29,7 +29,7 @@ export class EditorService {
 
   constructor(private field: DiFieldService, private sdkService: DcSdkService, private image: DiImageService) { }
 
-  modeRequest(mode: string) {
+  async modeRequest(mode: string) {
     const needBackup = this.previewMode === PreviewMode.View;
     switch (mode) {
       case 'view':
@@ -52,6 +52,7 @@ export class EditorService {
         }
         break;
       case 'delete':
+        await this.field.resetDefault();
         this.field.data.image = null;
         this.previewMode = PreviewMode.View;
         this.field.updateField();
@@ -79,12 +80,12 @@ export class EditorService {
     try {
       result = await sdk.mediaLink.getImage();
     } catch (err) {
+      // decided against switching the image.
       return;
     }
+    await this.field.resetDefault();
     this.field.data.image = result;
-    this.field.data.poi = {x: -1, y: -1};
-    this.field.data.crop = [null, null, null, null];
-    this.field.updateField();
+    await this.field.updateField();
     this.image.loadImage(this.field.data);
     this.image.parseDataChange(this.field.data);
     await this.field.updateField();

@@ -27,7 +27,7 @@ export class DiImageService {
   imageReady = false;
   imageError: string;
 
-  imageUIProvider: () => HTMLImageElement;
+  imageUIProvider: () => Promise<HTMLImageElement>;
 
   imageSizeLimit = 1000;
   imageChanged: EventEmitter<HTMLImageElement> = new EventEmitter();
@@ -78,7 +78,7 @@ export class DiImageService {
         this.imageSizeMultiplier = [1, 1];
       }
 
-      const image = this.imageUIProvider();
+      const image = await this.imageUIProvider();
       image.onload = this.imageLoaded.bind(this);
       image.onerror = (event: ErrorEvent) => {
         this.imageError = 'Could not load image!';
