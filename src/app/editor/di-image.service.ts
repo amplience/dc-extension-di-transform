@@ -103,7 +103,6 @@ export class DiImageService {
       const bound = this.cropPx || this.getRotatedBounds();
       this.poiPx = [bound[0] + bound[2] * data.poi.x, bound[1] + bound[3] * data.poi.y];
     }
-
     this.imageChanged.emit(this.image);
   }
 

@@ -46,12 +46,16 @@ export class DiPreviewService {
 
   constructor(private field: DiFieldService, private image: DiImageService) {
     field.fieldUpdated.subscribe(data => {
-      this.updated.next(true);
+      this.updateDiQuery();
+    });
+
+    image.imageChanged.subscribe(result => {
+      this.updateDiQuery();
     });
 
     const db = this.updated.pipe(debounce(() => interval(100)));
     db.subscribe(() => {
-      this.updateDiQuery();
+      this.updateDiPreview();
     });
   }
 
@@ -74,7 +78,10 @@ export class DiPreviewService {
     return elem;
   }
 
-  getDiQuery() {
+  updateDiQuery() {
+    if (!this.image.imageReady) {
+      return;
+    }
     const queryCommands: DiTransformationSegment[] = [];
     const data = this.field.data;
     if (data.rot != null && data.rot !== 0) {
@@ -105,7 +112,8 @@ export class DiPreviewService {
 
     if (this.field.isCropActive()) {
       const crop = data.crop;
-      if (data.rot != null && data.rot !== 0) {
+      const alwaysCrop = true; // prefer crop over pcrop right now
+      if (alwaysCrop || (data.rot != null && data.rot !== 0)) {
         // cropping after a rotation. protate then crop. if the user wants to crop after this, they should use ecrop.
         // rotating resizes the image so we're going to want to use percentage calculations to align crops to the center
 
@@ -131,12 +139,13 @@ export class DiPreviewService {
       this.addSegment(queryCommands, 'Crop', null, 'aspectLock', 'clear');
     }
     this.transformations = queryCommands;
-    return queryCommands.map(command => command.queryString()).join('&');
+    this.field.data.query = queryCommands.map(command => command.queryString()).join('&');
+
+    this.updated.next(true);
   }
 
-  updateDiQuery() {
+  updateDiPreview() {
     const data = this.field.data;
-    data.query = this.getDiQuery();
     const bounds = this.image.getRotatedBounds();
     const image = data.image;
     if (image == null) {
@@ -145,7 +154,7 @@ export class DiPreviewService {
     }
 
     const previewSize = 141;
-    const previewPoi = data.rot === undefined || data.rot === 0;
+    const previewPoi = (data.rot != null && data.rot !== 0) || this.field.isPOIActive();
     const baseQuery = `http://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query;
     if (previewPoi) {
       this.previews = [];
@@ -153,14 +162,15 @@ export class DiPreviewService {
       this.previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=2:3&h=${previewSize}`, previewSize * 2 / 3, previewSize));
       this.previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=3:2&w=${previewSize}`, previewSize, previewSize * 2 / 3));
     } else {
+      const crop = (this.image.cropPx == null) ? bounds : this.image.cropPx;
       let width = previewSize;
-      let height = previewSize * this.image.cropPx[3] / this.image.cropPx[2];
+      let height = previewSize * crop[3] / crop[2];
       if (height > previewSize) {
         width /= height / previewSize;
         height /= height / previewSize;
       }
-      const requestWidth = Math.round(width * bounds[2] / this.image.cropPx[2]);
-      const requestHeight = Math.round(height * bounds[3] / this.image.cropPx[3]);
+      const requestWidth = Math.round(width * bounds[2] / crop[2]);
+      const requestHeight = Math.round(height * bounds[3] / crop[3]);
       this.previews = [new DiPreviewImage(baseQuery + `&w=${requestWidth}&h=${requestHeight}`, width, height)];
     }
   }

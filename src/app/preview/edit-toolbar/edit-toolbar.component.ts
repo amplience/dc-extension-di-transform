@@ -32,7 +32,7 @@ export class EditToolbarComponent implements OnInit {
 
   editButtons = [
     new DiEditModeButton(PreviewMode.EditCrop, 'Crop', [
-      {type: 'listItem', name: 'Clear', field: 'aspectLock', value: '', action: () => this.clearCrop()},
+      {type: 'listItem', name: 'Focal Point', field: 'aspectLock', value: 'poi', action: () => this.poiMode()},
       {type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none'}, // , action: () => this.showCropMenu()},
       {type: 'listItem', name: 'Square', field: 'aspectLock', value: '1:1'},
       {type: 'listItem', name: '16:9', field: 'aspectLock', value: '16:9'},
@@ -98,7 +98,9 @@ export class EditToolbarComponent implements OnInit {
   }
 
   setMode(button: DiEditModeButton) {
-    this.editor.setMode(button.mode);
+    if (!this.modeActive(button.mode)) {
+      this.editor.setMode(button.mode);
+    }
     this.activeSliders = button.sliders;
   }
 
@@ -113,10 +115,21 @@ export class EditToolbarComponent implements OnInit {
   }
 
   poiMode() {
-    this.editor.setMode(PreviewMode.POI);
+    this.field.data.crop = [0, 0, 0, 0];
+    this.field.data.aspectLock = 'poi';
+    this.field.updateField();
+    // this.editor.setMode(PreviewMode.POI);
   }
 
   showCropMenu() {
     this.cropMenuTrigger.openMenu();
+  }
+
+  modeActive(mode: PreviewMode): boolean {
+    let active = this.editor.previewMode;
+    if (active === PreviewMode.POI) {
+      active = PreviewMode.EditCrop;
+    }
+    return (active === mode);
   }
 }

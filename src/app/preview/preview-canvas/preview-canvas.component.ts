@@ -24,7 +24,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   data: DiTransformedImage;
 
   get isCrop(): boolean {
-    return this.editor.previewMode === PreviewMode.EditCrop;
+    return this.editor.previewMode === PreviewMode.EditCrop && !this.isPOI;
   }
 
   get isPreview(): boolean {
@@ -32,7 +32,8 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   }
 
   get isPOI(): boolean {
-    return this.editor.previewMode === PreviewMode.POI;
+    // when crop and POI are exclusive, poi mode is a special aspect lock.
+    return this.field.data.aspectLock === 'poi'; // this.editor.previewMode === PreviewMode.POI;
   }
 
   get isPOIActive(): boolean {
@@ -107,7 +108,16 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
     if (data != null) {
       this.updateTransformFrames(1);
-      if (data.aspectLock != null && data.aspectLock !== 'none' && data.aspectLock !== 'clear') {
+      const isAspect = data.aspectLock != null && data.aspectLock.indexOf(':') !== -1;
+
+      // ensure that poi and crop are exclusive
+      if (data.aspectLock === 'poi') {
+        data.crop = [0, 0, 0, 0];
+      } else {
+        data.poi = {x: -1, y: -1};
+      }
+
+      if (this.dimage.imageReady && isAspect) {
         // attempt to lock aspect of the crop rectangle
         const split = data.aspectLock.split(':');
         if (split.length === 2) {
@@ -190,7 +200,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     this.handleHSize = (-4 / scale) + 'px';
     this.handleSize = (8 / scale) + 'px';
     this.cropRectStroke = (2 / scale) + 'px';
-    this.outlineSize = (800 / scale) + 'px';
+    this.outlineSize = (Math.max(size[0], size[1]) / scale) + 'px';
     this.scale = scale;
     transformCommands.push(`scale(${scale}, ${scale})`);
 
@@ -438,16 +448,14 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
   grabCropHandle(handle: number) {
     // handle is 0 for top left, incrementing clockwise
-    switch (this.editor.previewMode) {
-      case PreviewMode.EditCrop:
+    if (this.isCrop) {
         if (handle === 5 && this.field.isCropActive()) {
           return;
         }
         this.movingHandle = handle;
         const moveEvent = this.moveHandle.bind(this);
         this.bindMouseEvent(moveEvent, this.upHandle.bind(this));
-        break;
-      case PreviewMode.POI:
+    } else if (this.isPOI) {
         // place point of interest
         if (handle !== 5) {
           return;
@@ -457,13 +465,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
         }
         this.grabPOI();
     }
-    if (this.editor.previewMode !== PreviewMode.EditCrop || (handle === 5 && this.field.isCropActive())) {
-      return;
-    }
   }
 
   grabPOI() {
-    if (this.editor.previewMode !== PreviewMode.POI) {
+    if (!this.isPOI) {
       return;
     }
     const moveEvent = this.movePOI.bind(this);

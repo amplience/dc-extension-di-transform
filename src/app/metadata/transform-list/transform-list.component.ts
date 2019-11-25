@@ -25,6 +25,6 @@ export class TransformListComponent implements OnInit {
       }
     }
     this.field.updateField();
-    this.di.getDiQuery();
+    this.di.updateDiPreview();
   }
 }
