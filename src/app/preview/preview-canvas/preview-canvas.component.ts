@@ -113,8 +113,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
       // ensure that poi and crop are exclusive
       if (data.aspectLock === 'poi') {
         data.crop = [0, 0, 0, 0];
+        this.cropPx = null;
       } else {
         data.poi = {x: -1, y: -1};
+        this.poiPx = null;
       }
 
       if (this.dimage.imageReady && isAspect) {
