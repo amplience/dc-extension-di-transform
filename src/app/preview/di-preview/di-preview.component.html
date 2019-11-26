@@ -1,1 +1,16 @@
-<img *ngFor="let item of preview.previews" [src]="item.url" [style.width]="item.width+'px'" [style.height]="item.height+'px'"/>
+<ng-container *ngFor="let item of preview.previews">
+  <img
+  *ngIf="item.error == null"
+  class="amp-di-preview__image"
+  [src]="item.url"
+  [style.width]="item.width+'px'"
+  [style.height]="item.height+'px'"
+  (error)="imageError($event, item)" />
+  <div
+  *ngIf="item.error != null"
+  class="amp-di-preview__image"
+  [style.width]="item.width+'px'"
+  [style.height]="item.height+'px'">
+    {{item.error}}
+  </div>
+</ng-container>

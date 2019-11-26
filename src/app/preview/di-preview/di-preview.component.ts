@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DiFieldService } from 'src/app/editor/di-field.service';
-import { DiPreviewService } from 'src/app/editor/di-preview.service';
+import { DiPreviewService, DiPreviewImage } from 'src/app/editor/di-preview.service';
 
 @Component({
   selector: 'amp-di-preview',
@@ -14,4 +14,7 @@ export class DiPreviewComponent implements OnInit {
   ngOnInit() {
   }
 
+  imageError(event: Event, item: DiPreviewImage) {
+    item.error = 'Not available.';
+  }
 }

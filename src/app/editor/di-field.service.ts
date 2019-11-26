@@ -4,6 +4,8 @@ import { DiEditSlider } from './di-edit-slider';
 import { DcSdkService } from '../api/dc-sdk.service';
 import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
+import { Subject, interval } from 'rxjs';
+import { debounce } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +19,15 @@ export class DiFieldService {
   fullRes: boolean;
 
   private updateInProgress: boolean;
+  private updated = new Subject();
 
   constructor(private sdk: DcSdkService) {
+    const db = this.updated.pipe(debounce(() => interval(100)));
+    db.subscribe(async () => {
+      const sdkInstance = await this.sdk.getSDK();
+      sdkInstance.field.setValue(this.data);
+    });
+
     sdk.getSDK().then(async (sdkInstance) => {
       sdkInstance.frame.startAutoResizer();
       this.stagingEnvironment = sdkInstance.stagingEnvironment;
@@ -45,8 +54,7 @@ export class DiFieldService {
     }
     this.updateInProgress = true;
     this.fieldUpdated.emit(this.data);
-    const sdk = await this.sdk.getSDK();
-    sdk.field.setValue(this.data);
+    this.updated.next(true);
     this.updateInProgress = false;
   }
 

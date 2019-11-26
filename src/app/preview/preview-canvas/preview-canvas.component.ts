@@ -12,6 +12,7 @@ import { DiPreviewService } from 'src/app/editor/di-preview.service';
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 import { DiFieldService } from 'src/app/editor/di-field.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ImageTransformerService } from '../image-transformer.service';
 
 @Component({
   selector: 'amp-preview-canvas',
@@ -55,6 +56,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   @ViewChild('imageContainer', {static: false}) imageContainer: ElementRef<HTMLDivElement>;
   @ViewChild('canvas', {static: false}) canvas: ElementRef<HTMLDivElement>;
   @ViewChild('image', {static: false}) imageElem: ElementRef<HTMLImageElement>;
+  @ViewChild('imageCanvas', {static: false}) imageCanvas: ElementRef<HTMLCanvasElement>;
 
   get imageWidth(): number { return this.dimage.imageWidth; }
   get imageHeight(): number { return this.dimage.imageHeight; }
@@ -81,10 +83,11 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   private lastFlip: boolean[] = [false, false];
 
   constructor(private myElem: ElementRef<Element>, private sanitizer: DomSanitizer, private dimage: DiImageService,
-              public editor: EditorService, private field: DiFieldService) {
+              public editor: EditorService, private field: DiFieldService, private transform: ImageTransformerService) {
     this.dataUpdated(this.field.data);
     this.dimage.imageChanged.subscribe((image) => {
       this.updateCanvasTransform();
+      this.renderCanvas();
     });
     editor.modeChange.subscribe((mode) => {
       this.updateTransformFrames(2);
@@ -100,6 +103,13 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
   getImageHost(): string {
     return this.field.getImageHost();
+  }
+
+  renderCanvas() {
+    const data = this.data;
+    if (this.dimage.imageReady && data != null) {
+      this.transform.renderCanvas(this.imageCanvas.nativeElement, this.imageElem.nativeElement, data);
+    }
   }
 
   dataUpdated(data: DiTransformedImage) {
@@ -128,6 +138,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
       } else {
         this.activeAspect = null;
       }
+      this.renderCanvas();
     }
   }
 
@@ -224,17 +235,22 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   }
 
   getImageFilter(): SafeStyle {
-    const filterCommands: string[] = [];
-    if (this.data.hue != null) {
-      filterCommands.push(`hue-rotate(${this.data.hue}deg)`);
+    const useCSS = false;
+    if (useCSS) {
+      const filterCommands: string[] = [];
+      if (this.data.hue != null) {
+        filterCommands.push(`hue-rotate(${this.data.hue}deg)`);
+      }
+      if (this.data.sat != null) {
+        filterCommands.push(`saturate(${this.diIntensityToBrowser(this.data.sat)})`);
+      }
+      if (this.data.bri != null) {
+        filterCommands.push(`brightness(${this.diIntensityToBrowser(this.data.bri)})`);
+      }
+      this.sanitizer.bypassSecurityTrustStyle(filterCommands.join(' '));
+    } else {
+      return this.sanitizer.bypassSecurityTrustStyle('');
     }
-    if (this.data.sat != null) {
-      filterCommands.push(`saturate(${this.diIntensityToBrowser(this.data.sat)})`);
-    }
-    if (this.data.bri != null) {
-      filterCommands.push(`brightness(${this.diIntensityToBrowser(this.data.bri)})`);
-    }
-    return this.sanitizer.bypassSecurityTrustStyle(filterCommands.join(' '));
   }
 
   private boundSize(size: number[], bounds: number[]) {

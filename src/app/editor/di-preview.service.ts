@@ -9,6 +9,7 @@ export class DiPreviewImage {
   url: SafeUrl;
   width: number;
   height: number;
+  error: string;
 
   constructor(url: SafeUrl, width: number, height: number) {
     this.url = url;

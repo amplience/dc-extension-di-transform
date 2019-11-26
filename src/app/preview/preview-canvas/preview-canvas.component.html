@@ -8,12 +8,17 @@
       [style.height]="imageHeight+'px'"
       (mousedown)="grabCropHandle(5)"
       #imageContainer>
-        <img class="amp-preview-canvas__image"
-        #image
+        <img #image
+        crossorigin="anonymous"
+        style="display:none">
+
+        <canvas class="amp-preview-canvas__image"
+        #imageCanvas
         [style.width]="imageWidth + 'px'"
         [style.height]="imageHeight + 'px'"
         [style.filter]="getImageFilter()"
         [style.transform]="getImageTransform()">
+        </canvas>
 
         <!-- The crop overlay -->
         <div class="amp-preview-canvas__croprect"

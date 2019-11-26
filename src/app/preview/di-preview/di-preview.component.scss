@@ -9,11 +9,17 @@
   position: relative;
   transition: 0.5s margin-right;
   background-color: #fcfcfc;
+}
 
-  img {
-    padding: 5px;
-    background: white;
-    margin: 5px;
-    border: 1px solid $color-light-grey;
-  }
+.amp-di-preview__image {
+  padding: 5px;
+  background: white;
+  margin: 5px;
+  border: 1px solid $color-light-grey;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-grey;
+  font-size: 15px;
 }
