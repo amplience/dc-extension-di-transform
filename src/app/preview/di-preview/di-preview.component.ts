@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, ViewChildren, QueryList, ElementRef, AfterViewChecked } from '@angular/core';
-import { DiPreviewService, DiPreviewImage } from 'src/app/editor/di-preview.service';
+import { DiPreviewService } from 'src/app/editor/di-preview.service';
 
 @Component({
   selector: 'amp-di-preview',
@@ -49,9 +49,5 @@ export class DiPreviewComponent implements OnInit, OnChanges, AfterViewChecked {
         }
       }
     }
-  }
-
-  imageError(event: Event, item: DiPreviewImage) {
-    item.error = 'Not available.';
   }
 }
