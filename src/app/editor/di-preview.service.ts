@@ -1,20 +1,56 @@
-import { Injectable } from '@angular/core';
-import { SafeUrl } from '@angular/platform-browser';
+import { Injectable, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { DiFieldService } from './di-field.service';
 import { debounce } from 'rxjs/operators';
 import { interval, Subject } from 'rxjs';
 import { DiImageService } from './di-image.service';
 
 export class DiPreviewImage {
-  url: SafeUrl;
+  url: string;
   width: number;
   height: number;
   error: string;
 
-  constructor(url: SafeUrl, width: number, height: number) {
+  image: HTMLImageElement;
+  displayImage: DiPreviewImage;
+
+  constructor(url: string, width: number, height: number, private changeFunc: (image: DiPreviewImage) => void) {
     this.url = url;
     this.width = width;
     this.height = height;
+
+    this.beginLoading();
+  }
+
+  beginLoading() {
+    this.image = new Image();
+
+    this.image.onload = () => {
+      this.displayImage = this;
+      this.changeFunc(this);
+    };
+
+    this.image.onerror = () => {
+      this.error = 'Not available.';
+      if (this.displayImage) {
+        this.displayImage.error = 'Not available.';
+      }
+      this.changeFunc(this);
+    };
+
+    this.image.src = this.url;
+    this.image.style.width = this.width + 'px';
+    this.image.style.height = this.height + 'px';
+  }
+
+  preferred(): DiPreviewImage {
+    return (this.displayImage == null) ? this : this.displayImage;
+  }
+
+  preferredImage(): HTMLImageElement {
+    if (this.displayImage == null && this.error) {
+      return null;
+    }
+    return this.preferred().image;
   }
 }
 
@@ -43,6 +79,7 @@ export class DiPreviewService {
 
   previews: DiPreviewImage[] = [];
   transformations: DiTransformationSegment[] = [];
+  previewLoaded: EventEmitter<DiPreviewImage> = new EventEmitter();
   private updated = new Subject();
 
   constructor(private field: DiFieldService, private image: DiImageService) {
@@ -77,6 +114,24 @@ export class DiPreviewService {
       elem.defaults.push(defaultValue);
     }
     return elem;
+  }
+
+  private updatePreviews(previews: DiPreviewImage[]) {
+    // track which previews updated, and the last "loaded" image for each preview.
+    // this lets us show the last preview if an image fails to load
+
+    if (this.previews.length === previews.length) {
+      // assume the preview arrangement is the same, for now.
+      // copy over the "displayImage" pointer. when an image loads, this sets to itself.
+      for (let i = 0; i < previews.length; i++) {
+        previews[i].displayImage = this.previews[i].displayImage;
+      }
+    }
+    this.previews = previews;
+  }
+
+  private previewChange(preview: DiPreviewImage) {
+    this.previewLoaded.emit(preview);
   }
 
   updateDiQuery() {
@@ -157,11 +212,13 @@ export class DiPreviewService {
     const previewSize = 141;
     const previewPoi = (data.rot != null && data.rot !== 0) || this.field.isPOIActive();
     const baseQuery = `http://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query;
+    const func = this.previewChange.bind(this);
+    let previews: DiPreviewImage[];
     if (previewPoi) {
-      this.previews = [];
-      this.previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=1:1&w=${previewSize}`, previewSize, previewSize));
-      this.previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=2:3&h=${previewSize}`, previewSize * 2 / 3, previewSize));
-      this.previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=3:2&w=${previewSize}`, previewSize, previewSize * 2 / 3));
+      previews = [];
+      previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=1:1&w=${previewSize}`, previewSize, previewSize, func));
+      previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=2:3&h=${previewSize}`, previewSize * 2 / 3, previewSize, func));
+      previews.push(new DiPreviewImage(baseQuery + `&sm=aspect&aspect=3:2&w=${previewSize}`, previewSize, previewSize * 2 / 3, func));
     } else {
       const crop = (this.image.cropPx == null) ? bounds : this.image.cropPx;
       let width = previewSize;
@@ -172,7 +229,9 @@ export class DiPreviewService {
       }
       const requestWidth = Math.round(width * bounds[2] / crop[2]);
       const requestHeight = Math.round(height * bounds[3] / crop[3]);
-      this.previews = [new DiPreviewImage(baseQuery + `&w=${requestWidth}&h=${requestHeight}`, width, height)];
+      previews = [new DiPreviewImage(baseQuery + `&w=${requestWidth}&h=${requestHeight}`, width, height, func)];
     }
+
+    this.updatePreviews(previews);
   }
 }

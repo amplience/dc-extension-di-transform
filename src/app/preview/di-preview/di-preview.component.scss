@@ -22,4 +22,12 @@
   justify-content: center;
   color: $color-grey;
   font-size: 15px;
+  text-align: center;
+  overflow: hidden;
+
+  transition: 0.5s filter;
+
+  &--invalid {
+    filter: grayscale(1);
+  }
 }
