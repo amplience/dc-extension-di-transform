@@ -28,7 +28,10 @@ export class DiPreviewComponent implements OnInit, OnChanges, AfterViewChecked {
   }
 
   updateContainers() {
-    const previews = this.preview.previews;
+    let previews = this.preview.previews;
+    if (previews == null) {
+      previews = [];
+    }
     const elems = this.imageContainers.toArray();
     for (let i = 0; i < previews.length; i++) {
       const preview = previews[i];

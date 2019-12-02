@@ -71,7 +71,7 @@ export class DiPreviewService {
     // track which previews updated, and the last "loaded" image for each preview.
     // this lets us show the last preview if an image fails to load
 
-    if (this.previews.length === previews.length) {
+    if (this.previews != null && this.previews.length === previews.length) {
       // assume the preview arrangement is the same, for now.
       // copy over the "displayImage" pointer. when an image loads, this sets to itself.
       for (let i = 0; i < previews.length; i++) {
