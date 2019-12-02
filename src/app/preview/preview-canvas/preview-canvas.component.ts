@@ -129,11 +129,17 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
         this.poiPx = null;
       }
 
-      if (this.dimage.imageReady && isAspect) {
+      if (isAspect) {
         // attempt to lock aspect of the crop rectangle
         const split = data.aspectLock.split(':');
         if (split.length === 2) {
-          this.forceAspect(Number(split[0]) / Number(split[1]));
+          const aspect = Number(split[0]) / Number(split[1]);
+          if (this.dimage.imageReady) {
+            this.forceAspect(aspect);
+          } else {
+            // image is not ready, so we are loading the data for the first time.
+            this.activeAspect = aspect; // set the current aspect but do not process the change.
+          }
         }
       } else {
         this.activeAspect = null;
