@@ -266,7 +266,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
 
   private forceAspect(aspect: number) {
     const bounds = this.dimage.getRotatedBounds();
-    if (this.cropPx == null) {
+    if (this.cropPx == null || (this.activeAspect !== aspect)) {
       this.cropPx = bounds;
     }
 
