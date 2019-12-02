@@ -11,7 +11,7 @@ export class ImageTransformerService {
   lastTransform: number[] = [];
   constructor() { }
 
-  renderCanvas(canvas: HTMLCanvasElement, imageElem: HTMLImageElement, data: DiTransformedImage) {
+  renderCanvas(canvas: HTMLCanvasElement, imageElem: HTMLImageElement, data: DiTransformedImage, force: boolean) {
     if (canvas !== this.canvas) {
       this.initCanvas(canvas);
       this.lastTransform = [];
@@ -19,6 +19,9 @@ export class ImageTransformerService {
     if (canvas.width !== imageElem.width || canvas.height !== imageElem.height) {
       canvas.width = imageElem.width;
       canvas.height = imageElem.height;
+      this.lastTransform = [];
+    }
+    if (force) {
       this.lastTransform = [];
     }
 

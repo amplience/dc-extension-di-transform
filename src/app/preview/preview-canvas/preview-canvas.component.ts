@@ -87,7 +87,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     this.dataUpdated(this.field.data);
     this.dimage.imageChanged.subscribe((image) => {
       this.updateCanvasTransform();
-      this.renderCanvas();
+      this.renderCanvas(true);
     });
     editor.modeChange.subscribe((mode) => {
       this.updateTransformFrames(2);
@@ -105,10 +105,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     return this.field.getImageHost();
   }
 
-  renderCanvas() {
+  renderCanvas(force: boolean) {
     const data = this.data;
     if (this.dimage.imageReady && data != null) {
-      this.transform.renderCanvas(this.imageCanvas.nativeElement, this.imageElem.nativeElement, data);
+      this.transform.renderCanvas(this.imageCanvas.nativeElement, this.imageElem.nativeElement, data, force);
     }
   }
 
@@ -138,7 +138,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
       } else {
         this.activeAspect = null;
       }
-      this.renderCanvas();
+      this.renderCanvas(false);
     }
   }
 
