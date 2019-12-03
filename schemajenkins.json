@@ -98,7 +98,7 @@
         }
       },
       "ui:extension": {
-        "url": "https://apps.dev-artifacts.adis.ws/dc-extension-di-transform/feature-intial/index.html",
+        "url": "https://apps.dev-artifacts.adis.ws/dc-extension-di-transform/master/index.html",
         "height": 500
       }
     }

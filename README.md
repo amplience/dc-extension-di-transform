@@ -1,9 +1,20 @@
 # DI Image Transformation UI Extension
 
 This UI extension lets you create an image transformation to attach to an image in DI, including crops, rotation and image effects.
-Check out `schema.json` for the content schema to use with this extension. Note that it is very likely to change at this point.
+Check out `schema.json` for the content schema to use with this extension. In future versions, you may need to update this schema to match any additions made to the functionality.
 
-You're probably better off looking at a feature branch, check those out in the branches list.
+## Key features:
+
+- Transform and preview of any image on the linked DAM account. Image and transforms are made available via the content item, as a query string and image link.
+- Shows DAM previews on the side that show real outputs of the transformations from DAM.
+- Supports cropping, flips and HSL modification.
+  - Crops support interactive dragging over the image, aspect ratio locks.
+  - HSL modification uses a software image filter to mimic what DI generates.
+- Extendable to support more types of transformation.
+- Support for rotation and POI on cropped image segments. Disabled for now.
+- Query parameters created within the transformer are included in the content item as a prebaked query string.
+- Can draw unpublished images using a VSE. useVSE: boolean by itself attempts to use the DC VSE, but you can also provide your own with customVSE.
+- Result is shown as a preview card on any future loads into the content item.
 
 ## Parameters in Schema
 Put the following in the `params` object to change features of the extension:
@@ -13,7 +24,7 @@ Put the following in the `params` object to change features of the extension:
 
 # Step by Step to run from Jenkins on DC:
 This project is built on Jenkins and hosted on dev-artifacts to make QA and UAT a little easier.
-- Go to a version of DC that supports UI extensions. Example: http://qa-daniel-app.s3-website-eu-west-1.amazonaws.com/builds/qa-titan-sprint-72-64/index-1.46.0-qa-titan-sprint-72-64.html?env=../envs/env-cmp.json
+- Go to any version of Amplience DC that supports UI extensions. (should be a given now)
 - Log in, go to development and create a new schema. (if the schema is not already set up on that account)
 - Paste the contents of `schemajenkins.json`.
   - If you want to choose a specific build, replace the branch name in the link to `index.html` with the branch you're interested in.
@@ -26,38 +37,34 @@ This project is built on Jenkins and hosted on dev-artifacts to make QA and UAT 
 - `npm i`
 - `ng serve`
 - Head to `http://localhost:4200/` and accept the security risk.
-- Go to a version of DC that supports UI extensions. Example: http://qa-daniel-app.s3-website-eu-west-1.amazonaws.com/builds/qa-titan-sprint-72-64/index-1.46.0-qa-titan-sprint-72-64.html?env=../envs/env-cmp.json
+- Go to any version of Amplience DC that supports UI extensions. (should be a given now)
 - Log in, go to development and create a new schema. (if the schema is not already set up on that account)
 - Paste the contents of `schema.json`
 - Save it. Go back to development and create a content type for your new schema.
 - Go to Production and make as many content items as your heart desires.
 
-## TODO
-- POI summary, more than just one hotspot.
-- Work out what to do about cropping rotated images. (may need DI change to support this (pprotate?? make protate apply before pcrop?), if not we can just disable POI for rotated crops, or disable crop. up to the user)
-- More transformations (blur, unsharp), discussion about "scale" now that we have full crop control.
-- "Metadata" tab that lets you see printouts of all the transformations. (?)
+## Angular CLI
 
-## Development server
+### Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+### Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
+### Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests (wip)
+### Running unit tests (wip)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Karma tests are not yet set up, but the regular angular-cli setup for them is present: Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests (wip)
+### Running end-to-end tests (wip)
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+End to end tests are not yet set up, but the regular angular-cli setup for them is present: Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
+### Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
