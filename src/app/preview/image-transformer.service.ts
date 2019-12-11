@@ -63,11 +63,8 @@ export class ImageTransformerService {
     const data = idata.data;
 
     const hMod = ((meta.hue || 0) + 360) % 360;
-    let sMod = 1 + (meta.sat || 0) / 100;
+    const sMod = 1 + (meta.sat || 0) / 100;
     const lMod = 1 + (meta.bri || 0) / 100;
-    if (lMod > 1 && sMod > 1) {
-      sMod = 1 + (sMod - 1) * (2 - lMod);
-    }
 
     const dataLength = data.length;
     for (let i = 0; i < dataLength; i += 4) {
@@ -95,7 +92,7 @@ export class ImageTransformerService {
       let s = (delta === 0) ? 0 : (delta / (1 - Math.abs(2 * l - 1)));
 
       h = (h + hMod) % 360;
-      s = (s * sMod);
+      s = Math.min(1, (s * sMod));
       l = (l * lMod);
 
       const c = (1 - Math.abs(2 * l - 1)) * s;
