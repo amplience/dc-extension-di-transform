@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import { DiTransformedImage } from '../model/di-transformed-image';
+import { DiPreviewService, DiTransformationSegment } from '../editor/di-preview.service';
+import { debounce } from 'rxjs/operators';
+import { interval } from 'rxjs';
+import { throwToolbarMixedModesError } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -8,8 +12,46 @@ export class ImageTransformerService {
 
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+  cachedHSVImage: HTMLImageElement;
+  cachedHSVImageLoaded = false;
   lastTransform: number[] = [];
-  constructor() { }
+
+  constructor(private diPreview: DiPreviewService) {
+    const db = diPreview.transformationsChanged.pipe(debounce(() => interval(666)));
+    db.subscribe(this.updateCachedHSV.bind(this));
+  }
+
+  updateCachedHSV(transformations: DiTransformationSegment[]) {
+    const queryString = transformations.filter(x => x.name === 'HSB').map(command => command.queryString()).join('&');
+    if (queryString.length === 0) {
+      // do not need a transformation
+      this.cachedHSVImage = null;
+      this.cachedHSVImageLoaded = false;
+      return;
+    }
+    const imgSrc = this.diPreview.getCustomQueryURL(queryString);
+
+    if (this.cachedHSVImage != null && this.cachedHSVImage.src === imgSrc) {
+      return;
+    }
+    const cachedImage = new Image();
+    this.cachedHSVImage = cachedImage;
+    cachedImage.crossOrigin = 'anonymous';
+    cachedImage.onload = () => {
+      if (cachedImage !== this.cachedHSVImage) {
+        return;
+      }
+      this.cachedHSVImageLoaded = true;
+      this.drawCachedHSV();
+    };
+    cachedImage.src = imgSrc;
+  }
+
+  drawCachedHSV() {
+    const canvas = this.canvas;
+    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.ctx.drawImage(this.cachedHSVImage, 0, 0);
+  }
 
   renderCanvas(canvas: HTMLCanvasElement, imageElem: HTMLImageElement, data: DiTransformedImage, force: boolean) {
     if (canvas !== this.canvas) {
@@ -27,9 +69,15 @@ export class ImageTransformerService {
 
     const transform = [data.hue, data.sat, data.bri];
     if (!this.transformDirty(transform)) {
+      if (this.cachedHSVImageLoaded) {
+        this.drawCachedHSV();
+      }
       return;
     }
     this.lastTransform = transform;
+    this.cachedHSVImageLoaded = false;
+    this.cachedHSVImage = null;
+
     this.ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.ctx.drawImage(imageElem, 0, 0);
     if (this.transformNeeded()) {

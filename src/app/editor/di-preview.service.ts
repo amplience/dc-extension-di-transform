@@ -31,7 +31,9 @@ export class DiPreviewService {
   previews: DiPreviewImage[] = [];
   transformations: DiTransformationSegment[] = [];
   previewLoaded: EventEmitter<DiPreviewImage> = new EventEmitter();
+  transformationsChanged: EventEmitter<DiTransformationSegment[]> = new EventEmitter();
   private updated = new Subject();
+
 
   constructor(private field: DiFieldService, private image: DiImageService) {
     field.fieldUpdated.subscribe(data => {
@@ -148,7 +150,18 @@ export class DiPreviewService {
     this.transformations = queryCommands;
     this.field.data.query = queryCommands.map(command => command.queryString()).join('&');
 
+    this.transformationsChanged.emit(this.transformations);
     this.updated.next(true);
+  }
+
+  getCustomQueryURL(query: string) {
+    const data = this.field.data;
+    const image = data.image;
+    if (image == null) {
+      return null;
+    }
+    const params = ((this.image.imageParams.length > 0) ? (this.image.imageParams + '&' + query) : ('?' + query));
+    return `http://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}` + params;
   }
 
   updateDiPreview() {

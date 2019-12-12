@@ -27,6 +27,8 @@ export class DiImageService {
   imageReady = false;
   imageError: string;
 
+  imageParams = '';
+
   imageUIProvider: () => Promise<HTMLImageElement>;
 
   imageSizeLimit = 1000;
@@ -83,6 +85,7 @@ export class DiImageService {
       image.onerror = (event: ErrorEvent) => {
         this.imageError = 'Could not load image!';
       };
+      this.imageParams = defaultParams;
       image.src = this.buildImageSrc(data.image) + defaultParams;
       this.image = image;
     } else {
