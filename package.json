@@ -1,5 +1,5 @@
 {
-  "name": "dc-uiex-di",
+  "name": "dc-extension-di-transform",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
