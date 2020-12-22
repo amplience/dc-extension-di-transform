@@ -11,6 +11,6 @@ frontend:
       commands:
         - npm run build
   artifacts:
-    baseDirectory: dist
+    baseDirectory: dist/dc-uiex-di
     files:
       - '**/*'
