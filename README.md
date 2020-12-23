@@ -2,6 +2,8 @@
 
 # dc-extension-di-transform
 
+![In Action](media/in-action.png)
+
 This UI extension lets you create an image transformation to attach to an image in DI, including crops, rotation and image effects.
 Check out `schema.json` for the content schema to use with this extension. In future versions, you may need to update this schema to match any additions made to the functionality.
 
