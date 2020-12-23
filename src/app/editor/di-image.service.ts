@@ -44,7 +44,7 @@ export class DiImageService {
   }
 
   buildImageSrc(image: MediaImageLink): string {
-    return `http://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}`;
+    return `https://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}`;
   }
 
   async loadImage(data: DiTransformedImage) {

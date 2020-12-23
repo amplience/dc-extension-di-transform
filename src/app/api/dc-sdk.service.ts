@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { init, SDK } from 'dc-extensions-sdk';
+import { SDK } from 'dc-extensions-sdk';
 
 /** A simple wrapper around the dc-extensions-sdk */
 @Injectable({
@@ -12,7 +12,7 @@ export class DcSdkService {
 
   public async getSDK(): Promise<SDK> {
     if (this.sdk == null) {
-      this.sdk = init();
+      this.sdk = (window as any).extensionsSdkInstance as Promise<SDK>;
     }
     return await this.sdk;
   }

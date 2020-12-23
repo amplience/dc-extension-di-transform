@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
     "@types/deep-equal": "^1.0.1",
-    "dc-extensions-sdk": "^1.0.1",
+    "dc-extensions-sdk": "^1.1.0",
     "deep-equal": "^1.1.0",
     "flex-layout-srcs": "github:angular/flex-layout",
     "hammerjs": "^2.0.8",
