@@ -49,6 +49,14 @@ You can use our deployed version of this extension (builds from the "production"
 
 _As this is an open source project you're welcome to host your own "fork" of this project. You can use any standard static hosting service (Netlify, Amplify, Vercel, etc.) if you wish._
 
+
+##### Permissions
+
+![Permissions](media/permissions.png)
+
+Sandbox permissions:
+- Allow same origin
+
 ### Assign the extension to schema
 
 - Log in, go to development and create a new schema.
