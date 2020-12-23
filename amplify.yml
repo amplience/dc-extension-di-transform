@@ -9,7 +9,7 @@ frontend:
         # - npm test
     build:
       commands:
-        - npm run build
+        - npm run build -- --prod
   artifacts:
     baseDirectory: dist/dc-uiex-di
     files:
