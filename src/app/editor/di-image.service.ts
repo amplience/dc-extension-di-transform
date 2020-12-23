@@ -118,7 +118,7 @@ export class DiImageService {
   getRotatedBounds() {
     const hw = this.imageWidth / 2;
     const hh = this.imageHeight / 2;
-    let angle = this.field.data.rot;
+    let angle = this.field && this.field.data && this.field.data.rot;
     if (angle == null) {
       angle = 0;
     }

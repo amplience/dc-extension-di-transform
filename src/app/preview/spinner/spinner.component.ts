@@ -12,8 +12,8 @@ export class SpinnerComponent implements OnInit, OnChanges {
   public dots: number[];
 
   lastMessage: string;
-  private newMessage: boolean;
-  private oldMessage: boolean;
+  public newMessage: boolean;
+  public oldMessage: boolean;
 
   constructor() {
   }

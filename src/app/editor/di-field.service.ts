@@ -18,6 +18,7 @@ export class DiFieldService {
   defaultParams: string[] = [];
   fullRes: boolean;
 
+  private forcePostUpdate: boolean;
   private updateInProgress: boolean;
   private updated = new Subject();
 
@@ -48,14 +49,23 @@ export class DiFieldService {
     this.fullRes = params.alwaysFullRes;
   }
 
-  async updateField() {
+  async updateField(force = false) {
     if (this.updateInProgress) {
+      this.forcePostUpdate = force;
       return;
     }
     this.updateInProgress = true;
     this.fieldUpdated.emit(this.data);
     this.updated.next(true);
     this.updateInProgress = false;
+
+    if (this.forcePostUpdate) {
+      this.updateInProgress = true;
+      this.fieldUpdated.emit(this.data);
+      this.updated.next(true);
+      this.updateInProgress = false;
+      this.forcePostUpdate = false;
+    }
   }
 
   getImageHost(): string {
