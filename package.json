@@ -25,7 +25,7 @@
     "@types/deep-equal": "^1.0.1",
     "dc-extensions-sdk": "^1.0.1",
     "deep-equal": "^1.1.0",
-    "flex-layout-srcs": "github:angular/flex-layout",
+    "flex-layout-srcs": "github:angular/flex-layout#dd367816157ea7a98dd1e9a9050f89b87d97639f",
     "hammerjs": "^2.0.8",
     "rxjs": "~6.4.0",
     "simplebar": "^5.0.7",
