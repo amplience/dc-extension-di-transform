@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://custom.image",
+  "$id": "https://github.com/amplience/dc-extension-di-transform/blob/master/schema.json",
 
   "title": "DI Image Customizer Example",
   "description": "Description",
@@ -98,7 +98,7 @@
         }
       },
       "ui:extension": {
-        "url": "https://localhost:4200",
+        "name": "di-image-transformation",
         "height": 500
       }
     }
