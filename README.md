@@ -38,14 +38,14 @@ This extension needs to be [registered](https://amplience.com/docs/development/r
 * Category: Content Field
 * Label: DI Image Transformation _(this will appear as the tab title in the Dashboard)_
 * Name: di-image-transformation _(needs to be unique with the Hub)_
-* URL: [https://dc-extension-di-transform.amplience.net](https://dc-extension-di-transform.amplience.net)
+* URL: [https://di-transform.extensions.content.amplience.net](https://di-transform.extensions.content.amplience.net)
 * Description: DI Image Transformation _(can be left blank, if you wish)_
 * Initial height: 500
 
 Note:
 You can use our deployed version of this extension (builds from the "production" branch) -
 
-[https://dc-extension-di-transform.amplience.net](https://dc-extension-di-transform.amplience.net)
+[di-transform.extensions.content.amplience.net](di-transform.extensions.content.amplience.net)
 
 _As this is an open source project you're welcome to host your own "fork" of this project. You can use any standard static hosting service (Netlify, Amplify, Vercel, etc.) if you wish._
 
