@@ -5,6 +5,19 @@
   background-color: $color-lightest-grey;
 }
 
+.amp-root {
+  &__title {
+    color: #666;
+    font-size: 13px;
+    margin: 5px 0;
+  }
+
+  &__main {
+    height: 500px;
+    overflow: hidden;
+  }
+}
+
 .amp-root__topbar {
   &--hide {
     margin-top: -42px;

@@ -12,7 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'dc-uiex-di';
+  title: string;
   data: DiTransformedImage;
 
   get showToolbar(): boolean {
@@ -22,5 +22,11 @@ export class AppComponent {
   constructor(private sdkService: DcSdkService, private editor: EditorService, private icons: MatIconRegistry,
               private sanitizer: DomSanitizer) {
     icons.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/ic-asset-delete.svg'));
+
+    sdkService.getSDK().then((sdk) => {
+      const params = { ...sdk.params.installation, ...sdk.params.instance };
+
+      this.title = (params as any).title || sdk.field.schema.title;
+    });
   }
 }
