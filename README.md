@@ -67,6 +67,8 @@ Sandbox permissions:
 
 ## How to run locally:
 
+This project requires Node 14.x or 16.x to build.
+
 - `npm install -g angular-cli` (if it is not already installed)
 - `npm i`
 - `ng serve`
