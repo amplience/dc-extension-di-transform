@@ -1,5 +1,3 @@
-[![Amplience Dynamic Content](media/header.png)](https://amplience.com/dynamic-content)
-
 # dc-extension-di-transform
 
 ![In Action](media/in-action.png)
