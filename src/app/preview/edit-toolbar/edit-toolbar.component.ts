@@ -4,6 +4,7 @@ import { DiEditField, DiEditModeButton, DiEditListItem, DiEditSlider } from 'src
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 import { MatMenuTrigger } from '@angular/material';
 import { DiImageService } from 'src/app/editor/di-image.service';
+import { ImageStudioLauncherService } from 'src/app/image-studio-launcher/image-studio-launcher.service';
 
 @Component({
   selector: 'amp-edit-toolbar',
@@ -64,7 +65,7 @@ export class EditToolbarComponent implements OnInit {
     new DiEditModeButton(PreviewMode.POI, 'POI', []),
   ];
 
-  constructor(private field: DiFieldService, public editor: EditorService, private dimage: DiImageService) {
+  constructor(private field: DiFieldService, public editor: EditorService, private dimage: DiImageService, private imageStudioLauncherService: ImageStudioLauncherService) {
     this.modeChanged();
     editor.modeChange.subscribe((mode) => {
       this.modeChanged();
@@ -131,5 +132,9 @@ export class EditToolbarComponent implements OnInit {
       active = PreviewMode.EditCrop;
     }
     return (active === mode);
+  }
+
+  async openImageStudio() {
+    this.imageStudioLauncherService.openImageStudio(this.field.data.image)
   }
 }
