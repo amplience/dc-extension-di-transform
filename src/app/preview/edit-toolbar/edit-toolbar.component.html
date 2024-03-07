@@ -46,6 +46,10 @@
       </button>
     </ng-container>
     <mat-divider [vertical]="true"></mat-divider>
+    <button mat-flat-button [disabled]="isLoading" matTooltip="Edit in Image Studio" class="amp-edit-toolbar__reset">
+      <mat-icon>image</mat-icon>
+    </button>
+    <mat-divider [vertical]="true"></mat-divider>
     <button mat-flat-button [disabled]="isLoading" (click)="resetTransforms()" matTooltip="Reset all" class="amp-edit-toolbar__reset">
       <mat-icon>undo</mat-icon>
     </button>

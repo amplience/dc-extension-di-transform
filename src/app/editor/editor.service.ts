@@ -57,6 +57,10 @@ export class EditorService {
         this.previewMode = PreviewMode.View;
         this.field.updateField();
         break;
+      case 'openImageStudio':
+        const imageStudioUrl = "http://localhost:5173/image-studio";
+        const winRef = window.open(imageStudioUrl);
+        break;
     }
 
     this.modeChange.emit(this.previewMode);
