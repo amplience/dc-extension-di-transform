@@ -1,19 +1,31 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import { SDK } from 'dc-extensions-sdk';
+import { Injectable } from '@angular/core';
+import { init, ContentFieldExtension, Params } from 'dc-extensions-sdk';
+import { DiTransformedImage } from '../model/di-transformed-image';
+
+export interface FieldModel {
+  image: any;
+}
+
+export interface Parameters extends Params {
+  installation: {
+    imageStudioUrl: string;
+  };
+}
 
 /** A simple wrapper around the dc-extensions-sdk */
 @Injectable({
   providedIn: 'root'
 })
 export class DcSdkService {
-  private sdk: Promise<SDK>;
+  private sdk: ContentFieldExtension<DiTransformedImage, Parameters>;
   constructor() {
   }
 
-  public async getSDK(): Promise<SDK> {
-    if (this.sdk == null) {
-      this.sdk = (window as any).extensionsSdkInstance as Promise<SDK>;
+  public async getSDK() {
+    if (!this.sdk) {
+      this.sdk = await init<ContentFieldExtension<DiTransformedImage, Parameters>>();
+
     }
-    return await this.sdk;
+    return this.sdk;
   }
 }

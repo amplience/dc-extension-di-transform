@@ -1,9 +1,9 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { DiFieldService } from './di-field.service';
 import { DiTransformedImage } from '../model/di-transformed-image';
-import { MediaImageLink } from 'dc-extensions-sdk';
 import { HttpClient } from '@angular/common/http';
 import { DiImageMeta } from '../model/di-image-meta';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 
 /**
  * Handles image related fields in the content item, such as crop and point of interest.

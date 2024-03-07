@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, OnChanges } from '@angular/core';
-import { MediaImageLink } from 'dc-extensions-sdk';
 import { DiTransformedImage } from 'src/app/model/di-transformed-image';
 import { DomSanitizer, SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { QueryValueType } from '@angular/compiler/src/core';
@@ -13,6 +12,7 @@ import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 import { DiFieldService } from 'src/app/editor/di-field.service';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ImageTransformerService } from '../image-transformer.service';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 
 @Component({
   selector: 'amp-preview-canvas',
