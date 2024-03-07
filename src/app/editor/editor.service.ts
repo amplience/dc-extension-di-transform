@@ -3,7 +3,7 @@ import { DiFieldService } from './di-field.service';
 import { DcSdkService } from '../api/dc-sdk.service';
 import { DiImageService } from './di-image.service';
 import { DiTransformedImage } from '../model/di-transformed-image';
-import { MediaImageLink } from 'dc-extensions-sdk';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 
 export enum PreviewMode {
   View,

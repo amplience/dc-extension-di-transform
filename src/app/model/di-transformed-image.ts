@@ -1,4 +1,5 @@
-import { MediaImageLink } from 'dc-extensions-sdk';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
+
 
 /** The data type we expect the schema to use. */
 export interface DiTransformedImage {
