@@ -6,6 +6,7 @@ import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { Subject, interval } from 'rxjs';
 import { debounce } from 'rxjs/operators';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 
 @Injectable({
   providedIn: 'root'
@@ -114,6 +115,11 @@ export class DiFieldService {
     }
     const value = this.data[slider.field];
     return (value == null) ? 0 : value;
+  }
+
+  async updateImageValue(image: MediaImageLink) {
+    this.data.image = image;
+    await this.updateField();
   }
 
   async resetDefault() {

@@ -1,22 +1,12 @@
 import { Injectable } from '@angular/core';
 import { DcSdkService } from '../api/dc-sdk.service';
-import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 import { BehaviorSubject } from 'rxjs';
+import { ImageInfo } from '../model/image-info';
+import { UploadImageService } from './upload-image.service';
+import { Asset } from '../model/asset';
+import { DiFieldService } from '../editor/di-field.service';
 
-export interface AssetInfo {
-  thumbURL: string;
-  srcName: string;
-  label: string;
-  folderID: string;
-  bucketID: string;
-}
-
-export interface ImageInfo {
-  srcAsset: AssetInfo;
-  srcImage: MediaImageLink;
-}
-
-interface WindowData {
+export interface WindowData {
   window: Window;
   connected: boolean;
   srcImageUrl: string;
@@ -26,7 +16,7 @@ interface WindowData {
   };
 }
 
-interface WindowMessageDataOut {
+export interface WindowMessageDataOut {
   extensionMeta?: {
     exportContext: string;
   };
@@ -34,7 +24,7 @@ interface WindowMessageDataOut {
   focus?: boolean;
 }
 
-interface WindowMessageDataIn {
+export interface WindowMessageDataIn {
   data: {
     exportImageUrl?: string;
     connect?: boolean;
@@ -52,11 +42,10 @@ export class ImageStudioLauncherService {
   private readonly _returnedImageUrl = new BehaviorSubject<string>(undefined);
   readonly _returnedImageUrl$ = this._returnedImageUrl.asObservable();
 
+  imageInfo: ImageInfo;
   imageStudioUrl: string;
-  sdkService: DcSdkService;
 
-  constructor(sdkService: DcSdkService) {
-    this.sdkService = sdkService;
+  constructor(private sdkService: DcSdkService, private uploadImageService: UploadImageService, private diFieldService: DiFieldService) {
 
     window.addEventListener('message', (event) => this.listener(event));
 
@@ -65,7 +54,13 @@ export class ImageStudioLauncherService {
     });
 
     this._returnedImageUrl.subscribe((value) => {
-      console.log('Image returned from Image Studio', value);
+      if (!value) {
+        return;
+      }
+      this.uploadImageService.uploadToAssetStore(this.returnedImageUrl, this.imageInfo).then((uploadedAsset: Asset) => {
+        const mediaImageLink = this.uploadImageService.createImageLinkFromAsset(this.imageInfo.srcImage, uploadedAsset);
+        this.diFieldService.updateImageValue(mediaImageLink);
+      });
     });
   }
 
@@ -143,11 +138,13 @@ export class ImageStudioLauncherService {
 
   public async openImageStudio(image) {
     const sdkInstance = await this.sdkService.getSDK();
-    const asset = await sdkInstance.assets.getById(image.id);
+    const srcAsset = await sdkInstance.assets.getById(image.id);
+
+    this.imageInfo = {srcAsset, srcImage: image };
     this.imageStudioUrl = sdkInstance.params.installation.imageStudioUrl;
 
     if (this.activeWindow && this.activeWindow.connected) {
-      this.activeWindow.srcImageUrl = image.thumbURL;
+      this.activeWindow.srcImageUrl = this.imageInfo.srcAsset.thumbURL;
       this.activeWindow.sendMessage = {
         srcImageUrl: true,
       };
@@ -164,7 +161,7 @@ export class ImageStudioLauncherService {
       const newWinObj: WindowData = {
         window: winRef,
         connected: false,
-        srcImageUrl: asset.thumbURL,
+        srcImageUrl: this.imageInfo.srcAsset.thumbURL,
       };
       this.activeWindow = newWinObj;
     }
