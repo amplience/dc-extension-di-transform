@@ -4,6 +4,7 @@ import { DcSdkService } from '../api/dc-sdk.service';
 import { DiImageService } from './di-image.service';
 import { DiTransformedImage } from '../model/di-transformed-image';
 import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
+import { ImageStudioLauncherService } from '../image-studio-launcher/image-studio-launcher.service';
 
 export enum PreviewMode {
   View,
@@ -27,7 +28,7 @@ export class EditorService {
   modeChange: EventEmitter<PreviewMode> = new EventEmitter();
   entered: EventEmitter<boolean> = new EventEmitter();
 
-  constructor(private field: DiFieldService, private sdkService: DcSdkService, private image: DiImageService) { }
+  constructor(private field: DiFieldService, private sdkService: DcSdkService, private image: DiImageService, private imageStudioLauncherService: ImageStudioLauncherService) { }
 
   async modeRequest(mode: string) {
     const needBackup = this.previewMode === PreviewMode.View;
@@ -56,6 +57,9 @@ export class EditorService {
         this.field.data.image = null;
         this.previewMode = PreviewMode.View;
         this.field.updateField();
+        break;
+      case 'openImageStudio':
+        this.imageStudioLauncherService.openImageStudio(this.field.data.image)
         break;
     }
 
