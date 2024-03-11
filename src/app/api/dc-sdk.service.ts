@@ -9,6 +9,7 @@ export interface FieldModel {
 export interface Parameters extends Params {
   installation: {
     imageStudioUrl: string;
+    mediaAssetsUrl: string;
   };
 }
 
@@ -24,7 +25,6 @@ export class DcSdkService {
   public async getSDK() {
     if (!this.sdk) {
       this.sdk = await init<ContentFieldExtension<DiTransformedImage, Parameters>>();
-
     }
     return this.sdk;
   }

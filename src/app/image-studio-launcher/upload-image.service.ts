@@ -49,12 +49,12 @@ export class UploadImageService {
         ],
       };
 
+      const mediaAssetsUrl = sdk.params && sdk.params.installation && sdk.params.installation.mediaAssetsUrl
       const sendAsset = await sdk.client.request({
-        url: 'https://api.amplience-qa.net/v2/content/media/assets',
+        url: mediaAssetsUrl || 'https://api.amplience-qa.net/v2/content/media/assets',
         method: 'PUT' as HttpMethod,
         data: JSON.stringify(payload),
       });
-      console.log(sendAsset)
       if (sendAsset.status !== 200) {
         throw new Error('Error creating new asset');
       }
