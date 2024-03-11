@@ -20,6 +20,31 @@ export interface AssetStoreRequestBody {
   }[];
 }
 
+export const imageMimeTypeToExtension = (
+  mimeType: string | null,
+): string | undefined => {
+  switch (mimeType) {
+    case 'image/jpeg':
+      return 'jpg';
+    case 'image/png':
+      return 'png';
+    case 'image/bmp':
+      return 'bmp';
+    case 'image/gif':
+      return 'gif';
+    case 'image/tiff':
+      return 'tif';
+    case 'image/webp':
+      return 'webp';
+    case 'image/jp2':
+      return 'jp2';
+    case 'image/avif':
+      return 'avif';
+    default:
+      return undefined;
+  }
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -34,15 +59,36 @@ export class UploadImageService {
         throw new Error('User has no HubId');
       }
 
+      // perform a HEAD request to validate whether the new asset is of an acceptable mime type
+      const response = await fetch(url, {
+        method: 'HEAD',
+      });
+
+      let fileExtension;
+      if (response.status === 200 && response.headers.has('Content-Type')) {
+        const contentType = response.headers.get('Content-Type');
+        fileExtension = imageMimeTypeToExtension(contentType);
+      }
+
+      if (!fileExtension) {
+        throw new Error('Unable to determine image Content-Type');
+      }
+
+      const periodIndex = imageInfo.srcAsset.srcName.lastIndexOf('.');
+      const srcNameNoExtension =
+        periodIndex >= 0
+          ? imageInfo.srcAsset.srcName.substring(0, periodIndex)
+          : imageInfo.srcAsset.srcName;
+
       const payload: AssetStoreRequestBody = {
         hubId: sdk.hub.id,
         mode: 'renameUnique',
         assets: [
           {
             src: url,
-            name: imageInfo.srcImage.name,
-            label: imageInfo.srcAsset.label,
-            srcName: imageInfo.srcAsset.srcName,
+            name: srcNameNoExtension,
+            srcName: srcNameNoExtension + '.' + fileExtension,
+            label: srcNameNoExtension + '.' + fileExtension,
             folderID: imageInfo.srcAsset.folderID,
             bucketID: imageInfo.srcAsset.bucketID,
           },
