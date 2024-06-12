@@ -1,4 +1,5 @@
-<div style="height:500px">
+<div class="amp-root__title" *ngIf="title">{{title}}</div>
+<div class="amp-root__main">
 <amp-edit-toolbar [ngClass]="{'amp-root__topbar--hide': !showToolbar}"></amp-edit-toolbar>
 <amp-preview-canvas></amp-preview-canvas>
 </div>
