@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { DiFieldService } from './di-field.service';
 import { DiTransformedImage } from '../model/di-transformed-image';
-import { MediaImageLink } from 'dc-extensions-sdk';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 import { HttpClient } from '@angular/common/http';
 import { DiImageMeta } from '../model/di-image-meta';
 
@@ -137,7 +137,7 @@ export class DiImageService {
       if (this.lastImage != null) {
         // clear data from the last image.
         data.crop = [0, 0, 0, 0];
-        data.poi = {x: -1, y: -1};
+        data.poi = { x: -1, y: -1 };
         this.poiPx = null;
       }
       this.loadImage(data);

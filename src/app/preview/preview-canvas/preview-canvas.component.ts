@@ -1,18 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter, ElementRef, ViewChild, OnChanges } from '@angular/core';
-import { MediaImageLink } from 'dc-extensions-sdk';
+import { Component, OnInit, ElementRef, ViewChild, OnChanges } from '@angular/core';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 import { DiTransformedImage } from 'src/app/model/di-transformed-image';
-import { DomSanitizer, SafeStyle, SafeUrl } from '@angular/platform-browser';
-import { QueryValueType } from '@angular/compiler/src/core';
-import { throwMatDialogContentAlreadyAttachedError, throwMatDuplicatedDrawerError } from '@angular/material';
-import { Subject, interval } from 'rxjs';
-import { debounce } from 'rxjs/operators';
-import { ThrowStmt } from '@angular/compiler';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { DiImageService } from 'src/app/editor/di-image.service';
-import { DiPreviewService } from 'src/app/editor/di-preview.service';
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 import { DiFieldService } from 'src/app/editor/di-field.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ImageTransformerService } from '../image-transformer.service';
+
 
 @Component({
   selector: 'amp-preview-canvas',
@@ -53,10 +47,10 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
     return this.dimage.imageError;
   }
 
-  @ViewChild('imageContainer', {static: false}) imageContainer: ElementRef<HTMLDivElement>;
-  @ViewChild('canvas', {static: false}) canvas: ElementRef<HTMLDivElement>;
-  @ViewChild('image', {static: false}) imageElem: ElementRef<HTMLImageElement>;
-  @ViewChild('imageCanvas', {static: false}) imageCanvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('imageContainer', { static: false }) imageContainer: ElementRef<HTMLDivElement>;
+  @ViewChild('canvas', { static: false }) canvas: ElementRef<HTMLDivElement>;
+  @ViewChild('image', { static: false }) imageElem: ElementRef<HTMLImageElement>;
+  @ViewChild('imageCanvas', { static: false }) imageCanvas: ElementRef<HTMLCanvasElement>;
 
   get imageWidth(): number { return this.dimage.imageWidth; }
   get imageHeight(): number { return this.dimage.imageHeight; }
@@ -83,7 +77,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   private lastFlip: boolean[] = [false, false];
 
   constructor(private myElem: ElementRef<Element>, private sanitizer: DomSanitizer, private dimage: DiImageService,
-              public editor: EditorService, private field: DiFieldService, private transform: ImageTransformerService) {
+    public editor: EditorService, private field: DiFieldService, private transform: ImageTransformerService) {
     this.dataUpdated(this.field.data);
     this.dimage.imageChanged.subscribe((image) => {
       this.updateCanvasTransform();
@@ -125,7 +119,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
         data.crop = [0, 0, 0, 0];
         this.cropPx = null;
       } else {
-        data.poi = {x: -1, y: -1};
+        data.poi = { x: -1, y: -1 };
         this.poiPx = null;
       }
 
@@ -473,21 +467,21 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   grabCropHandle(handle: number) {
     // handle is 0 for top left, incrementing clockwise
     if (this.isCrop) {
-        if (handle === 5 && this.field.isCropActive()) {
-          return;
-        }
-        this.movingHandle = handle;
-        const moveEvent = this.moveHandle.bind(this);
-        this.bindMouseEvent(moveEvent, this.upHandle.bind(this));
+      if (handle === 5 && this.field.isCropActive()) {
+        return;
+      }
+      this.movingHandle = handle;
+      const moveEvent = this.moveHandle.bind(this);
+      this.bindMouseEvent(moveEvent, this.upHandle.bind(this));
     } else if (this.isPOI) {
-        // place point of interest
-        if (handle !== 5) {
-          return;
-        }
-        if (!this.field.isPOIActive()) {
-          this.field.data.poi = {x: 0.5, y: 0.5};
-        }
-        this.grabPOI();
+      // place point of interest
+      if (handle !== 5) {
+        return;
+      }
+      if (!this.field.isPOIActive()) {
+        this.field.data.poi = { x: 0.5, y: 0.5 };
+      }
+      this.grabPOI();
     }
   }
 

@@ -4,6 +4,7 @@ import { DiEditField, DiEditModeButton, DiEditListItem, DiEditSlider } from 'src
 import { EditorService, PreviewMode } from 'src/app/editor/editor.service';
 import { MatMenuTrigger } from '@angular/material';
 import { DiImageService } from 'src/app/editor/di-image.service';
+import { ImageStudioService } from 'src/app/image-studio/image-studio.service';
 
 @Component({
   selector: 'amp-edit-toolbar',
@@ -14,7 +15,7 @@ export class EditToolbarComponent implements OnInit {
 
   buttons: DiEditModeButton[];
   activeSliders: DiEditField[] = [];
-  @ViewChild('cropMenuTrigger', {read: MatMenuTrigger, static: true}) cropMenuTrigger: MatMenuTrigger;
+  @ViewChild('cropMenuTrigger', { read: MatMenuTrigger, static: true }) cropMenuTrigger: MatMenuTrigger;
 
   previewMode: any = PreviewMode;
 
@@ -32,13 +33,13 @@ export class EditToolbarComponent implements OnInit {
 
   editButtons = [
     new DiEditModeButton(PreviewMode.EditCrop, 'Crop', [
-      {type: 'listItem', name: 'Focal Point', field: 'aspectLock', value: 'poi', action: () => this.poiMode()},
-      {type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none'}, // , action: () => this.showCropMenu()},
-      {type: 'listItem', name: 'Square', field: 'aspectLock', value: '1:1'},
-      {type: 'listItem', name: '16:9', field: 'aspectLock', value: '16:9'},
-      {type: 'listItem', name: '4:3', field: 'aspectLock', value: '4:3'},
-      {type: 'listItem', name: '3:2', field: 'aspectLock', value: '3:2'},
-      {type: 'listItem', name: '2:3', field: 'aspectLock', value: '2:3'},
+      { type: 'listItem', name: 'Focal Point', field: 'aspectLock', value: 'poi', action: () => this.poiMode() },
+      { type: 'listItem', name: 'Custom', field: 'aspectLock', value: 'none' }, // , action: () => this.showCropMenu()},
+      { type: 'listItem', name: 'Square', field: 'aspectLock', value: '1:1' },
+      { type: 'listItem', name: '16:9', field: 'aspectLock', value: '16:9' },
+      { type: 'listItem', name: '4:3', field: 'aspectLock', value: '4:3' },
+      { type: 'listItem', name: '3:2', field: 'aspectLock', value: '3:2' },
+      { type: 'listItem', name: '2:3', field: 'aspectLock', value: '2:3' },
     ] as DiEditListItem[]),
 
     /* disabled until POI and rotate can be used at the same time
@@ -49,14 +50,14 @@ export class EditToolbarComponent implements OnInit {
     */
 
     new DiEditModeButton(PreviewMode.EditFlip, 'Flip', [
-      {type: 'bool', name: 'Horizontal', field: 'fliph'},
-      {type: 'bool', name: 'Vertical', field: 'flipv'}
+      { type: 'bool', name: 'Horizontal', field: 'fliph' },
+      { type: 'bool', name: 'Vertical', field: 'flipv' }
     ]),
 
     new DiEditModeButton(PreviewMode.EditHSV, 'HSB', [
-      {type: 'slider', name: 'Hue (degrees)', field: 'hue', min: -180, max: 180},
-      {type: 'slider', name: 'Saturation', field: 'sat', min: -100, max: 100},
-      {type: 'slider', name: 'Brightness', field: 'bri', min: -100, max: 100}
+      { type: 'slider', name: 'Hue (degrees)', field: 'hue', min: -180, max: 180 },
+      { type: 'slider', name: 'Saturation', field: 'sat', min: -100, max: 100 },
+      { type: 'slider', name: 'Brightness', field: 'bri', min: -100, max: 100 }
     ] as DiEditSlider[])
   ];
 
@@ -64,7 +65,7 @@ export class EditToolbarComponent implements OnInit {
     new DiEditModeButton(PreviewMode.POI, 'POI', []),
   ];
 
-  constructor(private field: DiFieldService, public editor: EditorService, private dimage: DiImageService) {
+  constructor(private field: DiFieldService, public editor: EditorService, private dimage: DiImageService, private imageStudioService: ImageStudioService) {
     this.modeChanged();
     editor.modeChange.subscribe((mode) => {
       this.modeChanged();
@@ -131,5 +132,9 @@ export class EditToolbarComponent implements OnInit {
       active = PreviewMode.EditCrop;
     }
     return (active === mode);
+  }
+
+  async openImageStudio() {
+    this.imageStudioService.openImageStudio(this.field.data.image)
   }
 }
