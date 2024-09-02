@@ -21,12 +21,12 @@ export class ImageStudioService {
         baseUrl: imageStudioUrl,
       });
 
-      const studioResponse = await imageStudio.launch({
-        image: {
+      const studioResponse = await imageStudio.editImages([
+        {
           url: srcImage.thumbURL,
           name: srcImage.name,
         },
-      });
+      ]);
 
       if (studioResponse && studioResponse.image) {
         const uploadedAsset = await this.assetLibraryService.uploadAsset(
