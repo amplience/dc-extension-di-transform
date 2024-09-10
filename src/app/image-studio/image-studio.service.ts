@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DcSdkService } from '../api/dc-sdk.service';
-import { AmplienceImageStudio } from "@amplience/image-studio-sdk/dist/esm";
+import { AmplienceImageStudio } from "@amplience/image-studio-sdk";
 import { DiFieldService } from '../editor/di-field.service';
 import { AssetLibraryService } from './asset-library.service';
 
@@ -25,6 +25,7 @@ export class ImageStudioService {
         {
           url: srcImage.thumbURL,
           name: srcImage.name,
+          mimeType: srcImage.mimeType
         },
       ]);
 
