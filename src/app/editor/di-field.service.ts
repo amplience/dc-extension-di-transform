@@ -5,6 +5,7 @@ import { DcSdkService } from '../api/dc-sdk.service';
 import { Subject, interval } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
+import { Asset } from '../image-studio/types/Asset';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class DiFieldService {
 
   fieldUpdated: EventEmitter<DiTransformedImage> = new EventEmitter();
   data: DiTransformedImage;
+  diImage: Asset;
   stagingEnvironment: string;
   defaultParams: string[] = [];
   fullRes: boolean;
@@ -32,6 +34,7 @@ export class DiFieldService {
       this.stagingEnvironment = sdkInstance.stagingEnvironment;
       this.loadParams(sdkInstance.params.instance);
       this.data = await sdkInstance.field.getValue();
+      await this.loadDiImage();
       this.parseData();
       this.updateField();
     });
@@ -45,6 +48,13 @@ export class DiFieldService {
       this.stagingEnvironment = null;
     }
     this.fullRes = params.alwaysFullRes;
+  }
+
+  private async loadDiImage() {
+    const sdkInstance = await this.sdk.getSDK();
+    if (this.data && this.data.image && this.data.image.id) {
+      this.diImage = await sdkInstance.assets.getById(this.data.image.id);
+    }
   }
 
   async updateField() {
@@ -117,6 +127,7 @@ export class DiFieldService {
 
   async updateImageValue(image: MediaImageLink) {
     this.data.image = image;
+    await this.loadDiImage();
     await this.updateField();
   }
 

@@ -31,8 +31,7 @@ export class ImageStudioService {
 
       if (studioResponse && studioResponse.image) {
         const uploadedAsset = await this.assetLibraryService.uploadAsset(
-          studioResponse.image.url,
-          studioResponse.image.name,
+          studioResponse.image,
           srcImage
         );
         const imageLink = this.assetLibraryService.createImageLinkFromAsset(

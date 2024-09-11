@@ -115,8 +115,8 @@ export class DiPreviewService {
 
     if (this.field.isPOIActive()) {
       this.addSegment(queryCommands, 'Point of Interest',
-      `poi=${this.decimalRound(data.poi.x, 10000)},${this.decimalRound(data.poi.y, 10000)},0,0&scaleFit=poi`,
-      'poi', {x: -1, y: -1});
+        `poi=${this.decimalRound(data.poi.x, 10000)},${this.decimalRound(data.poi.y, 10000)},0,0&scaleFit=poi`,
+        'poi', { x: -1, y: -1 });
     }
 
     if (this.field.isCropActive()) {
@@ -137,13 +137,13 @@ export class DiPreviewService {
           this.decimalRound(crop[3] / bounds[3] * 100, 100),
         ];
         this.addSegment(queryCommands, 'Crop', `crop={${cropPercent[0]}%},{${cropPercent[1]}%},{${cropPercent[2]}%},{${cropPercent[3]}%}`,
-        'crop',
-        [0, 0, 0, 0]);
+          'crop',
+          [0, 0, 0, 0]);
       } else {
         // cropping with no rotation (pcrop)
         this.addSegment(queryCommands, 'Crop', `pcrop=${Math.round(crop[0])},${Math.round(crop[1])},${Math.round(crop[2])},${Math.round(crop[3])}`,
-        'crop',
-        [0, 0, 0, 0]);
+          'crop',
+          [0, 0, 0, 0]);
       }
       this.addSegment(queryCommands, 'Crop', null, 'aspectLock', 'clear');
     }
@@ -161,7 +161,7 @@ export class DiPreviewService {
       return null;
     }
     const params = ((this.image.imageParams.length > 0) ? (this.image.imageParams + '&' + query) : ('?' + query));
-    return `http://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}` + params;
+    return `https://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}` + params;
   }
 
   updateDiPreview() {
@@ -175,7 +175,8 @@ export class DiPreviewService {
 
     const previewSize = 141;
     const previewPoi = (data.rot != null && data.rot !== 0) || this.field.isPOIActive();
-    const baseQuery = `http://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query;
+    const versionQuery = this.field.diImage && this.field.diImage.revisionNumber ? `&v=${this.field.diImage.revisionNumber}` : '';
+    const baseQuery = `https://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query + versionQuery;
     const func = this.previewChange.bind(this);
     let previews: DiPreviewImage[];
     if (previewPoi) {
