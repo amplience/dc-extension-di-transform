@@ -5,8 +5,6 @@ import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/Medi
 import { HttpClient } from '@angular/common/http';
 import { DiImageMeta } from '../model/di-image-meta';
 
-import equal from 'deep-equal';
-
 /**
  * Handles image related fields in the content item, such as crop and point of interest.
  * These require information such as the image width and height, therefore the image must
@@ -53,7 +51,7 @@ export class DiImageService {
     this.imageReady = false;
     this.imageError = null;
     if (data.image != null) {
-      const defaultParams = new URLSearchParams();
+      let defaultParams = '';
       try {
         this.imageMeta = (await this.http.get(this.buildImageSrc(this.field.data.image) + '.json').toPromise()) as DiImageMeta;
         if (this.imageMeta.status === 'error') {
@@ -67,11 +65,11 @@ export class DiImageService {
         if (!this.field.fullRes) {
           if (this.imageWidth > this.imageHeight) {
             if (this.imageWidth > this.imageSizeLimit) {
-              defaultParams.set('w', this.imageSizeLimit.toString());
+              defaultParams = `?w=${this.imageSizeLimit}`;
             }
           } else {
             if (this.imageHeight > this.imageSizeLimit) {
-              defaultParams.set('h', this.imageSizeLimit.toString());
+              defaultParams = `?h=${this.imageSizeLimit}`;
             }
           }
         }
@@ -81,17 +79,14 @@ export class DiImageService {
         this.imageMeta = null;
         this.imageSizeMultiplier = [1, 1];
       }
-      if (this.field.diImage) {
-        defaultParams.set('v', this.field.diImage.revisionNumber.toString())
-      }
 
       const image = await this.imageUIProvider();
       image.onload = this.imageLoaded.bind(this);
       image.onerror = (event: ErrorEvent) => {
         this.imageError = 'Could not load image!';
       };
-      this.imageParams = defaultParams.toString() ? `?${defaultParams.toString()}` : '';
-      image.src = this.buildImageSrc(data.image) + this.imageParams;
+      this.imageParams = defaultParams;
+      image.src = this.buildImageSrc(data.image) + defaultParams;
       this.image = image;
     } else {
       this.image = null;
@@ -138,16 +133,16 @@ export class DiImageService {
   }
 
   parseDataChange(data: DiTransformedImage) {
-    if (!equal(this.lastImage, data.image)) {
+    if (this.lastImage !== data.image) {
       if (this.lastImage != null) {
         // clear data from the last image.
         data.crop = [0, 0, 0, 0];
         data.poi = { x: -1, y: -1 };
         this.poiPx = null;
       }
+      this.loadImage(data);
       this.lastImage = data.image;
     }
-    this.loadImage(data);
 
     if (this.field.isCropActive()) {
       // crop must be initialized

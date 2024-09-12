@@ -64,7 +64,7 @@ export class AssetLibraryService {
 
       const assetPutResponse = await this.putAsset({
         hubId: sdk.hub.id,
-        mode: "overwrite",
+        mode: "renameUnique",
         assets: [
           {
             src: studioImage.url,

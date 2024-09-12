@@ -175,8 +175,7 @@ export class DiPreviewService {
 
     const previewSize = 141;
     const previewPoi = (data.rot != null && data.rot !== 0) || this.field.isPOIActive();
-    const versionQuery = this.field.diImage && this.field.diImage.revisionNumber ? `&v=${this.field.diImage.revisionNumber}` : '';
-    const baseQuery = `https://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query + versionQuery;
+    const baseQuery = `https://${this.field.getImageHost()}/i/${image.endpoint}/${encodeURIComponent(image.name)}?` + data.query;
     const func = this.previewChange.bind(this);
     let previews: DiPreviewImage[];
     if (previewPoi) {
