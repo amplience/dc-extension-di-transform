@@ -1,5 +1,8 @@
 <ng-container *ngIf="showButtons">
   <ng-container *ngIf="hasImage">
+    <button mat-fab (click)="changeMode('openImageStudio')" color="secondary" matTooltip="Edit in Image Studio" class="amp-fab">
+      <mat-icon class="amp-icon-small amp-mode-buttons__light" svgIcon="image_studio"></mat-icon>
+    </button>
       <button mat-fab (click)="changeMode('edit')" matTooltip="Edit image & focal point" class="amp-fab">
         <mat-icon class="amp-icon-small">edit</mat-icon>
       </button>

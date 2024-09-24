@@ -1,5 +1,3 @@
-[![Amplience Dynamic Content](media/header.png)](https://amplience.com/dynamic-content)
-
 # dc-extension-di-transform
 
 ![In Action](media/in-action.png)
@@ -26,6 +24,14 @@ Put the following in the `params` object to change features of the extension:
 - `useVSE`: Set to true to use a VSE for fetching and rendering images. If this is false, images must be published to be seen.
 - `customVSE`: Set to whatever your custom VSE's hostname is. Do not include `http://` or a trailing slash. `useVSE` must be true.
 - `alwaysFullRes`: When true, the main preview image is always fetched at full resolution.
+
+## Image Studio
+
+The extension has been fully integrated with Image Studio. This allows the user to launch Image Studio and utilise its powerful tools to modify the base image.
+
+![Edit in Image Studio](media/edit-in-image-studio.png)
+
+You can find more information about using Image Studio in the [Amplience Studios docs](https://amplience.com/developers/docs/amplience-studios/)
 
 ## How to install
 
@@ -54,8 +60,16 @@ _As this is an open source project you're welcome to host your own "fork" of thi
 
 ![Permissions](media/permissions.png)
 
+API Permissions:
+
+- Read access
+- Modify access
+
 Sandbox permissions:
+
 - Allow same origin
+- Allow pop-ups
+- Allow pop-ups to escape sandbox
 
 ### Assign the extension to schema
 

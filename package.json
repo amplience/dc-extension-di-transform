@@ -1,6 +1,6 @@
 {
   "name": "dc-extension-di-transform",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,6 +11,7 @@
   },
   "private": true,
   "dependencies": {
+    "@amplience/image-studio-sdk": "^0.1.0",
     "@angular/animations": "~8.2.0",
     "@angular/cdk": "~8.2.3",
     "@angular/common": "~8.2.0",
@@ -22,9 +23,7 @@
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
-    "@types/deep-equal": "^1.0.1",
-    "dc-extensions-sdk": "^1.1.0",
-    "deep-equal": "^1.1.0",
+    "dc-extensions-sdk": "^2.4.0",
     "flex-layout-srcs": "github:angular/flex-layout",
     "hammerjs": "^2.0.8",
     "rxjs": "~6.4.0",
@@ -38,9 +37,9 @@
     "@angular/cli": "~8.2.0",
     "@angular/compiler-cli": "~8.2.0",
     "@angular/language-service": "~8.2.0",
-    "@types/node": "~8.9.4",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",

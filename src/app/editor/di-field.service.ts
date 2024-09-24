@@ -1,11 +1,10 @@
-import { Injectable, EventEmitter, DefaultIterableDiffer } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { DiTransformedImage } from '../model/di-transformed-image';
 import { DiEditSlider } from './di-edit-slider';
 import { DcSdkService } from '../api/dc-sdk.service';
-import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
-import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { Subject, interval } from 'rxjs';
 import { debounce } from 'rxjs/operators';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +72,7 @@ export class DiFieldService {
         bri: 0,
         fliph: false,
         flipv: false,
-        poi: {x: -1, y: -1},
+        poi: { x: -1, y: -1 },
         aspectLock: 'clear',
         query: ''
       };
@@ -114,6 +113,11 @@ export class DiFieldService {
     }
     const value = this.data[slider.field];
     return (value == null) ? 0 : value;
+  }
+
+  async updateImageValue(image: MediaImageLink) {
+    this.data.image = image;
+    await this.updateField();
   }
 
   async resetDefault() {
