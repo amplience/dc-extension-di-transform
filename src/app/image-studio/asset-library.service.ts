@@ -4,7 +4,7 @@ import { MediaImageLink } from "dc-extensions-sdk/dist/types/lib/components/Medi
 import { AssetPutPayload } from "./types/AssetPutPayload";
 import { Asset } from "./types/Asset";
 import { DcSdkService } from '../api/dc-sdk.service';
-import { SDKImage, mimeTypeToFileExtension } from '@amplience/image-studio-sdk';
+import { SDKImage, mimeTypeToFileExtension } from '@amplience/image-studio-sdk/dist/esm';
 
 @Injectable({
   providedIn: 'root'

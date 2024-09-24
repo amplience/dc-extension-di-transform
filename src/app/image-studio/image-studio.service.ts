@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DcSdkService } from '../api/dc-sdk.service';
-import { AmplienceImageStudio } from "@amplience/image-studio-sdk";
+import { AmplienceImageStudio } from "@amplience/image-studio-sdk/dist/esm";
 import { DiFieldService } from '../editor/di-field.service';
 import { AssetLibraryService } from './asset-library.service';
 
