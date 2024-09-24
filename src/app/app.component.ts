@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { DcSdkService } from './api/dc-sdk.service';
-import { MediaImageLink } from 'dc-extensions-sdk';
 import { DiTransformedImage } from './model/di-transformed-image';
 import { EditorService, PreviewMode } from './editor/editor.service';
 import { MatIconRegistry } from '@angular/material';
@@ -20,7 +19,8 @@ export class AppComponent {
   }
 
   constructor(private sdkService: DcSdkService, private editor: EditorService, private icons: MatIconRegistry,
-              private sanitizer: DomSanitizer) {
+    private sanitizer: DomSanitizer) {
     icons.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/ic-asset-delete.svg'));
+    icons.addSvgIcon('image_studio', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/ic-image-studio.svg'));
   }
 }

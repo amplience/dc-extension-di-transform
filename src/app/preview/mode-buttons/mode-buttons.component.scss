@@ -29,3 +29,11 @@
   opacity: 0;
   pointer-events: none;
 }
+
+::ng-deep .amp-mode-buttons {
+  &__light {
+    svg * {
+      stroke: #fff
+    }
+  }
+}
