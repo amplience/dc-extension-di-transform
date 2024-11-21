@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@amplience/image-studio-sdk": "^0.1.0",
+    "@amplience/image-studio-sdk": "^0.4.0",
     "@angular/animations": "~8.2.0",
     "@angular/cdk": "~8.2.3",
     "@angular/common": "~8.2.0",
