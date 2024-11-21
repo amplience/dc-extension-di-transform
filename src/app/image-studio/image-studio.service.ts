@@ -15,17 +15,23 @@ export class ImageStudioService {
   public async openImageStudio(image) {
     try {
       const sdkInstance = await this.sdkService.getSDK();
-      const imageStudioUrl = sdkInstance.params.installation.imageStudioUrl || "https://app.amplience.net/image-studio";
+      const imageStudioUrl =
+        sdkInstance.params.installation.imageStudioUrl ||
+        "https://app.amplience.net";
       const srcImage = await this.assetLibraryService.getAssetById(image.id);
       const imageStudio = new AmplienceImageStudio({
-        baseUrl: imageStudioUrl,
+        domain: imageStudioUrl,
       });
+
+      if (sdkInstance.hub.organizationId) {
+        imageStudio.withDecodedOrgId(sdkInstance.hub.organizationId);
+      }
 
       const studioResponse = await imageStudio.editImages([
         {
           url: srcImage.thumbURL,
           name: srcImage.name,
-          mimeType: srcImage.mimeType
+          mimeType: srcImage.mimeType,
         },
       ]);
 
