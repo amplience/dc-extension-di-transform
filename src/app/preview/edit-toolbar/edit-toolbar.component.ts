@@ -135,6 +135,6 @@ export class EditToolbarComponent implements OnInit {
   }
 
   async openImageStudio() {
-    this.imageStudioService.openImageStudio(this.field.data.image)
+    this.imageStudioService.openImageStudio(this.field.data.image);
   }
 }

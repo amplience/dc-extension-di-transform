@@ -60,7 +60,7 @@ export class EditorService {
         this.field.updateField();
         break;
       case 'openImageStudio':
-        this.imageStudioService.openImageStudio(this.field.data.image)
+        this.imageStudioService.openImageStudio(this.field.data.image);
         break;
     }
 

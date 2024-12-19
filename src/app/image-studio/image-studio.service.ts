@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { DcSdkService } from '../api/dc-sdk.service';
-import { AmplienceImageStudio } from "@amplience/image-studio-sdk/dist/esm";
+import { AmplienceImageStudio } from '@amplience/image-studio-sdk/dist/esm';
 import { DiFieldService } from '../editor/di-field.service';
 import { AssetLibraryService } from './asset-library.service';
 import {
   ImageSaveEventData,
   ImageStudioEventType,
   SDKEventType,
-} from "@amplience/image-studio-sdk";
+} from '@amplience/image-studio-sdk';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ImageStudioService {
   constructor(
@@ -24,7 +24,7 @@ export class ImageStudioService {
       const sdkInstance = await this.sdkService.getSDK();
       const imageStudioUrl =
         sdkInstance.params.installation.imageStudioUrl ||
-        "https://app.amplience.net";
+        'https://app.amplience.net';
       const srcImage = await this.assetLibraryService.getAssetById(image.id);
       const imageStudio = new AmplienceImageStudio({
         domain: imageStudioUrl,
@@ -63,7 +63,7 @@ export class ImageStudioService {
         },
       ]);
     } catch (e) {
-      console.error("Image Studio error:", e);
+      console.error('Image Studio error:', e);
     }
   }
 }
