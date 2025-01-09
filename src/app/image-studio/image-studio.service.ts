@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { DcSdkService } from '../api/dc-sdk.service';
 import { AmplienceImageStudio } from '@amplience/image-studio-sdk/dist/esm';
-import { DiFieldService } from '../editor/di-field.service';
-import { AssetLibraryService } from './asset-library.service';
 import {
   ImageSaveEventData,
   ImageStudioEventType,
   SDKEventType,
 } from '@amplience/image-studio-sdk';
+import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
+import { DiFieldService } from '../editor/di-field.service';
+import { AssetLibraryService } from './asset-library.service';
+import { Asset } from './types/Asset';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +21,33 @@ export class ImageStudioService {
     private diFieldService: DiFieldService
   ) {}
 
+  private async handleOnSaveCallback(
+    data: any,
+    srcImage: Asset,
+    image: MediaImageLink
+  ) {
+    try {
+      const imageData = data as ImageSaveEventData;
+      if (imageData.image) {
+        const uploadedAsset = await this.assetLibraryService.uploadAsset(
+          imageData.image,
+          srcImage
+        );
+        const imageLink = this.assetLibraryService.createImageLinkFromAsset(
+          image,
+          uploadedAsset
+        );
+
+        this.diFieldService.updateImageValue(imageLink);
+        return SDKEventType.Success;
+      }
+      return SDKEventType.Fail;
+    } catch (error) {
+      console.error(error);
+      return SDKEventType.Fail;
+    }
+  }
+
   public async openImageStudio(image) {
     try {
       const sdkInstance = await this.sdkService.getSDK();
@@ -29,29 +58,10 @@ export class ImageStudioService {
       const imageStudio = new AmplienceImageStudio({
         domain: imageStudioUrl,
       }).withEventListener(ImageStudioEventType.ImageSave, async (data) => {
-        try {
-          const imageData = data as ImageSaveEventData;
-          if (imageData.image) {
-            const uploadedAsset = await this.assetLibraryService.uploadAsset(
-              imageData.image,
-              srcImage
-            );
-            const imageLink = this.assetLibraryService.createImageLinkFromAsset(
-              image,
-              uploadedAsset
-            );
-
-            this.diFieldService.updateImageValue(imageLink);
-            return SDKEventType.Success;
-          }
-          return SDKEventType.Fail;
-        } catch (error) {
-          console.error(error);
-          return SDKEventType.Fail;
-        }
+        return await this.handleOnSaveCallback(data, srcImage, image);
       });
 
-      if (sdkInstance.hub.organizationId) {
+      if (sdkInstance && sdkInstance.hub && sdkInstance.hub.organizationId) {
         imageStudio.withDecodedOrgId(sdkInstance.hub.organizationId);
       }
 
