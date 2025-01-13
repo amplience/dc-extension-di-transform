@@ -51,12 +51,12 @@ export class ImageStudioService {
   public async openImageStudio(image) {
     try {
       const sdkInstance = await this.sdkService.getSDK();
-      const imageStudioUrl =
-        sdkInstance.params.installation.imageStudioUrl ||
+      const imageStudioDomain =
+        sdkInstance.params.installation.imageStudioDomain ||
         'https://app.amplience.net';
       const srcImage = await this.assetLibraryService.getAssetById(image.id);
       const imageStudio = new AmplienceImageStudio({
-        domain: imageStudioUrl,
+        domain: imageStudioDomain,
       }).withEventListener(ImageStudioEventType.ImageSave, async (data) => {
         return await this.handleOnSaveCallback(data, srcImage, image);
       });

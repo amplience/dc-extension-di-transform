@@ -4,7 +4,7 @@ import { DiTransformedImage } from '../model/di-transformed-image';
 
 export interface Parameters extends Params {
   installation: {
-    imageStudioUrl: string;
+    imageStudioDomain: string;
     mediaAssetsUrl: string;
   };
 }
