@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
+import { SDKImage, mimeTypeToFileExtension } from '@amplience/image-studio-sdk';
 import { HttpMethod } from 'dc-extensions-sdk/dist/types/lib/components/HttpClient';
 import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 import { AssetPutPayload } from './types/AssetPutPayload';
 import { Asset } from './types/Asset';
 import { DcSdkService } from '../api/dc-sdk.service';
-import { SDKImage, mimeTypeToFileExtension } from '@amplience/image-studio-sdk/dist/esm';
 
 @Injectable({
   providedIn: 'root'

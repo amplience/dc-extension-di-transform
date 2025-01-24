@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { DcSdkService } from '../api/dc-sdk.service';
-import { AmplienceImageStudio } from '@amplience/image-studio-sdk/dist/esm';
 import {
+  AmplienceImageStudio,
   ImageSaveEventData,
   ImageStudioEventType,
   SDKEventType,
 } from '@amplience/image-studio-sdk';
+import { DcSdkService } from '../api/dc-sdk.service';
 import { MediaImageLink } from 'dc-extensions-sdk/dist/types/lib/components/MediaLink';
 import { DiFieldService } from '../editor/di-field.service';
 import { AssetLibraryService } from './asset-library.service';
