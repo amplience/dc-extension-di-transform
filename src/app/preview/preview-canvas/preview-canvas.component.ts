@@ -77,7 +77,7 @@ export class PreviewCanvasComponent implements OnInit, OnChanges {
   private lastFlip: boolean[] = [false, false];
 
   constructor(private myElem: ElementRef<Element>, private sanitizer: DomSanitizer, private dimage: DiImageService,
-    public editor: EditorService, private field: DiFieldService, private transform: ImageTransformerService) {
+              public editor: EditorService, private field: DiFieldService, private transform: ImageTransformerService) {
     this.dataUpdated(this.field.data);
     this.dimage.imageChanged.subscribe((image) => {
       this.updateCanvasTransform();
