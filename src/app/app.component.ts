@@ -19,7 +19,7 @@ export class AppComponent {
   }
 
   constructor(private sdkService: DcSdkService, private editor: EditorService, private icons: MatIconRegistry,
-    private sanitizer: DomSanitizer) {
+              private sanitizer: DomSanitizer) {
     icons.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/ic-asset-delete.svg'));
     icons.addSvgIcon('image_studio', sanitizer.bypassSecurityTrustResourceUrl('./assets/icons/ic-image-studio.svg'));
   }
