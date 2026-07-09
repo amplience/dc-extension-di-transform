@@ -21,7 +21,6 @@ Check out `schema.json` for the content schema to use with this extension. In fu
 ## Parameters in Schema
 
 Put the following in the `params` object to change features of the extension:
-
 - `useVSE`: Set to true to use a VSE for fetching and rendering images. If this is false, images must be published to be seen.
 - `customVSE`: Set to whatever your custom VSE's hostname is. Do not include `http://` or a trailing slash. `useVSE` must be true.
 - `alwaysFullRes`: When true, the main preview image is always fetched at full resolution.
@@ -54,12 +53,12 @@ This extension needs to be [registered](https://amplience.com/docs/development/r
 
 ![Setup](media/setup.png)
 
-- Category: Content Field
-- Label: DI Image Transformation _(this will appear as the tab title in the Dashboard)_
-- Name: di-image-transformation _(needs to be unique with the Hub)_
-- URL: [https://di-transform.extensions.content.amplience.net](https://di-transform.extensions.content.amplience.net)
-- Description: DI Image Transformation _(can be left blank, if you wish)_
-- Initial height: 500
+* Category: Content Field
+* Label: DI Image Transformation _(this will appear as the tab title in the Dashboard)_
+* Name: di-image-transformation _(needs to be unique with the Hub)_
+* URL: [https://di-transform.extensions.content.amplience.net](https://di-transform.extensions.content.amplience.net)
+* Description: DI Image Transformation _(can be left blank, if you wish)_
+* Initial height: 500
 
 Note:
 You can use our deployed version of this extension (builds from the "production" branch) -
@@ -67,6 +66,7 @@ You can use our deployed version of this extension (builds from the "production"
 [di-transform.extensions.content.amplience.net](di-transform.extensions.content.amplience.net)
 
 _As this is an open source project you're welcome to host your own "fork" of this project. You can use any standard static hosting service (Netlify, Amplify, Vercel, etc.) if you wish._
+
 
 ##### Permissions
 
