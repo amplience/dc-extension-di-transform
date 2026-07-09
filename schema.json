@@ -95,6 +95,21 @@
           "title": "DI Query String",
           "description": "A query string baked with all the above parameters.",
           "type": "string"
+        },
+        "srcWidth": {
+          "title": "Source Width",
+          "description": "Intrinsic width of the source image in pixels (from DI metadata). Written by the extension so consumers can reserve layout space without a second call.",
+          "type": "number"
+        },
+        "srcHeight": {
+          "title": "Source Height",
+          "description": "Intrinsic height of the source image in pixels (from DI metadata). Written by the extension so consumers can reserve layout space without a second call.",
+          "type": "number"
+        },
+        "aspectRatio": {
+          "title": "Aspect Ratio",
+          "description": "Aspect ratio (width / height) of the delivered image: the crop rectangle when a crop is active, otherwise the source image. Bind directly to CSS aspect-ratio to avoid layout shift (CLS).",
+          "type": "number"
         }
       },
       "ui:extension": {

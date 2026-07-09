@@ -21,6 +21,7 @@ Check out `schema.json` for the content schema to use with this extension. In fu
 ## Parameters in Schema
 
 Put the following in the `params` object to change features of the extension:
+
 - `useVSE`: Set to true to use a VSE for fetching and rendering images. If this is false, images must be published to be seen.
 - `customVSE`: Set to whatever your custom VSE's hostname is. Do not include `http://` or a trailing slash. `useVSE` must be true.
 - `alwaysFullRes`: When true, the main preview image is always fetched at full resolution.
@@ -33,6 +34,18 @@ The extension has been fully integrated with Image Studio. This allows the user 
 
 You can find more information about using Image Studio in the [Amplience Studios docs](https://amplience.com/developers/docs/amplience-studios/)
 
+## Output fields (dimensions & aspect ratio)
+
+In addition to the transform parameters and prebaked `query`, the extension writes the following read-only fields into the content item so that a frontend can reserve the correct layout space up front and avoid Cumulative Layout Shift (CLS) — without making a second call to the DAM/DI metadata endpoint:
+
+- `srcWidth` / `srcHeight`: the intrinsic width and height (in pixels) of the source image, as reported by DI metadata. Useful as `next/image`-style intrinsic dimensions, or to derive the source aspect ratio.
+- `aspectRatio`: the aspect ratio (`width / height`, rounded to 4 dp) of the image that will actually be delivered — the crop rectangle when a crop is active, otherwise the source image. Bind this straight to CSS `aspect-ratio` for CLS-free rendering in both the cropped and uncropped cases.
+
+These values are populated automatically once the base image loads and are refreshed when the crop changes. They are optional in the schema, so content saved by earlier versions of the extension continues to load unchanged.
+
+> [!NOTE]
+> Rotation is not currently reflected in `aspectRatio` (e.g. a 90°/270° rotation would invert the delivered ratio), but rotation is currently disabled in this extension anyway, so it's just noting here in case it is enabled in the future.
+
 ## How to install
 
 ### Register Extension
@@ -41,12 +54,12 @@ This extension needs to be [registered](https://amplience.com/docs/development/r
 
 ![Setup](media/setup.png)
 
-* Category: Content Field
-* Label: DI Image Transformation _(this will appear as the tab title in the Dashboard)_
-* Name: di-image-transformation _(needs to be unique with the Hub)_
-* URL: [https://di-transform.extensions.content.amplience.net](https://di-transform.extensions.content.amplience.net)
-* Description: DI Image Transformation _(can be left blank, if you wish)_
-* Initial height: 500
+- Category: Content Field
+- Label: DI Image Transformation _(this will appear as the tab title in the Dashboard)_
+- Name: di-image-transformation _(needs to be unique with the Hub)_
+- URL: [https://di-transform.extensions.content.amplience.net](https://di-transform.extensions.content.amplience.net)
+- Description: DI Image Transformation _(can be left blank, if you wish)_
+- Initial height: 500
 
 Note:
 You can use our deployed version of this extension (builds from the "production" branch) -
@@ -54,7 +67,6 @@ You can use our deployed version of this extension (builds from the "production"
 [di-transform.extensions.content.amplience.net](di-transform.extensions.content.amplience.net)
 
 _As this is an open source project you're welcome to host your own "fork" of this project. You can use any standard static hosting service (Netlify, Amplify, Vercel, etc.) if you wish._
-
 
 ##### Permissions
 
