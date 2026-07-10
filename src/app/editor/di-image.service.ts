@@ -115,9 +115,9 @@ export class DiImageService {
     this.imageChanged.emit(this.image);
   }
 
-  // Stores source dimensions and delivered aspect ratio (crop if active, else source) on
-  // the field. Returns true if anything changed, so callers can decide whether to persist.
-  // Rotation (disabled in this extension) is not accounted for.
+  // Stores source dimensions & delivered aspect ratio (crop if active, else source) on the field.
+  // Returns true if anything changed so callers can decide whether to persist.
+  // Rotation (disabled in this extension anyway) is not accounted for.
   updateDimensionMetadata(): boolean {
     const data = this.field.data;
     if (data == null || !(this.imageWidth > 0) || !(this.imageHeight > 0)) {
