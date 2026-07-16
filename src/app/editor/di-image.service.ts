@@ -115,8 +115,9 @@ export class DiImageService {
     this.imageChanged.emit(this.image);
   }
 
-  // Stores source dimensions & delivered aspect ratio (crop if active, else source) on the field.
-  // Returns true if anything changed so callers can decide whether to persist.
+  // Stores the delivered image dimensions & aspect ratio on the field: the crop rectangle
+  // (source pixels) when a crop is active, else the source image. Returns true if anything
+  // changed so callers can decide whether to persist.
   // Rotation (disabled in this extension anyway) is not accounted for.
   updateDimensionMetadata(): boolean {
     const data = this.field.data;
@@ -124,26 +125,25 @@ export class DiImageService {
       return false;
     }
 
+    let width = this.imageWidth;
+    let height = this.imageHeight;
+    if (this.field.isCropActive()) {
+      width = Math.round(data.crop[2]);
+      height = Math.round(data.crop[3]);
+    }
+
     let changed = false;
 
-    if (data.srcWidth !== this.imageWidth) {
-      data.srcWidth = this.imageWidth;
+    if (data.width !== width) {
+      data.width = width;
       changed = true;
     }
-    if (data.srcHeight !== this.imageHeight) {
-      data.srcHeight = this.imageHeight;
+    if (data.height !== height) {
+      data.height = height;
       changed = true;
     }
-
-    let aspectWidth = this.imageWidth;
-    let aspectHeight = this.imageHeight;
-    if (this.field.isCropActive()) {
-      aspectWidth = data.crop[2];
-      aspectHeight = data.crop[3];
-    }
-
-    if (aspectWidth > 0 && aspectHeight > 0) {
-      const aspectRatio = Math.round((aspectWidth / aspectHeight) * 10000) / 10000;
+    if (width > 0 && height > 0) {
+      const aspectRatio = Math.round((width / height) * 10000) / 10000;
       if (data.aspectRatio !== aspectRatio) {
         data.aspectRatio = aspectRatio;
         changed = true;

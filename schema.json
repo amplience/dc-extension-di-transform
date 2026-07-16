@@ -96,19 +96,19 @@
           "description": "A query string baked with all the above parameters.",
           "type": "string"
         },
-        "srcWidth": {
-          "title": "Source Width",
-          "description": "Intrinsic width of the source image in pixels (from DI metadata). Written by the extension so consumers can reserve layout space without a second call.",
+        "width": {
+          "title": "Width",
+          "description": "Intrinsic width in pixels of the delivered image: the crop rectangle when a crop is active, otherwise the source image. Written by the extension so consumers can reserve layout space (avoid CLS) and cap request resolution without a second call.",
           "type": "number"
         },
-        "srcHeight": {
-          "title": "Source Height",
-          "description": "Intrinsic height of the source image in pixels (from DI metadata). Written by the extension so consumers can reserve layout space without a second call.",
+        "height": {
+          "title": "Height",
+          "description": "Intrinsic height in pixels of the delivered image: the crop rectangle when a crop is active, otherwise the source image.",
           "type": "number"
         },
         "aspectRatio": {
           "title": "Aspect Ratio",
-          "description": "Aspect ratio (width / height) of the delivered image: the crop rectangle when a crop is active, otherwise the source image. Bind directly to CSS aspect-ratio to avoid layout shift (CLS).",
+          "description": "Aspect ratio (width / height) of the delivered image, rounded to 4 dp. Bind directly to CSS aspect-ratio to avoid layout shift (CLS).",
           "type": "number"
         }
       },
