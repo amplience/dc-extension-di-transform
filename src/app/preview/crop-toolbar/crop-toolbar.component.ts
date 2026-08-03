@@ -46,6 +46,7 @@ export class CropToolbarComponent implements OnInit {
     }
 
     this.field.data.crop = crop.slice(0);
+    this.image.updateDimensionMetadata();
     this.field.updateField();
   }
 

@@ -33,6 +33,20 @@ The extension has been fully integrated with Image Studio. This allows the user 
 
 You can find more information about using Image Studio in the [Amplience Studios docs](https://amplience.com/developers/docs/amplience-studios/)
 
+## Output fields (dimensions & aspect ratio)
+
+In addition to the transform parameters and prebaked `query`, the extension writes the following read-only fields into the content item so that a frontend can reserve the correct layout space up front and avoid Cumulative Layout Shift (CLS) — without making a second call to the DAM/DI metadata endpoint:
+
+All three describe the **delivered** image — the crop rectangle when a crop is active, otherwise the source image:
+
+- `width` / `height`: the intrinsic width and height (in pixels) of the delivered image. Usable as `next/image`-style intrinsic dimensions, and as an upper bound so the frontend doesn't request (and upscale) beyond the real resolution.
+- `aspectRatio`: `width / height`, rounded to 4 dp. Bind this straight to CSS `aspect-ratio` for CLS-free rendering in both the cropped and uncropped cases.
+
+These values are populated automatically once the base image loads and are refreshed when the crop changes. They are optional in the schema, so content saved by earlier versions of the extension continues to load unchanged.
+
+> [!NOTE]
+> Rotation is not currently reflected in these fields (e.g. a 90°/270° rotation would swap width and height), but rotation is currently disabled in this extension anyway, so it's just noting here in case it is enabled in the future.
+
 ## How to install
 
 ### Register Extension

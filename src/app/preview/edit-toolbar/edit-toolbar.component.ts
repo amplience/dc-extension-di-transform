@@ -112,12 +112,14 @@ export class EditToolbarComponent implements OnInit {
   clearCrop() {
     this.field.data.crop = [0, 0, 0, 0];
     this.field.data.aspectLock = 'clear';
+    this.dimage.updateDimensionMetadata();
     this.field.updateField();
   }
 
   poiMode() {
     this.field.data.crop = [0, 0, 0, 0];
     this.field.data.aspectLock = 'poi';
+    this.dimage.updateDimensionMetadata();
     this.field.updateField();
     // this.editor.setMode(PreviewMode.POI);
   }
