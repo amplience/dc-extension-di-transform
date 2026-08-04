@@ -15,6 +15,12 @@ export interface DiTransformedImage {
 
   aspectLock: string;
   query: string;
+
+  // Delivered image dimensions & aspect ratio (incl post-crop changes)
+  // Useful for reserving layout space to prevent CLS
+  width?: number;
+  height?: number;
+  aspectRatio?: number;
 }
 
 export interface DiTransformPoi {

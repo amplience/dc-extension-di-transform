@@ -106,7 +106,51 @@ export class DiImageService {
       const bound = this.cropPx || this.getRotatedBounds();
       this.poiPx = [bound[0] + bound[2] * data.poi.x, bound[1] + bound[3] * data.poi.y];
     }
+
+    // dimensions are now known - persist them so consumers avoid a second metadata call.
+    if (this.updateDimensionMetadata()) {
+      this.field.updateField();
+    }
+
     this.imageChanged.emit(this.image);
+  }
+
+  // Stores the delivered image dimensions & aspect ratio on the field: the crop rectangle
+  // (source pixels) when a crop is active, else the source image. Returns true if anything
+  // changed so callers can decide whether to persist.
+  // Rotation (disabled in this extension anyway) is not accounted for.
+  updateDimensionMetadata(): boolean {
+    const data = this.field.data;
+    if (data == null || !(this.imageWidth > 0) || !(this.imageHeight > 0)) {
+      return false;
+    }
+
+    let width = this.imageWidth;
+    let height = this.imageHeight;
+    if (this.field.isCropActive()) {
+      width = Math.round(data.crop[2]);
+      height = Math.round(data.crop[3]);
+    }
+
+    let changed = false;
+
+    if (data.width !== width) {
+      data.width = width;
+      changed = true;
+    }
+    if (data.height !== height) {
+      data.height = height;
+      changed = true;
+    }
+    if (width > 0 && height > 0) {
+      const aspectRatio = Math.round((width / height) * 10000) / 10000;
+      if (data.aspectRatio !== aspectRatio) {
+        data.aspectRatio = aspectRatio;
+        changed = true;
+      }
+    }
+
+    return changed;
   }
 
   private rotatePoint(point: number[], angle: number): number[] {
@@ -167,6 +211,7 @@ export class DiImageService {
     }
     data.crop = this.cropPx;
     this.savePOI(true);
+    this.updateDimensionMetadata();
     this.field.updateField();
   }
 
